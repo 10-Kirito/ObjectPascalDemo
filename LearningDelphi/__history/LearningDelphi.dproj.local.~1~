@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2024/06/04 09:52:17.223.dproj,C:\Users\zhoupengfei\Documents\RAD Studio\Projects\Project1.dproj=C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\LearningDelphi.dproj</Transaction>
+    <Transaction>2024/06/04 09:52:54.487.pas,C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Unit1.pas=C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Chapter1.pas</Transaction>
+    <Transaction>2024/06/04 10:11:28.878.pas,C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Unit1.pas=C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Chapter1\Test1.pas</Transaction>
+    <Transaction>2024/06/04 11:09:28.512.pas,C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Unit1.pas=C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Practices\Practice1.pas</Transaction>
+    <Transaction>2024/06/05 10:04:06.533.pas,C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Unit1.pas=C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Chapter2\Chapter2.pas</Transaction>
+    <Transaction>2024/06/05 11:36:12.419.pas,C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Unit1.pas=C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Package\Unit1.pas</Transaction>
+    <Transaction>2024/06/05 11:36:12.419.dfm,C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Unit1.dfm=C:\Users\zhoupengfei\Documents\RAD Studio\Projects\LearningDelphi\Package\Unit1.dfm</Transaction>
+  </Transactions>
+</BorlandProject>

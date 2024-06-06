@@ -1,0 +1,20 @@
+unit Chapter4;
+// ????routine(????)?????????
+interface
+
+procedure MyProcedure(params);
+
+
+TClassName = class(Tancestor)
+private
+    
+protected
+public
+    constructor Create; override;
+    destructor Destroy; override;
+published
+end;
+
+implementation
+
+end.

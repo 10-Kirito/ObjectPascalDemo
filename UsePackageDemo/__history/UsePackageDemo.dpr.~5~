@@ -1,0 +1,10 @@
+program UsePackageDemo;
+
+{$APPTYPE CONSOLE}
+
+uses
+  SysUtils, Practice1;
+
+begin
+  
+end.

@@ -1,0 +1,89 @@
+unit ClassTest;
+
+interface
+
+// types:
+type
+  TTemp = class
+  public // 任何位置以及任何类都可见
+    // 注意，Object Pascal 要求所有的对象内存分配和初始化完全由构造函数控制
+    Flag: Boolean;
+    Number: Integer;
+    SName: string;
+
+    constructor Create();
+    constructor SpecialCreate(ANumber: Integer);
+  private
+  end;
+
+  TBasic = class
+  public
+    constructor Create();
+  end;
+
+  TDerivedClass = class(TBasic)
+  public
+    class function Test(): Integer; static;
+    constructor Create();
+    procedure Hello();
+  end;
+
+// functions and procedures:
+procedure TestClass();
+
+implementation
+
+/// <summary>
+/// class TTemp constructors
+/// </summary>
+constructor TTemp.Create;
+begin
+
+end;
+
+constructor TTemp.SpecialCreate(ANumber: Integer);
+begin
+
+end;
+
+constructor TBasic.Create;
+begin
+  Writeln('TBasic.Create is called!');
+end;
+
+constructor TDerivedClass.Create;
+begin
+  inherited;
+  Writeln('TDerivedClass.Create is called!');
+end;
+
+procedure TDerivedClass.Hello();
+begin
+  Writeln('Hello, TDerivedClass!');
+end;
+
+class function TDerivedClass.Test(): Integer; static;
+begin
+  Writeln('Hello, Staic Function!');
+end;
+
+procedure TestClass();
+var
+  DerivedObj: TDerivedClass;
+  ClassType: TClass;
+  Obj: TObject;
+begin
+  DerivedObj := TDerivedClass.Create();
+  Writeln(DerivedObj.ClassName);
+
+  ClassType := DerivedObj.ClassType();
+  Obj := ClassType.Create();
+
+  if Obj is TDerivedClass then
+    TDerivedClass(Obj).Hello();
+
+  Writeln(TDerivedClass.Test());
+end;
+
+
+end.

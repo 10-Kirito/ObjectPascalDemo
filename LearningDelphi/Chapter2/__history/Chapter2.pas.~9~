@@ -1,0 +1,19 @@
+unit Chapter2;
+
+interface
+
+procedure Test1();
+
+implementation
+
+procedure Test1();
+var
+  char1: WideChar;
+  char2: AnsiChar;
+  Set: 1..100;
+begin
+  char1 := '·É';
+  char2 := 'z';
+end;
+
+end.

@@ -1,0 +1,17 @@
+unit Test1;
+
+interface
+  procedure HelloWorld();
+  function TestFunction(): string;
+implementation
+  // Hello, world
+  procedure HelloWorld();
+  begin
+    writeln('Hello, world');
+  end;
+  //
+  function TestFunction(): string;
+  begin
+    Result := 'Result';
+  end;
+end.

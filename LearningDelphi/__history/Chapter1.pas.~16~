@@ -1,0 +1,18 @@
+// 单元名称的声明，这里和.pas文件的名称是一样的!
+unit Chapter1;
+// 接口的声明，这里可以只写声明，在implementation处书写定义!
+// 注意!!!如果想要被其它的文件访问，只能在该部分书写!
+interface
+
+// 这里可以书写上述声明的定义，该处可以省略参数（若未省略必须与声明一致）;
+// 此部分可以定义常量、变量、例程等，但是只能在本单元内使用!
+implementation
+
+
+initialization
+
+
+finalization
+
+
+end.
