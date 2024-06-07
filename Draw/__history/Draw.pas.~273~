@@ -1,4 +1,4 @@
-unit Draw;
+ï»¿unit Draw;
 
 interface
 
@@ -19,7 +19,7 @@ type
     PolyLine: TButton;
     Image: TImage;
     Curve: TButton;
-    // ¸÷ÖÖÊÂ¼şµÄ»Øµ÷º¯Êı£º
+    // å„ç§äº‹ä»¶çš„å›è°ƒå‡½æ•°ï¼š
     procedure LineClick(Sender: TObject);
     procedure RectangleClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -33,27 +33,31 @@ type
     procedure ImageMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
   private
-    // ¼ÇÂ¼ÉÏÒ»¸öÊó±êµÄÎ»ÖÃ
+    // è®°å½•ä¸Šä¸€ä¸ªé¼ æ ‡çš„ä½ç½®
     StartPoint: TPoint;
     LastPoint: TPoint;
-    // »æÖÆÖ±Ïß±êÖ¾:
+    // ç»˜åˆ¶ç›´çº¿æ ‡å¿—:
     DrawingLine: Boolean;
-    // »æÖÆ¾ØĞÎ±êÖ¾:
+    // ç»˜åˆ¶çŸ©å½¢æ ‡å¿—:
     DrawingRectangle: Boolean;
-    // ÅĞ¶ÏÊÇ·ñ»æÖÆÇúÏß
+    // åˆ¤æ–­æ˜¯å¦ç»˜åˆ¶æ›²çº¿
     PolyFlag: Boolean;
     CurveFlag: Boolean;
     /// <summary>
-    /// ±£´æ»­Í¼È«¾Ö×´Ì¬£º
-    ///  1. drawsEMPTY: ³õÊ¼×´Ì¬;
-    ///  2. drawsLINE: »æÖÆÖ±Ïß;
-    ///  3. drawsRECTANGLE: »æÖÆ¾ØĞÎ;
+    /// ä¿å­˜ç”»å›¾å…¨å±€çŠ¶æ€ï¼š
+    ///  1. drawsEMPTY: åˆå§‹çŠ¶æ€;
+    ///  2. drawsLINE: ç»˜åˆ¶ç›´çº¿;
+    ///  3. drawsRECTANGLE: ç»˜åˆ¶çŸ©å½¢;
     ///  ...
     /// </summary>
     Status: TDrawStatus;
-    // Çå³ıµ±Ç°µÄ»æÖÆ×´Ì¬
+
+
+    // åˆ›å»ºä¸€ä¸ªä½å›¾æ¥ä¿å­˜æˆ‘ä»¬çš„ç»˜åˆ¶æ“ä½œ:
+
+    // æ¸…é™¤å½“å‰çš„ç»˜åˆ¶çŠ¶æ€
     procedure ClearStatus();
-    // »æÖÆº¯Êı½Ó¿Ú:
+    // ç»˜åˆ¶å‡½æ•°æ¥å£:
     procedure DrawLine(const StartPoint, EndPoint: TPoint);
     procedure DrawRectangle(const StartPoint, EndPoint: TPoint);
   public
@@ -75,15 +79,15 @@ begin
 end;
 
 {$R *.dfm}
-// »æÖÆÇúÏß¶ÔÓ¦µÄÊÂ¼ş
+// ç»˜åˆ¶æ›²çº¿å¯¹åº”çš„äº‹ä»¶
 procedure TForm1.CurveClick(Sender: TObject);
 begin
-  // Çå³ıÆäËûµÄ»æÖÆ×´Ì¬
+  // æ¸…é™¤å…¶ä»–çš„ç»˜åˆ¶çŠ¶æ€
   ClearStatus();
   CurveFlag := False;
 end;
 
-// ·â×°µÄ»æÖÆº¯Êı:
+// å°è£…çš„ç»˜åˆ¶å‡½æ•°:
 procedure TForm1.DrawLine(const StartPoint, EndPoint: TPoint);
 begin
   Image.Canvas.MoveTo(StartPoint.X, StartPoint.Y);
@@ -95,22 +99,22 @@ begin
   Image.Canvas.Rectangle(StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y);
 end;
 
-// µ±Ç°´°Ìå±»´´½¨µÄÊ±ºò´¥·¢µÄÊÂ¼ş
+// å½“å‰çª—ä½“è¢«åˆ›å»ºçš„æ—¶å€™è§¦å‘çš„äº‹ä»¶
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Timer1.Enabled := True;
   Timer1.Interval := 1;
-  // ³õÊ¼»¯»­²¼
+  // åˆå§‹åŒ–ç”»å¸ƒ
   Image.Canvas.Create();
-  // ³õÊ¼»¯»­²¼×´Ì¬
+  // åˆå§‹åŒ–ç”»å¸ƒçŠ¶æ€
   ClearStatus();
 end;
 
-// Êó±ê×ó¼ü°´ÏÂ¶ÔÓ¦µÄÊÂ¼ş
+// é¼ æ ‡å·¦é”®æŒ‰ä¸‹å¯¹åº”çš„äº‹ä»¶
 procedure TForm1.ImageMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  // ÅĞ¶Ïµ±Ç°ÊÇ·ñÊÇ»æÖÆÖ±Ïß
+  // åˆ¤æ–­å½“å‰æ˜¯å¦æ˜¯ç»˜åˆ¶ç›´çº¿
   case Status of
     drawsEMPTY:
     begin
@@ -144,7 +148,6 @@ begin
     end;
     drawsLINE:
     if DrawingLine then
-
     begin
       // Erase the last shape
       DrawLine(StartPoint, LastPoint);
@@ -175,7 +178,7 @@ begin
         DrawLine(StartPoint, LastPoint);
         LastPoint := Point(X, Y);
         DrawLine(StartPoint, LastPoint);
-        // DrawingLine := False;
+        DrawingLine := False;
         Image.Canvas.Pen.Mode := pmCopy;
       end;
       drawsRECTANGLE:
@@ -183,11 +186,10 @@ begin
         // TODO
       end;
     end;
-    ClearStatus();
   end;
 end;
 
-// Line °´Å¥¶ÔÓ¦µÄÊÂ¼ş
+// Line æŒ‰é’®å¯¹åº”çš„äº‹ä»¶
 procedure TForm1.LineClick(Sender: TObject);
 var
   Canvas: TCanvas;
@@ -196,19 +198,19 @@ begin
   Status := drawsLINE;
 end;
 
-// PolyLine °´Å¥¶ÔÓ¦µÄÊÂ¼ş
+// PolyLine æŒ‰é’®å¯¹åº”çš„äº‹ä»¶
 procedure TForm1.PolyLineClick(Sender: TObject);
 begin
   PolyFlag := True;
   Status := drawsLINE;
 end;
 
-// Rectangle °´Å¥¶ÔÓ¦µÄÊÂ¼ş
+// Rectangle æŒ‰é’®å¯¹åº”çš„äº‹ä»¶
 procedure TForm1.RectangleClick(Sender: TObject);
 var
   Canvas: TCanvas;
 begin
-  // Çå³ıÆäËûµÄ»æÖÆ×´Ì¬
+  // æ¸…é™¤å…¶ä»–çš„ç»˜åˆ¶çŠ¶æ€
   ClearStatus();
   Canvas := Image.Canvas;
   with Canvas do
@@ -219,12 +221,12 @@ begin
   end;
 end;
 
-// ¼ÆÊ±Æ÷£¬ÓÃÀ´ÊµÊ±¸üĞÂÍ¼Ïñ
+// è®¡æ—¶å™¨ï¼Œç”¨æ¥å®æ—¶æ›´æ–°å›¾åƒ
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
   MousePos: TPoint;
 begin
-  // »ñÈ¡µ±Ç°Êó±êµÄÊµÊ±Î»ÖÃ(x, y)
+  // è·å–å½“å‰é¼ æ ‡çš„å®æ—¶ä½ç½®(x, y)
   GetCursorPos(MousePos);
   MouseX.Caption := IntToStr(MousePos.X);
   MouseY.Caption := IntToStr(MousePos.Y);

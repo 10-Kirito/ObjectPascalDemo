@@ -34,15 +34,15 @@ type
       Y: Integer);
   private
     // 记录上一个鼠标的位置
-    StartPoint: TPoint;
-    LastPoint: TPoint;
+    FStartPoint: TPoint;
+    FLastPoint: TPoint;
     // 绘制直线标志:
-    DrawingLine: Boolean;
+    FDrawingLine: Boolean;
     // 绘制矩形标志:
-    DrawingRectangle: Boolean;
+    FDrawingRectangle: Boolean;
     // 判断是否绘制曲线
-    PolyFlag: Boolean;
-    CurveFlag: Boolean;
+    FPolyFlag: Boolean;
+    FCurveFlag: Boolean;
     /// <summary>
     /// 保存画图全局状态：
     ///  1. drawsEMPTY: 初始状态;
@@ -50,7 +50,13 @@ type
     ///  3. drawsRECTANGLE: 绘制矩形;
     ///  ...
     /// </summary>
-    Status: TDrawStatus;
+    FStatus: TDrawStatus;
+
+
+    // 创建一个位图来保存我们的绘制操作:
+    FBitMap: TBitmap;
+    // 临时位图来实现橡皮筋效果:
+    FTempBitMap: TBitmap;
     // 清除当前的绘制状态
     procedure ClearStatus();
     // 绘制函数接口:
@@ -67,11 +73,16 @@ implementation
 
 procedure TForm1.ClearStatus();
 begin
-  PolyFlag := False;
-  DrawingLine := False;
-  CurveFlag := False;
-  DrawingRectangle := False;
-  Status := drawsEMPTY;
+  FPolyFlag := False;
+  FDrawingLine := False;
+  FCurveFlag := False;
+  FDrawingRectangle := False;
+  // 初始化画图全局状态
+  FStatus := drawsEMPTY;
+  // 创建位图并初始化相关配置
+  FBitMap := TBitmap.Create();
+  FBitMap.Width := Image.ClientWidth;
+  FBitMap.Width := Image.ClientHeight;
 end;
 
 {$R *.dfm}
@@ -80,14 +91,16 @@ procedure TForm1.CurveClick(Sender: TObject);
 begin
   // 清除其他的绘制状态
   ClearStatus();
-  CurveFlag := False;
+  FCurveFlag := False;
 end;
 
 // 封装的绘制函数:
 procedure TForm1.DrawLine(const StartPoint, EndPoint: TPoint);
 begin
-  Image.Canvas.MoveTo(StartPoint.X, StartPoint.Y);
-  Image.Canvas.LineTo(EndPoint.X, EndPoint.Y);
+//  Image.Canvas.MoveTo(StartPoint.X, StartPoint.Y);
+//  Image.Canvas.LineTo(EndPoint.X, EndPoint.Y);
+  FTempBitMap.Canvas.MoveTo(StartPoint.X, StartPoint.Y);
+  FTempBitMap.Canvas.LineTo(EndPoint.X, EndPoint.Y);
 end;
 
 procedure TForm1.DrawRectangle(const StartPoint, EndPoint: TPoint);
@@ -110,8 +123,14 @@ end;
 procedure TForm1.ImageMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
+  // 初始化临时位图:
+  FTempBitMap := TBitmap.Create();
+  FTempBitMap.Width := FBitMap.Width;
+  FTempBitMap.Height := FBitMap.Height;
+  // 复制原始位图到临时位图:
+  FTempBitMap.Assign(FBitMap);
   // 判断当前是否是绘制直线
-  case Status of
+  case FStatus of
     drawsEMPTY:
     begin
       // DO NOTHING
@@ -120,11 +139,11 @@ begin
     begin
       if(Button = mbLeft) then
       begin
-        StartPoint := Point(X, Y);
-        LastPoint := StartPoint;
+        FStartPoint := Point(X, Y);
+        FLastPoint := FStartPoint;
         Image.Canvas.MoveTo(X, Y);
-        DrawingLine := True;
-        Image.Canvas.Pen.Mode := pmNotXor;
+        FDrawingLine := True;
+        // Image.Canvas.Pen.Mode := pmNotXor;
       end;
     end;
     drawsRECTANGLE:
@@ -137,24 +156,27 @@ end;
 procedure TForm1.ImageMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
-  case Status of
+  case FStatus of
     drawsEMPTY:
     begin
       // DO NOTHING
     end;
     drawsLINE:
+    if FDrawingLine then
     begin
       // Erase the last shape
-      DrawLine(StartPoint, LastPoint);
+      DrawLine(FStartPoint, FLastPoint);
       // Draw the new shape
-      LastPoint := Point(X, Y);
-      DrawLine(StartPoint, LastPoint);
+      FLastPoint := Point(X, Y);
+      DrawLine(FStartPoint, FLastPoint);
     end;
     drawsRECTANGLE:
     begin
       // TODO
     end;
   end;
+  // 将临时位图的图像绘制到对应的组件当中
+  Image.Picture.Bitmap.Assign(FTempBitMap);
 end;
 
 procedure TForm1.ImageMouseUp(Sender: TObject; Button: TMouseButton;
@@ -162,7 +184,7 @@ procedure TForm1.ImageMouseUp(Sender: TObject; Button: TMouseButton;
 begin
   if Button = mbLeft then
   begin
-    case Status of
+    case FStatus of
       drawsEMPTY:
       begin
         // DO NOTHING
@@ -170,10 +192,10 @@ begin
       drawsLINE:
       begin
         // Finish the drawing
-        DrawLine(StartPoint, LastPoint);
-        LastPoint := Point(X, Y);
-        DrawLine(StartPoint, LastPoint);
-        // DrawingLine := False;
+        DrawLine(FStartPoint, FLastPoint);
+        FLastPoint := Point(X, Y);
+        DrawLine(FStartPoint, FLastPoint);
+        FDrawingLine := False;
         Image.Canvas.Pen.Mode := pmCopy;
       end;
       drawsRECTANGLE:
@@ -181,8 +203,11 @@ begin
         // TODO
       end;
     end;
-    ClearStatus();
   end;
+
+  // 释放临时位图，下次绘制的时候重新申请临时位图资源
+  FTempBitMap.Destroy();
+
 end;
 
 // Line 按钮对应的事件
@@ -191,14 +216,14 @@ var
   Canvas: TCanvas;
 begin
   // PolyFlag := True;
-  Status := drawsLINE;
+  FStatus := drawsLINE;
 end;
 
 // PolyLine 按钮对应的事件
 procedure TForm1.PolyLineClick(Sender: TObject);
 begin
-  PolyFlag := True;
-  Status := drawsLINE;
+  FPolyFlag := True;
+  FStatus := drawsLINE;
 end;
 
 // Rectangle 按钮对应的事件

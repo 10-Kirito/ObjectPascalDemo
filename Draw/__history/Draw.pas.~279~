@@ -34,15 +34,15 @@ type
       Y: Integer);
   private
     // 记录上一个鼠标的位置
-    StartPoint: TPoint;
-    LastPoint: TPoint;
+    FStartPoint: TPoint;
+    FLastPoint: TPoint;
     // 绘制直线标志:
-    DrawingLine: Boolean;
+    FDrawingLine: Boolean;
     // 绘制矩形标志:
-    DrawingRectangle: Boolean;
+    FDrawingRectangle: Boolean;
     // 判断是否绘制曲线
-    PolyFlag: Boolean;
-    CurveFlag: Boolean;
+    FPolyFlag: Boolean;
+    FCurveFlag: Boolean;
     /// <summary>
     /// 保存画图全局状态：
     ///  1. drawsEMPTY: 初始状态;
@@ -51,6 +51,10 @@ type
     ///  ...
     /// </summary>
     Status: TDrawStatus;
+
+
+    // 创建一个位图来保存我们的绘制操作:
+
     // 清除当前的绘制状态
     procedure ClearStatus();
     // 绘制函数接口:
@@ -67,10 +71,10 @@ implementation
 
 procedure TForm1.ClearStatus();
 begin
-  PolyFlag := False;
-  DrawingLine := False;
-  CurveFlag := False;
-  DrawingRectangle := False;
+  FPolyFlag := False;
+  FDrawingLine := False;
+  FCurveFlag := False;
+  FDrawingRectangle := False;
   Status := drawsEMPTY;
 end;
 
@@ -80,7 +84,7 @@ procedure TForm1.CurveClick(Sender: TObject);
 begin
   // 清除其他的绘制状态
   ClearStatus();
-  CurveFlag := False;
+  FCurveFlag := False;
 end;
 
 // 封装的绘制函数:
@@ -120,10 +124,10 @@ begin
     begin
       if(Button = mbLeft) then
       begin
-        StartPoint := Point(X, Y);
-        LastPoint := StartPoint;
+        FStartPoint := Point(X, Y);
+        FLastPoint := FStartPoint;
         Image.Canvas.MoveTo(X, Y);
-        DrawingLine := True;
+        FDrawingLine := True;
         Image.Canvas.Pen.Mode := pmNotXor;
       end;
     end;
@@ -143,12 +147,13 @@ begin
       // DO NOTHING
     end;
     drawsLINE:
+    if FDrawingLine then
     begin
       // Erase the last shape
-      DrawLine(StartPoint, LastPoint);
+      DrawLine(FStartPoint, FLastPoint);
       // Draw the new shape
-      LastPoint := Point(X, Y);
-      DrawLine(StartPoint, LastPoint);
+      FLastPoint := Point(X, Y);
+      DrawLine(FStartPoint, FLastPoint);
     end;
     drawsRECTANGLE:
     begin
@@ -170,10 +175,10 @@ begin
       drawsLINE:
       begin
         // Finish the drawing
-        DrawLine(StartPoint, LastPoint);
-        LastPoint := Point(X, Y);
-        DrawLine(StartPoint, LastPoint);
-        // DrawingLine := False;
+        DrawLine(FStartPoint, FLastPoint);
+        FLastPoint := Point(X, Y);
+        DrawLine(FStartPoint, FLastPoint);
+        FDrawingLine := False;
         Image.Canvas.Pen.Mode := pmCopy;
       end;
       drawsRECTANGLE:
@@ -181,7 +186,6 @@ begin
         // TODO
       end;
     end;
-    ClearStatus();
   end;
 end;
 
@@ -190,14 +194,14 @@ procedure TForm1.LineClick(Sender: TObject);
 var
   Canvas: TCanvas;
 begin
-  PolyFlag := True;
+  // PolyFlag := True;
   Status := drawsLINE;
 end;
 
 // PolyLine 按钮对应的事件
 procedure TForm1.PolyLineClick(Sender: TObject);
 begin
-  PolyFlag := True;
+  FPolyFlag := True;
   Status := drawsLINE;
 end;
 
