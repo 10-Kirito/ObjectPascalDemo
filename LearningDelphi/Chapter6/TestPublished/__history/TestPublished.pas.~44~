@@ -1,0 +1,57 @@
+unit TestPublished;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Rtti, TypInfo, StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+  private
+    FName: string;
+  protected
+    // ...
+  public
+    procedure SetName(AName: string);
+    function GetName(): string;
+  published
+    property TestName: string read GetName write SetName;
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+type
+  TTest1 = class
+    MemberOfTTest1: Integer;
+  end;
+
+  TTest2 = class(TPersistent)
+    MemberOfTest2: TObject;
+  end;
+
+  {$M+}
+  TTest3 = class
+    MemberOfTest3: TObject;
+  end;
+  {$M-}
+
+{ TForm1 }
+
+function TForm1.GetName: string;
+begin
+    Exit(Self.Name);
+end;
+
+procedure TForm1.SetName(AName: string);
+begin
+
+end;
+
+end.

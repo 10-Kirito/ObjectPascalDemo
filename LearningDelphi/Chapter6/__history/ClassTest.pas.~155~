@@ -30,6 +30,12 @@ type
     procedure Hello();
   end;
 
+  TTestClass = class
+  public
+    class function Test(): Integer;
+    class function Test1(): Boolean;
+  end;
+
 // functions and procedures:
 procedure TestClass();
 

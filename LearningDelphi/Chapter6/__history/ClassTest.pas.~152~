@@ -1,7 +1,5 @@
 unit ClassTest;
 
-{ 用来测试类的相关功能}
-
 interface
 
 // types:
@@ -28,6 +26,11 @@ type
     class function Test(): Integer; static;
     constructor Create();
     procedure Hello();
+  end;
+
+  TTestClass = class
+  public
+    class function Test(): Integer;
   end;
 
 // functions and procedures:
@@ -85,6 +88,14 @@ begin
     TDerivedClass(Obj).Hello();
 
   Writeln(TDerivedClass.Test());
+end;
+
+
+{ TTestClass }
+
+class function TTestClass.Test: Integer;
+begin
+
 end;
 
 end.

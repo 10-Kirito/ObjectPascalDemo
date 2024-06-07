@@ -13,8 +13,8 @@ uses
   InheritedTest in 'Chapter6\InheritedTest.pas';
 
 var
-  TestObj: TBase;
-  TestObj1: InheritedTest.TTest1;
+  TestObj: Base;
+  TestObj1: InheritedTest.Test1;
   TestObj3: InheritedTest.Test3;
 
 begin

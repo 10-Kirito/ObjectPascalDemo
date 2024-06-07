@@ -1,8 +1,8 @@
 ﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 		<PropertyGroup>
-			<ProjectGuid>{760DECB1-A296-4165-A465-B11A1148AC63}</ProjectGuid>
+			<ProjectGuid>{4B78067D-CFCF-4585-9902-105410CCAB33}</ProjectGuid>
 			<ProjectVersion>12.0</ProjectVersion>
-			<MainSource>LearningDelphi.dpr</MainSource>
+			<MainSource>Project1.dpr</MainSource>
 			<Config Condition="'$(Config)'==''">Debug</Config>
 			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
 		</PropertyGroup>
@@ -21,7 +21,7 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
 			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;$(DCC_UnitAlias)</DCC_UnitAlias>
-			<DCC_DependencyCheckOutputName>LearningDelphi.exe</DCC_DependencyCheckOutputName>
+			<DCC_DependencyCheckOutputName>Project1.exe</DCC_DependencyCheckOutputName>
 			<DCC_K>false</DCC_K>
 			<DCC_F>false</DCC_F>
 			<DCC_ImageBase>00400000</DCC_ImageBase>
@@ -40,16 +40,12 @@
 			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
 		</PropertyGroup>
 		<ItemGroup>
-			<DelphiCompile Include="LearningDelphi.dpr">
+			<DelphiCompile Include="Project1.dpr">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="Chapter1\Chapter1.pas"/>
-			<DCCReference Include="Chapter1\Test1.pas"/>
-			<DCCReference Include="Practices\Practice1.pas"/>
-			<DCCReference Include="Chapter2\Chapter2.pas"/>
-			<DCCReference Include="Chapter6\ClassTest.pas"/>
-			<DCCReference Include="Chapter4\Chapter4.pas"/>
-			<DCCReference Include="Chapter6\InheritedTest.pas"/>
+			<DCCReference Include="TestPublished.pas">
+				<Form>Form1</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
@@ -68,9 +64,6 @@
 			<Borland.ProjectType/>
 			<BorlandProject>
 				<Delphi.Personality>
-					<Source>
-						<Source Name="MainSource">LearningDelphi.dpr</Source>
-					</Source>
 					<Parameters>
 						<Parameters Name="UseLauncher">False</Parameters>
 						<Parameters Name="LoadAllSymbols">True</Parameters>
@@ -103,6 +96,9 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
+					<Source>
+						<Source Name="MainSource">Project1.dpr</Source>
+					</Source>
 				</Delphi.Personality>
 			</BorlandProject>
 			<ProjectFileVersion>12</ProjectFileVersion>

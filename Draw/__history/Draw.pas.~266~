@@ -143,7 +143,6 @@ begin
       // DO NOTHING
     end;
     drawsLINE:
-    if DrawingLine then
     begin
       // Erase the last shape
       DrawLine(StartPoint, LastPoint);
@@ -174,7 +173,7 @@ begin
         DrawLine(StartPoint, LastPoint);
         LastPoint := Point(X, Y);
         DrawLine(StartPoint, LastPoint);
-        DrawingLine := False;
+        // DrawingLine := False;
         Image.Canvas.Pen.Mode := pmCopy;
       end;
       drawsRECTANGLE:
@@ -182,6 +181,7 @@ begin
         // TODO
       end;
     end;
+    ClearStatus();
   end;
 end;
 
@@ -190,7 +190,7 @@ procedure TForm1.LineClick(Sender: TObject);
 var
   Canvas: TCanvas;
 begin
-  // PolyFlag := True;
+  PolyFlag := True;
   Status := drawsLINE;
 end;
 

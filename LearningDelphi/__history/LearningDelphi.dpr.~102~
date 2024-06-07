@@ -14,7 +14,7 @@ uses
 
 var
   TestObj: TBase;
-  TestObj1: InheritedTest.TTest1;
+  TestObj1: InheritedTest.Test1;
   TestObj3: InheritedTest.Test3;
 
 begin

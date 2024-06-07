@@ -1,0 +1,87 @@
+unit InheritedTest;
+
+interface
+uses
+  Rtti;
+
+type
+
+  Base = class(TObject)
+    procedure Func();
+  public
+    procedure Func2();
+  published
+    procedure Func3();
+  end;
+
+  Test1 = class
+    procedure Func();
+  end;
+
+  Test2 = class
+  private
+    procedure Func();
+  end;
+
+  Test3 = class(Test2)
+    procedure Func();
+  public
+    procedure HelloWorld();
+  end;
+
+procedure MainTest();
+
+implementation
+
+{ Base }
+
+procedure Base.Func;
+begin
+  Writeln('Base.Func is called');
+end;
+
+procedure Base.Func2;
+begin
+  Writeln('Base.Func2 is called');
+end;
+
+procedure Base.Func3;
+begin
+  Writeln('Base.Func3 is called!');
+end;
+
+procedure MainTest();
+var
+  TestObj: Base;
+begin
+  TestObj.Func;
+end;
+{ Test1 }
+
+procedure Test1.Func;
+begin
+  Writeln('Test1.Func is called!');
+end;
+
+{ Test2 }
+
+procedure Test2.Func;
+begin
+  Writeln('Test2.Func is called!');
+end;
+
+{ Test3 }
+                     
+procedure Test3.Func;
+begin
+  Writeln('Test3.Func is called!');
+  inherited Func();
+end;
+
+procedure Test3.HelloWorld;
+begin
+  Writeln('Hello, world!');
+end;
+
+end.
+

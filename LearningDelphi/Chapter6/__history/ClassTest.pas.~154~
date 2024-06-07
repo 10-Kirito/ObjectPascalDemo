@@ -1,7 +1,5 @@
 unit ClassTest;
 
-{ 用来测试类的相关功能}
-
 interface
 
 // types:
@@ -28,6 +26,12 @@ type
     class function Test(): Integer; static;
     constructor Create();
     procedure Hello();
+  end;
+
+  TTestClass = class
+  public
+    class function Test(): Integer;
+    class function Test1(): Boolean;
   end;
 
 // functions and procedures:

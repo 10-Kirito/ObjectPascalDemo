@@ -182,6 +182,7 @@ begin
         // TODO
       end;
     end;
+    ClearStatus();
   end;
 end;
 

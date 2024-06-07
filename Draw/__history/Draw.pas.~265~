@@ -83,7 +83,6 @@ begin
   CurveFlag := False;
 end;
 
-// 封装的绘制函数:
 procedure TForm1.DrawLine(const StartPoint, EndPoint: TPoint);
 begin
   Image.Canvas.MoveTo(StartPoint.X, StartPoint.Y);
@@ -143,7 +142,6 @@ begin
       // DO NOTHING
     end;
     drawsLINE:
-    if DrawingLine then
     begin
       // Erase the last shape
       DrawLine(StartPoint, LastPoint);
@@ -174,7 +172,7 @@ begin
         DrawLine(StartPoint, LastPoint);
         LastPoint := Point(X, Y);
         DrawLine(StartPoint, LastPoint);
-        DrawingLine := False;
+        // DrawingLine := False;
         Image.Canvas.Pen.Mode := pmCopy;
       end;
       drawsRECTANGLE:
@@ -182,6 +180,7 @@ begin
         // TODO
       end;
     end;
+    ClearStatus();
   end;
 end;
 
@@ -190,7 +189,7 @@ procedure TForm1.LineClick(Sender: TObject);
 var
   Canvas: TCanvas;
 begin
-  // PolyFlag := True;
+  PolyFlag := True;
   Status := drawsLINE;
 end;
 

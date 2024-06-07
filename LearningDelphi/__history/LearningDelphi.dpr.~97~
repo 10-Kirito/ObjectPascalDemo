@@ -13,9 +13,9 @@ uses
   InheritedTest in 'Chapter6\InheritedTest.pas';
 
 var
-  TestObj: TBase;
-  TestObj1: InheritedTest.TTest1;
-  TestObj3: InheritedTest.Test3;
+  TestObj: Base;
+  TestObj1: InheritedTest.Test1;
+  TestObj2: InheritedTest.Test3;
 
 begin
 //  练习一：
@@ -27,7 +27,5 @@ begin
   TestObj.Func();
 
   TestObj1.Func();
-  TestObj3.Func();
-
   Readln;
 end.
