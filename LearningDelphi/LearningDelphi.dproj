@@ -50,6 +50,8 @@
 			<DCCReference Include="Chapter6\ClassTest.pas"/>
 			<DCCReference Include="Chapter4\Chapter4.pas"/>
 			<DCCReference Include="Chapter6\InheritedTest.pas"/>
+			<DCCReference Include="Chapter6\ObjectFields.pas"/>
+			<DCCReference Include="Chapter6\ObjectFunc.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

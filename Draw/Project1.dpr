@@ -2,7 +2,8 @@ program Project1;
 
 uses
   Forms,
-  Draw in 'Draw.pas' {Form1};
+  Draw in 'Draw.pas' {Form1},
+  GraphicBasic in 'Model\GraphicBasic\GraphicBasic.pas';
 
 {$R *.res}
 

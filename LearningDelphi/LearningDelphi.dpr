@@ -10,7 +10,9 @@ uses
   Chapter2 in 'Chapter2\Chapter2.pas',
   ClassTest in 'Chapter6\ClassTest.pas',
   Chapter4 in 'Chapter4\Chapter4.pas',
-  InheritedTest in 'Chapter6\InheritedTest.pas';
+  InheritedTest in 'Chapter6\InheritedTest.pas',
+  ObjectFields in 'Chapter6\ObjectFields.pas',
+  ObjectFunc in 'Chapter6\ObjectFunc.pas';
 
 var
   TestObj: TBase;
@@ -23,11 +25,6 @@ begin
 //  Practice1.FindPrimeNumber();
 //  Practice1.Verify();
 
-  InheritedTest.MainTest();
-  TestObj.Func();
-
-  TestObj1.Func();
-  TestObj3.Func();
-
+  ObjectFunc.MainTest();
   Readln;
 end.

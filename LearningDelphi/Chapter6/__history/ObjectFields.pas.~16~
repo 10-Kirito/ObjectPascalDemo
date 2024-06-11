@@ -1,0 +1,24 @@
+unit ObjectFields;
+
+interface
+
+type
+  TTestFields = class(TObject)
+    const TestConst: Integer = 100;
+    Temp: Integer;
+    var
+      Name: string;
+  end;
+
+procedure TestObjectFields();
+
+implementation
+
+procedure TestObjectFields();
+var
+  field1: TTestFields;
+  field2: TTestFields;
+begin
+end;
+
+end.

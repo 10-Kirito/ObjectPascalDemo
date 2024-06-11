@@ -1,0 +1,14 @@
+unit Unit1;
+
+interface
+uses
+  Graphics;
+
+
+type
+  TCanvasadasd =
+
+
+implementation
+
+end.

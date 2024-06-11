@@ -46,6 +46,7 @@
 			<DCCReference Include="Draw.pas">
 				<Form>Form1</Form>
 			</DCCReference>
+			<DCCReference Include="Model\GraphicBasic\GraphicBasic.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
