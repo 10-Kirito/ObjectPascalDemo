@@ -1,0 +1,48 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{2C0DAE22-F98C-4E8B-8491-442646AEEDEF}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="Packages\DrawSource.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Draw.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="DrawSource">
+			<MSBuild Projects="Packages\DrawSource.dproj"/>
+		</Target>
+		<Target Name="DrawSource:Clean">
+			<MSBuild Targets="Clean" Projects="Packages\DrawSource.dproj"/>
+		</Target>
+		<Target Name="DrawSource:Make">
+			<MSBuild Targets="Make" Projects="Packages\DrawSource.dproj"/>
+		</Target>
+		<Target Name="Draw">
+			<MSBuild Projects="Draw.dproj"/>
+		</Target>
+		<Target Name="Draw:Clean">
+			<MSBuild Targets="Clean" Projects="Draw.dproj"/>
+		</Target>
+		<Target Name="Draw:Make">
+			<MSBuild Targets="Make" Projects="Draw.dproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="DrawSource;Draw"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="DrawSource:Clean;Draw:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="DrawSource:Make;Draw:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>

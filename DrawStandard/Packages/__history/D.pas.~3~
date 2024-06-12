@@ -1,0 +1,12 @@
+unit D;
+
+interface
+uses
+  Graphics;
+
+type
+
+
+implementation
+
+end.
