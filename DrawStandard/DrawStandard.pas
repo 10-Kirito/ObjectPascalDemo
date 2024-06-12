@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, RzLstBox, RzButton, ImgList, ExtCtrls, RzPanel, RzCommon,
   RzBorder, RzPopups, RzDBList, Grids, RzGrids, RzCmboBx, Mask, RzEdit, Buttons,
-  Menus, GraphicBasic;
+  Menus, GraphicBasic, Tools, Command, Manage;
 
 type
   TForm1 = class(TForm)
@@ -33,8 +33,7 @@ type
     procedure btnOpenClick(Sender: TObject);
     procedure btnPenClick(Sender: TObject);
     procedure btnSelectClick(Sender: TObject);
-    procedure imgCanvasMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+    procedure imgCanvasMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
   private
     FMode: TDrawMode;
     FIsDrawing: Boolean;
@@ -45,6 +44,8 @@ type
 
     FStartPoint: TPoint;
     FLastPoint: TPoint;
+
+    FManger: TManager;
   public
     { Public declarations }
   end;
@@ -103,55 +104,48 @@ begin
   FBitMap.Height := imgCanvas.ClientHeight;
 
   FBitMap.Assign(imgCanvas.Picture.Bitmap);
+
+  FManger := TManager.Create(imgCanvas.Picture.Bitmap);
+
 end;
 
 procedure TForm1.imgCanvasMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   if Button = mbLeft then
   begin
-    // 如果当前模式为选择模式，另外进行处理
+    // If the pen mode is drawSELECT
     if Self.FMode = drawSELECT then
     begin
       /// TODO!!!
       Exit;
     end;
-
-    // 除了选择模式之外，均为绘制模式，其中包含软件启动之后的页面(drawBRUSH模式)
-    FIsDrawing := True;
-    // 复制当前的图像位图
-    FTempBitMap := TBitmap.Create;
-    FTempBitMap.Width := FBitMap.Width;
-    FTempBitMap.Height := FBitMap.Height;
-    FTempBitMap.Assign(FBitMap);
+    // else
     case FMode of
       drawBRUSH:
-      begin
+        begin
 
-      end;
+        end;
       drawLINE:
-      begin
-        FStartPoint := Point(X, Y);
-        FLastPoint := FStartPoint;
-      end;
+        begin
+          FStartPoint := Point(X, Y);
+          FLastPoint := FStartPoint;
+        end;
     end;
   end;
 
 end;
 
-procedure TForm1.imgCanvasMouseMove(Sender: TObject; Shift: TShiftState; X,
-  Y: Integer);
+procedure TForm1.imgCanvasMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
-  // 判断当前是否处于绘制状态
+  // check if is drawing
   if FIsDrawing then
   begin
     case Self.FMode of
       drawLINE:
-      begin
-         FLastPoint := Point(X, Y);
+        begin
+         // send the draw command
 
-//         imgCanvas.Picture.Bitmap.Assign();
-
-      end;
+        end;
     end;
   end;
 end;

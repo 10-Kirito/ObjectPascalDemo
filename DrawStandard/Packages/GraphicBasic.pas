@@ -3,64 +3,54 @@ unit GraphicBasic;
 interface
 
 uses
-  Classes, Graphics, Windows;
+  Windows, Classes, Graphics;
 
 type
-  TDrawMode = (drawBRUSH, drawLINE, drawRECTANGLE, drawCIRCLE, drawERASE, drawSELECT);
-
-  TShapeType = (shapeLINE, shapeRECTANGLE, shapeCIRCLE);
-
-  TDrawPen = class(TPen)
+  TGraphicReceiver = class
   private
-    FDrawMode: TDrawMode;
+    FBitMap: TBitmap;
   public
-    property PMode: TDrawMode read FDrawMode write FDrawMode;
+    constructor Create(ABitMap: TBitmap);
+
+    procedure UpdateCanvas(ABitMap: TBitmap);
+
+    function DrawLine(AStart: TPoint; AEnd: TPoint): TBitmap;
+
+    function DrawRectangle(AStart: TPoint; AEnd: TPoint): TBitmap;
+
+    // fucntion DrawCircle(): TBitmap;
   end;
 
 
-  IShape = interface
-  ['{12144A75-CEEE-4A23-A1AE-125DAAE76BE4}']
-    procedure DrawShape();
-  End;
 
-  {Factory class}
-
-  TShapeFactory = class
-  public
-    class function GetShape(AShapeType: TShapeType): IShape;
-  end;
 
 implementation
-type
-  { Basic graphics class}
-  TShapeBasic = class(TInterfacedPersistent, IShape)
-  protected
-    FShapeType: TShapeType;
-  public
-    procedure DrawShape(); virtual; abstract;
-  end;
-  
-  TLine = class(TShapeBasic)
-  private
-    FStartPoint, FEndPoint: TPoint;
-    
-  public
-    procedure DrawShape();
-  end;
 
-{ TShapeFactory }
 
-class function TShapeFactory.GetShape(AShapeType: TShapeType): IShape;
+
+
+{ TGraphicReceiver }
+
+constructor TGraphicReceiver.Create(ABitMap: TBitmap);
 begin
-
+  FBitMap := ABitMap;
 end;
 
-
-{ TLine }
-
-procedure TLine.DrawShape;
+function TGraphicReceiver.DrawLine(AStart, AEnd: TPoint): TBitmap;
 begin
+  FBitMap.Canvas.MoveTo(AStart.X, AStart.Y);
+  FBitMap.Canvas.LineTo(AEnd.X, AEnd.Y);
+  Exit(FBitMap);
+end;
 
+function TGraphicReceiver.DrawRectangle(AStart, AEnd: TPoint): TBitmap;
+begin
+  Exit(FBitMap);
+end;
+
+procedure TGraphicReceiver.UpdateCanvas(ABitMap: TBitmap);
+begin
+  FBitMap := ABitMap;
 end;
 
 end.

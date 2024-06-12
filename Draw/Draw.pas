@@ -27,16 +27,13 @@ type
     procedure FormCreate(Sender: TObject);
     procedure tmr1Timer(Sender: TObject);
     procedure btnDrawPenClick(Sender: TObject);
-    procedure imgMainMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure imgMainMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure imgMainMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure imgMainMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure btnCurveClick(Sender: TObject);
-    procedure imgMainMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+    procedure imgMainMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
   private
-  type
-    TDrawStatus = (drawsEMPTY, drawsLINE, drawsRECTANGLE, drawsPEN);
+    type
+      TDrawStatus = (drawsEMPTY, drawsLINE, drawsRECTANGLE, drawsPEN);
   private
     // 记录上一个鼠标的位置
     FStartPoint: TPoint;
@@ -66,6 +63,7 @@ type
   public
     { Public declarations }
   end;
+
 var
   Form1: TForm1;
 
@@ -111,8 +109,7 @@ begin
 end;
 
 // 鼠标左键按下对应的事件
-procedure TForm1.imgMainMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TForm1.imgMainMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   // if left mouse is pressed
   if Button = mbLeft then
@@ -124,45 +121,44 @@ begin
     // check the current drawing status
     case FStatus of
       drawsEMPTY:
-      begin
+        begin
         // DO NOTHING
-      end;
+        end;
       drawsLINE: // draw line settings
-      begin
-        FStartPoint := Point(X, Y);
-        FLastPoint := FStartPoint;
-        FDrawingLine := True;
-      end;
+        begin
+          FStartPoint := Point(X, Y);
+          FLastPoint := FStartPoint;
+          FDrawingLine := True;
+        end;
       drawsRECTANGLE: // draw rectangle
-      begin
-        FStartPoint := Point(X, Y);
-        FLastPoint := FStartPoint;
-        FDrawingRectangle := True;
-      end;
+        begin
+          FStartPoint := Point(X, Y);
+          FLastPoint := FStartPoint;
+          FDrawingRectangle := True;
+        end;
       drawsPEN: // draw pen
-      begin
-        FLastPoint := Point(X, Y);
-        FTempBitMap.Canvas.Pen.Width := 3;
-        FTempBitMap.Canvas.MoveTo(X, Y);
-        FPenDrawing := True;
-      end;
+        begin
+          FLastPoint := Point(X, Y);
+          FTempBitMap.Canvas.Pen.Width := 3;
+          FTempBitMap.Canvas.MoveTo(X, Y);
+          FPenDrawing := True;
+        end;
     end;
   end;
 end;
 
-procedure TForm1.imgMainMouseMove(Sender: TObject; Shift: TShiftState; X,
-  Y: Integer);
+procedure TForm1.imgMainMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
   // drawing the line
   if FDrawingLine then
   begin
      // copy the temp bitmap to update
-     FTempBitMap.Assign(FBitMap);
-     FLastPoint := Point(X, Y);
-     FCanvasObject := TLine.Create(FStartPoint, FLastPoint, FTempBitMap.Canvas);
-     FCanvasObject.Draw();
+    FTempBitMap.Assign(FBitMap);
+    FLastPoint := Point(X, Y);
+    FCanvasObject := TLine.Create(FStartPoint, FLastPoint, FTempBitMap.Canvas);
+    FCanvasObject.Draw();
      // display the temp bitmap in the TImage
-     imgMain.Picture.Bitmap.Assign(FTempBitMap);
+    imgMain.Picture.Bitmap.Assign(FTempBitMap);
   end;
   // drawing the pen
   if FPenDrawing then
@@ -183,29 +179,28 @@ begin
   end;
 end;
 
-procedure TForm1.imgMainMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TForm1.imgMainMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   if Button = mbLeft then
   begin
     case FStatus of
       drawsEMPTY:
-      begin
+        begin
         // DO NOTHING
-      end;
+        end;
       drawsLINE:
-      begin
-        FDrawingLine := False;
-      end;
+        begin
+          FDrawingLine := False;
+        end;
       drawsRECTANGLE:
-      begin
-        FDrawingRectangle := False;
-      end;
+        begin
+          FDrawingRectangle := False;
+        end;
       drawsPEN:
-      begin
-        FPenDrawing := False;
+        begin
+          FPenDrawing := False;
         // ClearStatus();
-      end;
+        end;
     end;
   end;
   // 将临时位图复制到最终位图当中:
@@ -246,3 +241,4 @@ begin
 end;
 
 end.
+

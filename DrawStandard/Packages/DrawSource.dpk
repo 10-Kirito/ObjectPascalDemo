@@ -31,6 +31,8 @@ requires
 
 contains
   GraphicBasic in 'GraphicBasic.pas',
-  Command in 'Command.pas';
+  Command in 'Command.pas',
+  Tools in 'Tools.pas',
+  Manage in 'Manage.pas';
 
 end.

@@ -1,0 +1,15 @@
+unit Tools;
+
+interface
+
+type
+  TDrawPen = class(TPen)
+  private
+    FDrawMode: TDrawMode;
+  public
+    property PMode: TDrawMode read FDrawMode write FDrawMode;
+  end;
+
+implementation
+
+end.

@@ -1,0 +1,28 @@
+unit Manage;
+
+interface
+
+uses
+  Command, GraphicBasic, Graphics;
+
+type
+  TManager = class
+  private
+    FCanvas: TCanvas;
+    FGraphicReceiver: TGraphicReceiver;
+  public
+    constructor Create(ACanvas: TCanvas);
+
+  end;
+
+implementation
+
+{ TManager }
+
+constructor TManager.Create(ACanvas: TCanvas);
+begin
+  FCanvas := ACanvas;
+  FGraphicReceiver := TGraphicReceiver.Create(FCanvas);
+end;
+
+end.
