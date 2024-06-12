@@ -119,8 +119,6 @@ begin
   begin
     // create a temp bitmap to store the prev image:
     FTempBitMap := TBitmap.Create();
-    FTempBitMap.Width := FBitMap.Width;
-    FTempBitMap.Height := FBitMap.Height;
     // copy the prev image into temp bitmap:
     FTempBitMap.Assign(FBitMap);
     // check the current drawing status
@@ -169,6 +167,7 @@ begin
   // drawing the pen
   if FPenDrawing then
   begin
+    // FTempBitMap.Assign(FBitMap);
     FTempBitMap.Canvas.LineTo(X, Y);
     FLastPoint := Point(X, Y);
     imgMain.Picture.Bitmap.Assign(FTempBitMap);

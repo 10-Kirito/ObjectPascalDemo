@@ -58,6 +58,8 @@ type
 implementation
 { TLine }
 constructor TLine.Create(AStart: TPoint; AEnd: TPoint; ACanvas: TCanvas);
+var
+  Pen: TPen;
 begin
   inherited Create();
   FProperty.FStartPoint := AStart;
