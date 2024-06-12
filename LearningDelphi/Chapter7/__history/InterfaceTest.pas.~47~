@@ -1,0 +1,62 @@
+unit InterfaceTest;
+
+interface
+
+type
+  I1 = Interface
+    procedure SetAge(AValue: Integer);
+    function GetAge: Integer;
+    property Age: Integer read GetAge write SetAge;
+  End;
+
+  T0 = class(TInterfacedObject, I1)
+  private
+    FAge: Integer;
+  public
+    procedure SetAge(AValue: Integer);
+    function GetAge: Integer;
+    property Age: Integer read GetAge write SetAge; 
+  end;
+
+  T1 = class(TInterfacedObject, I1)
+    strict private
+      FInterface: I1;
+    public
+      property P1: I1 read FInterface write FInterface Implements I1;
+  end;
+  
+procedure MainTest();
+
+implementation
+
+{ T0 }
+
+function T0.GetAge: Integer;
+begin
+  Exit(Self.FAge);
+end;
+
+procedure T0.SetAge(AValue: Integer);
+begin
+  Self.FAge := AValue;
+end;
+
+{ Main test }
+
+procedure MainTest();
+var
+  Interface1: I1;
+  Obj1: T1;
+begin
+  Obj1 := T1.Create;
+  Obj1.P1 := T0.Create;
+  Obj1.P1.Age := 100;
+  Writeln(Obj1.P1.Age);
+
+  Interface1 := Obj1;
+  Interface1.Age := 200;
+  Writeln(Obj1.P1.Age);
+  Writeln(Interface1.Age);
+end;
+
+end.

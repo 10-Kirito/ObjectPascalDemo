@@ -1,0 +1,33 @@
+unit ReferenceTest;
+
+interface
+
+type
+  TTest = class
+    Name: string;
+  end;
+
+function ChangeName(ATest: TTest; ANew: string): string;
+procedure ShowName(ATest: TTest);
+procedure MainTest();
+
+implementation
+
+function ChangeName(ATest: TTest; ANew: string): string;
+begin
+  ATest.Name := ANew;
+end;
+
+procedure ShowName(ATest: TTest);
+begin
+  Writeln(ATest.Name);
+end;
+
+procedure MainTest();
+var
+  Obj: TTest;
+begin
+
+end;
+
+end.
