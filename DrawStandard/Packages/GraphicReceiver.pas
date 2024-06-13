@@ -59,7 +59,7 @@ end;
 
 destructor TGraphicReceiver.Destory;
 begin
- 
+
 end;
 
 procedure TGraphicReceiver.DrawLine(AStart, AEnd: TPoint);
@@ -74,8 +74,6 @@ begin
   FImageBitmap.Canvas.Rectangle(AStart.X, AStart.Y, AEnd.X, AEnd.Y);
   FPrevBitmap.Assign(FImageBitmap);
 end;
-
-
 
 procedure TGraphicReceiver.UpdateLine(AStart, AEnd: TPoint);
 begin

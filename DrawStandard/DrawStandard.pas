@@ -24,8 +24,10 @@ type
     edtColor: TRzColorEdit;
     btnSelect: TRzToolButton;
     procedure FormCreate(Sender: TObject);
-    procedure imgDrawImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure imgDrawImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure imgDrawImageMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure imgDrawImageMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure btnLineClick(Sender: TObject);
     procedure btnRecClick(Sender: TObject);
     procedure btnCircleClick(Sender: TObject);
@@ -33,7 +35,8 @@ type
     procedure btnOpenClick(Sender: TObject);
     procedure btnPenClick(Sender: TObject);
     procedure btnSelectClick(Sender: TObject);
-    procedure imgDrawImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure imgDrawImageMouseMove(Sender: TObject;
+      Shift: TShiftState; X, Y: Integer);
   private
     FManger: TManager;
   public

@@ -9,11 +9,13 @@
     <Transaction>2024/06/12 22:18:52.569.pas,D:\Desktop\Codes\ObjectPascalDemo\DrawStandard\Packages\Unit1.pas=D:\Desktop\Codes\ObjectPascalDemo\DrawStandard\Packages\Tools.pas</Transaction>
     <Transaction>2024/06/12 23:30:46.373.pas,D:\Desktop\Codes\ObjectPascalDemo\DrawStandard\Packages\Unit1.pas=D:\Desktop\Codes\ObjectPascalDemo\DrawStandard\Packages\Manage.pas</Transaction>
     <Transaction>2024/06/13 16:03:08.177.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\GraphicBasic.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\GraphicReceiver.pas</Transaction>
-  </Transactions>  <ProjectSortOrder AutoSort="0" SortType="0">
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="Command.pas"/>
     <File Path="GraphicReceiver.pas"/>
     <File Path="Manage.pas"/>
     <File Path="Tools.pas"/>
+    <File Path="Unit1.pas"/>
     <File Path="rtl.dcp"/>
     <File Path="vcl.dcp"/>
   </ProjectSortOrder>

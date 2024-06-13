@@ -3,8 +3,8 @@ unit Manage;
 interface
 
 uses
-  SysUtils, Generics.Collections, Dialogs, Controls, Classes, Windows, Graphics, ExtCtrls,
-  Command, GraphicReceiver, Tools;
+  SysUtils, Generics.Collections, Dialogs, Controls, Classes, Windows,
+  Graphics, ExtCtrls, Command, GraphicReceiver, Tools;
 
 type
   {
@@ -33,11 +33,14 @@ type
 
     procedure HandleEvents();
 
-    procedure HandleMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure HandleMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
 
-    procedure HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure HandleMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
 
-    procedure HandleMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure HandleMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
 
     property PMode: TDrawMode read FMode write FMode;
     property PIsDrawing: Boolean read FIsDrawing write FIsDrawing;
@@ -109,6 +112,7 @@ begin
     case FMode of
       drawBRUSH:
       begin
+
         if FCommands.TryGetValue(cmdMOVE, Command) then
         begin
           TCmdMovePoint(Command).SetPoint(FStartPoint);
@@ -116,11 +120,9 @@ begin
         end;
       end;
       drawLINE:
-      begin
-      end;
+        ;
       drawRECTANGLE:
-      begin
-      end;
+        ;
       drawCIRCLE:
         ;
       drawERASE:
@@ -130,7 +132,8 @@ begin
   end;
 end;
 
-procedure TManager.HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+procedure TManager.HandleMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
 var
   Command: TCommand;
 begin
@@ -169,7 +172,8 @@ begin
   end;
 end;
 
-procedure TManager.HandleMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TManager.HandleMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
 var
   Command: TCommand;
 begin

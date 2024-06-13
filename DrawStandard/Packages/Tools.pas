@@ -6,7 +6,8 @@ uses
   Classes, Graphics, Windows;
 
 type
-  TDrawMode = (drawBRUSH, drawLINE, drawRECTANGLE, drawCIRCLE, drawERASE, drawSELECT);
+  TDrawMode = (drawBRUSH, drawLINE, drawRECTANGLE, drawCIRCLE, drawERASE,
+    drawSELECT);
 
   TDrawPen = class(TPen)
   private

@@ -50,6 +50,7 @@
 			<DCCReference Include="Command.pas"/>
 			<DCCReference Include="Tools.pas"/>
 			<DCCReference Include="Manage.pas"/>
+			<DCCReference Include="Unit1.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

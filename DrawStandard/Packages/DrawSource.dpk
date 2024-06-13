@@ -33,6 +33,7 @@ contains
   GraphicReceiver in 'GraphicReceiver.pas',
   Command in 'Command.pas',
   Tools in 'Tools.pas',
-  Manage in 'Manage.pas';
+  Manage in 'Manage.pas',
+  Unit1 in 'Unit1.pas';
 
 end.
