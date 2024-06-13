@@ -30,7 +30,7 @@ requires
   vcl;
 
 contains
-  GraphicBasic in 'GraphicBasic.pas',
+  GraphicReceiver in 'GraphicReceiver.pas',
   Command in 'Command.pas',
   Tools in 'Tools.pas',
   Manage in 'Manage.pas';
