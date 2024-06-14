@@ -33,6 +33,10 @@ contains
   GraphicReceiver in 'GraphicReceiver.pas',
   Command in 'Command.pas',
   Tools in 'Tools.pas',
-  Manage in 'Manage.pas';
+  ManageCenter in 'ManageCenter.pas',
+  CommandManager in 'CommandManager.pas',
+  Commands in 'Commands.pas',
+  GraphicObject in 'GraphicObject.pas',
+  GraphicManager in 'GraphicManager.pas';
 
 end.

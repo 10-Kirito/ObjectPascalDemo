@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, RzLstBox, RzButton, ImgList, ExtCtrls, RzPanel, RzCommon,
   RzBorder, RzPopups, RzDBList, Grids, RzGrids, RzCmboBx, Mask, RzEdit, Buttons,
-  Menus, GraphicReceiver, Tools, Command, Manage;
+  Menus, GraphicReceiver, Tools, Command, ManageCenter;
 
 type
   TForm1 = class(TForm)
@@ -23,6 +23,8 @@ type
     btnCurve: TRzToolButton;
     edtColor: TRzColorEdit;
     btnSelect: TRzToolButton;
+    btnUndo: TRzToolButton;
+    btnRedo: TRzToolButton;
     procedure FormCreate(Sender: TObject);
     procedure imgDrawImageMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -37,6 +39,9 @@ type
     procedure btnSelectClick(Sender: TObject);
     procedure imgDrawImageMouseMove(Sender: TObject;
       Shift: TShiftState; X, Y: Integer);
+    procedure edtColorChange(Sender: TObject);
+    procedure btnUndoClick(Sender: TObject);
+    procedure btnRedoClick(Sender: TObject);
   private
     FManger: TManager;
   public
@@ -80,9 +85,24 @@ begin
   FManger.PMode := drawRECTANGLE;
 end;
 
+procedure TForm1.btnRedoClick(Sender: TObject);
+begin
+  FManger.HandleRedo;
+end;
+
 procedure TForm1.btnSelectClick(Sender: TObject);
 begin
   FManger.PMode := drawSELECT;
+end;
+
+procedure TForm1.btnUndoClick(Sender: TObject);
+begin
+  FManger.HandleUndo;
+end;
+
+procedure TForm1.edtColorChange(Sender: TObject);
+begin
+  FManger.HandleColorChange(edtColor.SelectedColor);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);

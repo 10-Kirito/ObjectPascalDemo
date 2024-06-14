@@ -1,17 +1,17 @@
-unit Manage;
+unit ManageCenter;
 
 interface
 
 uses
   SysUtils, Generics.Collections, Dialogs, Controls, Classes, Windows,
-  Graphics, ExtCtrls, Command, GraphicReceiver, Tools;
+  Graphics, ExtCtrls, Command, GraphicReceiver, Tools, CommandManager,
+  Commands, GraphicManager, GraphicObject;
 
 type
-  {
-    TManager:
-      1. manage the canvas global status: FMode, FIsDrawing, FPen;
-      2. register all commands;
-      3. handler all events;
+  {TManager:
+    1. manage the canvas global status: FMode, FIsDrawing, FPen;
+    2. register all commands;
+    3. handler all events;
   }
   TManager = class
   private
@@ -19,28 +19,37 @@ type
 
     FMode: TDrawMode;
     FIsDrawing: Boolean;
-    FPen: TPen;
+    FPen: TDrawPen;
 
+    {}
     FStartPoint: TPoint;
     FEndPoint: TPoint;
-
-    FCommands: TDictionary<TCommandType, TCommand>;
+    FPoints: TList<TPoint>;
+    { 注意:
+      1.橡皮筋效果和命令模式是分离开的，其中橡皮筋效果借助于TGraphicReceiver类;
+    }
+    FReceiver: TGraphicReceiver;
+    {
+      1.FCommandManager管理添加所有的命令;
+      2.FGraphicManager管理所有绘制的图像;
+    }
+    FCommandManager: TCommandManager;
+    FGraphicManager: TGraphicManager;
 
   public
     constructor Create(AImageBitmap: TBitmap);
+    destructor Destory;
 
-    destructor Destory();
-
-    procedure HandleEvents();
-
+    procedure HandleEvents;
     procedure HandleMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-
     procedure HandleMouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
-
     procedure HandleMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure HandleColorChange(AColor: Integer);
+    procedure HandleUndo;
+    procedure HandleRedo;
 
     property PMode: TDrawMode read FMode write FMode;
     property PIsDrawing: Boolean read FIsDrawing write FIsDrawing;
@@ -58,34 +67,26 @@ begin
   // canvas settings:
   FMode := drawBRUSH;
   FIsDrawing := False;
-  FPen := TPen.Create;
+  FPen := TDrawPen.Create;
+
   // copy the reference of image to change or update it
   FImageBitmap := AImageBitmap;
-
-  FCommands := TDictionary<TCommandType, TCommand>.Create;
-  // create commands bind command with receiver
-  Receiver := TGraphicReceiver.Create(FImageBitmap);
-
-  // DrawLine:
-  Commands := TCmdDrawLine.Create(Receiver);
-  FCommands.Add(cmdLINE, Commands);
-  // DrawRectangle:
-  Commands := TCmdDrawRectangle.Create(Receiver);
-  FCommands.Add(cmdRECTANGLE, Commands);
-  // MoveTo:
-  Commands := TCmdMovePoint.Create(Receiver);
-  FCommands.Add(cmdMOVE, Commands);
-  // LineTo:
-  Commands := TCmdConnectPoint.Create(Receiver);
-  FCommands.Add(cmdCONNECT, Commands);
+  // create the commands manager
+  FCommandManager := TCommandManager.Create;
+  // create the graphic manager
+  FGraphicManager := TGraphicManager.Create;
 
 end;
 
 destructor TManager.Destory;
 begin
-  // FPrevBitmap.Free;
   FPen.Free;
-  FCommands.Free;
+  FCommandManager.Free;
+end;
+
+procedure TManager.HandleColorChange(AColor: Integer);
+begin
+  FPen.PColor := TColor(AColor);
 end;
 
 procedure TManager.HandleEvents;
@@ -106,18 +107,21 @@ begin
       /// TODO!!!
       Exit;
     end;
+
+    FReceiver := TGraphicReceiver.Create(FImageBitmap);
+    FReceiver.SetDrawPen(FPen);
+
     FStartPoint := Point(X, Y);
     FEndPoint := FStartPoint;
     // normal case:
     case FMode of
       drawBRUSH:
       begin
+          FReceiver.MovePoint(FStartPoint);
 
-        if FCommands.TryGetValue(cmdMOVE, Command) then
-        begin
-          TCmdMovePoint(Command).SetPoint(FStartPoint);
-          Command.Execute;
-        end;
+          //
+          FPoints := TList<TPoint>.Create;
+          FPoints.Add(FStartPoint);
       end;
       drawLINE:
         ;
@@ -142,27 +146,19 @@ begin
     case FMode of
       drawBRUSH:
       begin
-        if FCommands.TryGetValue(cmdCONNECT, Command) then
+        FReceiver.ConnectPoint(Point(X, Y));
+        if Assigned(FPoints) then
         begin
-          TCmdConnectPoint(Command).SetPoint(Point(X, Y));
-          Command.Execute;
+          FPoints.Add(Point(X, Y));
         end;
       end;
       drawLINE:
       begin
-        if FCommands.TryGetValue(cmdLINE, Command) then
-        begin
-          TCmdDrawLine(Command).SetPoint(FStartPoint, Point(X, Y));
-          Command.Update();
-        end;
+        FReceiver.UpdateLine(FStartPoint, Point(X, Y));
       end;
       drawRECTANGLE:
       begin
-        if FCommands.TryGetValue(cmdRECTANGLE, Command) then
-        begin
-          TCmdDrawRectangle(Command).SetPoint(FStartPoint, Point(X, Y));
-          Command.Update();
-        end;
+        FReceiver.UpdateRectangle(FStartPoint, Point(X, Y));
       end;
       drawCIRCLE:
         ;
@@ -175,43 +171,58 @@ end;
 procedure TManager.HandleMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
-  Command: TCommand;
+  LCommand: TCommand;
+  LObject: TGraphicObject;
 begin
   if Button = mbLeft then
   begin
     if FIsDrawing then
     begin
+      FEndPoint := Point(X, Y);
+      {Do something:
+        1. create a new command into commands manager;
+        2. register a new Graphic object in the object manager;
+      }
       case FMode of
         drawBRUSH:
         begin
-          if FCommands.TryGetValue(cmdCONNECT, Command) then
+          if Assigned(FPoints) then
           begin
-            TCmdConnectPoint(Command).SetPoint(Point(X, Y));
-            Command.Execute();
+            FPoints.Add(FEndPoint);
+            LObject := TFreeLine.Create(FPoints);
+            FGraphicManager.RegisterObject(LObject);
           end;
+          // LCommand :=
         end;
         drawLINE:
         begin
-          if FCommands.TryGetValue(cmdLINE, Command) then
-          begin
-            TCmdDrawLine(Command).SetPoint(FStartPoint, Point(X, Y));
-            Command.Execute();
-          end;
+          LCommand := TDrawLine.Create(FImageBitmap, FPen, FStartPoint, FEndPoint);
+          FCommandManager.ExecuteCommand(LCommand, FImageBitmap);
+
+
         end;
         drawRECTANGLE:
         begin
-          if FCommands.TryGetValue(cmdRECTANGLE, Command) then
-          begin
-            TCmdDrawRectangle(Command).SetPoint(FStartPoint, Point(X, Y));
-            Command.Execute();
-          end;
+
         end;
         drawCIRCLE:;
         drawERASE:;
       end;
     end;
     FIsDrawing := False;
+    FReceiver.Free;
+    // LCommand.Free;
   end;
+end;
+
+procedure TManager.HandleRedo;
+begin
+  FCommandManager.Redo(FImageBitmap);
+end;
+
+procedure TManager.HandleUndo;
+begin
+  FCommandManager.Undo(FImageBitmap);
 end;
 
 end.

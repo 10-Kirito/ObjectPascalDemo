@@ -14,13 +14,14 @@ uses
   ObjectFields in 'Chapter6\ObjectFields.pas',
   ObjectFunc in 'Chapter6\ObjectFunc.pas',
   ReferenceTest in 'Chapter6\ReferenceTest.pas',
-  InterfaceTest in 'Chapter7\InterfaceTest.pas';
+  InterfaceTest in 'Chapter7\InterfaceTest.pas',
+  GenerateGUID in 'Practices\GenerateGUID.pas';
 
 begin
 //  练习一：
 //  Practice1.MultiplicationFormulas();
 //  Practice1.FindPrimeNumber();
 //  Practice1.Verify();
-  InterfaceTest.MainTest;
+  GenerateGUID.MainTest;
   Readln;
 end.

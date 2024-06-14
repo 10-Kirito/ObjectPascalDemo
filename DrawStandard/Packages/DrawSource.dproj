@@ -49,7 +49,11 @@
 			<DCCReference Include="GraphicReceiver.pas"/>
 			<DCCReference Include="Command.pas"/>
 			<DCCReference Include="Tools.pas"/>
-			<DCCReference Include="Manage.pas"/>
+			<DCCReference Include="ManageCenter.pas"/>
+			<DCCReference Include="CommandManager.pas"/>
+			<DCCReference Include="Commands.pas"/>
+			<DCCReference Include="GraphicObject.pas"/>
+			<DCCReference Include="GraphicManager.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
