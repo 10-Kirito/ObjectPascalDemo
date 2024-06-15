@@ -30,14 +30,14 @@ requires
   vcl;
 
 contains
-  GraphicReceiver in 'GraphicReceiver.pas',
+  GraphicReceiver in 'Graphics\GraphicReceiver.pas',
   Command in 'Command.pas',
-  Tools in 'Tools.pas',
+  Tools in 'Helper\Tools.pas',
   ManageCenter in 'ManageCenter.pas',
-  CommandManager in 'CommandManager.pas',
-  Commands in 'Commands.pas',
-  GraphicObject in 'GraphicObject.pas',
-  GraphicManager in 'GraphicManager.pas',
+  CommandManager in 'Command\CommandManager.pas',
+  Commands in 'Command\Commands.pas',
+  GraphicObject in 'Graphics\GraphicObject.pas',
+  GraphicManager in 'Graphics\GraphicManager.pas',
   History in 'History\History.pas';
 
 end.

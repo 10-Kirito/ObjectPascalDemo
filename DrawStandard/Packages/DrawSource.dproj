@@ -46,14 +46,14 @@
 			</DelphiCompile>
 			<DCCReference Include="rtl.dcp"/>
 			<DCCReference Include="vcl.dcp"/>
-			<DCCReference Include="GraphicReceiver.pas"/>
+			<DCCReference Include="Graphics\GraphicReceiver.pas"/>
 			<DCCReference Include="Command.pas"/>
-			<DCCReference Include="Tools.pas"/>
+			<DCCReference Include="Helper\Tools.pas"/>
 			<DCCReference Include="ManageCenter.pas"/>
-			<DCCReference Include="CommandManager.pas"/>
-			<DCCReference Include="Commands.pas"/>
-			<DCCReference Include="GraphicObject.pas"/>
-			<DCCReference Include="GraphicManager.pas"/>
+			<DCCReference Include="Command\CommandManager.pas"/>
+			<DCCReference Include="Command\Commands.pas"/>
+			<DCCReference Include="Graphics\GraphicObject.pas"/>
+			<DCCReference Include="Graphics\GraphicManager.pas"/>
 			<DCCReference Include="History\History.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>

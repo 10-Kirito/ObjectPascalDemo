@@ -18,16 +18,19 @@
     <Transaction>2024/06/15 09:13:41.417.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Unit1.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\History\History.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="Command"/>
+    <File Path="Command\CommandManager.pas"/>
+    <File Path="Command\Commands.pas"/>
+    <File Path="Graphics"/>
+    <File Path="Graphics\GraphicManager.pas"/>
+    <File Path="Graphics\GraphicObject.pas"/>
+    <File Path="Graphics\GraphicReceiver.pas"/>
+    <File Path="Helper"/>
+    <File Path="Helper\Tools.pas"/>
     <File Path="History"/>
     <File Path="History\History.pas"/>
     <File Path="Command.pas"/>
-    <File Path="CommandManager.pas"/>
-    <File Path="Commands.pas"/>
-    <File Path="GraphicManager.pas"/>
-    <File Path="GraphicObject.pas"/>
-    <File Path="GraphicReceiver.pas"/>
     <File Path="ManageCenter.pas"/>
-    <File Path="Tools.pas"/>
     <File Path="rtl.dcp"/>
     <File Path="vcl.dcp"/>
   </ProjectSortOrder>

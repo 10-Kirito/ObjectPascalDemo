@@ -56,6 +56,8 @@
 			<DCCReference Include="Chapter7\InterfaceTest.pas"/>
 			<DCCReference Include="Practices\GenerateGUID.pas"/>
 			<DCCReference Include="Chapter6\TestAssign.pas"/>
+			<DCCReference Include="Chapter6\StaticTest.pas"/>
+			<DCCReference Include="Chapter6\TestInterface.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

@@ -16,13 +16,15 @@ uses
   ReferenceTest in 'Chapter6\ReferenceTest.pas',
   InterfaceTest in 'Chapter7\InterfaceTest.pas',
   GenerateGUID in 'Practices\GenerateGUID.pas',
-  TestAssign in 'Chapter6\TestAssign.pas';
+  TestAssign in 'Chapter6\TestAssign.pas',
+  StaticTest in 'Chapter6\StaticTest.pas',
+  TestInterface in 'Chapter6\TestInterface.pas';
 
 begin
 //  练习一：
 //  Practice1.MultiplicationFormulas();
 //  Practice1.FindPrimeNumber();
 //  Practice1.Verify();
-  TestAssign.MainTest;
+  StaticTest.MainTest;
   Readln;
 end.

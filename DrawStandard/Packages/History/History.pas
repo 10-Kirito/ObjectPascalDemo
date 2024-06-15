@@ -6,22 +6,40 @@ uses
   Graphics, Generics.Collections, Commands;
 
 type
+  THistoryItem = class
+  private
+    FSnapshot: TBitmap;
+    FCommandList: TList<TCommand>;
+
+    FIndex: Integer; // record the current command index
+
+    class var
+      MAXSIZE: Integer; // the maxsize of storage of commands
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    function ExecuteCommands: TBitmap;
+
+    procedure DeleteSnapshot;
+  end;
+
   THistory = class
   private
-  type
-    TCommandList = TList<TCommand>;
-    TItem = TPair<TBitmap, TCommandList>;
   private
-    FHistoryList: TList<TItem>;
+    FHistoryList: TList<THistoryItem>;
     FIndex: Integer;
 
   public
     constructor Create;
     destructor Destroy; override;
 
-    procedure AddHistory(ACommand: TCommand);
-    procedure UndoHistory(ABitmap: TBitmap);
-    procedure RedoHistory(ABitmap: TBitmap);
+    procedure AddHistory(ABitmap: TBitmap; ACommand: TCommand);
+    // return the target bitmap
+    function UndoHistory: TBitmap;
+    function RedoHistory: TBitmap;
+
+
   end;
 
 implementation
@@ -31,7 +49,7 @@ implementation
 
 constructor THistory.Create;
 begin
-  FHistoryList := TList<TItem>.Create;
+  FHistoryList := TList<THistoryItem>.Create;
   FIndex := 0;
 end;
 
@@ -41,9 +59,6 @@ begin
 end;
 
 procedure THistory.AddHistory(ACommand: TCommand);
-var
-  LCmdList: TCommandList;
-  LCommand: TCommand;
 begin
 
 
@@ -58,5 +73,9 @@ procedure THistory.UndoHistory(ABitmap: TBitmap);
 begin
 
 end;
+
+initialization
+  THistoryItem.MAXSIZE := 10;
+
 
 end.
