@@ -1,5 +1,9 @@
 unit Command;
 
+{ !!!
+  This unit is Deprecated!!!
+}
+
 interface
 
 uses
@@ -16,7 +20,7 @@ type
     FReceiver: TGraphicReceiver;
   public
     constructor Create(AReceiver: TGraphicReceiver);
-    destructor Destroy; virtual;
+    destructor Destroy; override;
     procedure Execute; virtual; abstract;
     procedure Update; virtual; abstract;
     procedure Undo; virtual; abstract;

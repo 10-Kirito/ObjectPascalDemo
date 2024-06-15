@@ -57,6 +57,7 @@ type
     FPoints: TList<TPoint>;
   public
     constructor Create(APoints: TList<TPoint>);
+    destructor Destroy; override;
   end;
 
 
@@ -146,6 +147,11 @@ begin
   end;
 
   FType := FREEHAND;
+end;
+
+destructor TFreeLine.Destroy;
+begin
+  FreeAndNil(FPoints);
 end;
 
 end.

@@ -11,7 +11,7 @@ type
     FGraphicDic: TDictionary<TGUID, TGraphicObject>;
   public
     constructor Create;
-    destructor Destroy;
+    destructor Destroy; override;
 
     procedure RegisterObject(AObject: TGraphicObject);
     procedure DeleteObject(AGUID: TGUID);
@@ -33,8 +33,19 @@ begin
 end;
 
 destructor TGraphicManager.Destroy;
+var
+  Graphic: TGraphicObject;
 begin
-  FGraphicDic.Free;
+  if Assigned(FGraphicDic) then
+  begin
+    for Graphic in FGraphicDic.Values do
+    begin
+      // FreeAndNil(Graphic);
+      Graphic.Free;
+    end;
+
+    FreeAndNil(FGraphicDic);
+  end;
 end;
 
 procedure TGraphicManager.RegisterObject(AObject: TGraphicObject);

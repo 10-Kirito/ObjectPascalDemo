@@ -15,8 +15,11 @@
     <Transaction>2024/06/14 10:01:18.966.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Unit1.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\GraphicObject.pas</Transaction>
     <Transaction>2024/06/14 15:58:08.219.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Unit1.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\GraphicManager.pas</Transaction>
     <Transaction>2024/06/14 16:26:54.166.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Manage.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\ManageCenter.pas</Transaction>
+    <Transaction>2024/06/15 09:13:41.417.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Unit1.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\History\History.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="History"/>
+    <File Path="History\History.pas"/>
     <File Path="Command.pas"/>
     <File Path="CommandManager.pas"/>
     <File Path="Commands.pas"/>

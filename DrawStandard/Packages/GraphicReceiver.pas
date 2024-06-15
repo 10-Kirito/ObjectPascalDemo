@@ -15,7 +15,7 @@ type
   public
     constructor Create(AImageBitmap: TBitmap);
 
-    destructor Destory();
+    destructor Destroy; override;
 
     function GetCurrentBitmap: TBitmap;
     procedure SetDrawPen(APen: TDrawPen);
@@ -32,7 +32,6 @@ type
 
     property PPen: TDrawPen read GetDrawPen write SetDrawPen;
   end;
-
 
 implementation
 
@@ -75,9 +74,10 @@ begin
       + 'TGraphicReceiver.Create');
 end;
 
-destructor TGraphicReceiver.Destory;
+destructor TGraphicReceiver.Destroy;
 begin
-
+  FreeAndNil(FPrevBitmap);
+  inherited;
 end;
 
 procedure TGraphicReceiver.DrawLine(AStart, AEnd: TPoint);
@@ -85,6 +85,10 @@ begin
   UpdatePen(FImageBitmap, FPen);
   FImageBitmap.Canvas.MoveTo(AStart.X, AStart.Y);
   FImageBitmap.Canvas.LineTo(AEnd.X, AEnd.Y);
+  if Assigned(FPrevBitmap) then
+  begin
+    FPrevBitmap.Free;
+  end;
   FPrevBitmap.Assign(FImageBitmap);
 end;
 
@@ -92,6 +96,11 @@ procedure TGraphicReceiver.DrawRectangle(AStart, AEnd: TPoint);
 begin
   UpdatePen(FImageBitmap, FPen);
   FImageBitmap.Canvas.Rectangle(AStart.X, AStart.Y, AEnd.X, AEnd.Y);
+  if Assigned(FPrevBitmap) then
+  begin
+    FPrevBitmap.Free;
+  end;
+
   FPrevBitmap.Assign(FImageBitmap);
 end;
 
@@ -120,6 +129,7 @@ begin
   FTempBitmap.Canvas.MoveTo(AStart.X, AStart.Y);
   FTempBitmap.Canvas.LineTo(AEnd.X, AEnd.Y);
   FImageBitmap.Assign(FTempBitmap);
+  FreeAndNil(FTempBitmap);
 end;
 
 procedure TGraphicReceiver.UpdateRectangle(AStart, AEnd: TPoint);
@@ -131,6 +141,7 @@ begin
   FTempBitmap.Assign(FPrevBitmap);
   FTempBitmap.Canvas.Rectangle(AStart.X, AStart.Y, AEnd.X, AEnd.Y);
   FImageBitmap.Assign(FTempBitmap);
+  FreeAndNil(FTempBitmap);
 end;
 
 

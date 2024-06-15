@@ -18,10 +18,12 @@ type
     FPen: TDrawPen;
   public
     constructor Create;
-    constructor Destroy;
+    destructor Destroy; override;
     procedure Execute(ABitmap: TBitmap);virtual;abstract;
     procedure Undo(ABitmap: TBitmap);virtual;abstract;
     procedure Redo(ABitmap: TBitmap);virtual;abstract;
+    procedure Assign(ACommand: TCommand); virtual;
+    function Copy(ACommand: TCommand): TCommand; virtual;
   end;
 
   TDrawLine = class(TCommand)
@@ -29,12 +31,15 @@ type
     FStartPoint: TPoint;
     FEndPoint: TPoint;
   public
-    constructor Create(ABitmap: TBitmap; APen: TDrawPen; AStart: TPoint;
-      AEnd: TPoint);
+    constructor Create; overload;
+    constructor Create(ABitmap: TBitmap; APen: TDrawPen; AStart: TPoint;  AEnd: TPoint); overload;
 
+    destructor Destroy;override;
     procedure Execute(ABitmap: TBitmap);override;
     procedure Undo(ABitmap: TBitmap);override;
     procedure Redo(ABitmap: TBitmap);override;
+    procedure Assign(ACommand: TCommand);override;
+    function Copy(ACommand: TCommand): TCommand; override;
   end;
 
   TDrawRectangle = class(TCommand)
@@ -42,21 +47,49 @@ type
     FStartPoint: TPoint;
     FEndPoint: TPoint;
   public
+    constructor Create;overload;
     constructor Create(ABitmap: TBitmap; APen: TDrawPen; AStart: TPoint;
-      AEnd: TPoint);
+      AEnd: TPoint);overload;
+
+    destructor Destroy;override;
     procedure Execute(ABitmap: TBitmap);override;
     procedure Undo(ABitmap: TBitmap);override;
     procedure Redo(ABitmap: TBitmap);override;
+    procedure Assign(ACommand: TCommand);override;
+    function Copy(ACommand: TCommand): TCommand; override;
   end;
 
 implementation
 
 { TDrawLine }
 
+procedure TDrawLine.Assign(ACommand: TCommand);
+begin
+  inherited;
+
+  if ACommand is TDrawLine then
+  begin
+    FStartPoint := TDrawLine(ACommand).FStartPoint;
+    FEndPoint := TDrawLine(ACommand).FEndPoint;
+  end;
+end;
+
+function TDrawLine.Copy(ACommand: TCommand): TCommand;
+var
+  LCmd: TCommand;
+begin
+  LCmd := TDrawLine.Create;
+  LCmd.Assign(ACommand);
+  Result := LCmd;
+end;
+
+constructor TDrawLine.Create;
+begin
+  inherited Create;
+end;
+
 constructor TDrawLine.Create(ABitmap: TBitmap; APen: TDrawPen;
   AStart, AEnd: TPoint);
-var
-  LBitmap: TBitmap;
 begin
   inherited Create;
 
@@ -73,6 +106,12 @@ begin
   begin
     FPen.Assign(APen);
   end;
+end;
+
+destructor TDrawLine.Destroy;
+begin
+  inherited;
+
 end;
 
 procedure TDrawLine.Execute(ABitmap: TBitmap);
@@ -111,6 +150,21 @@ end;
 
 { TCommand }
 
+procedure TCommand.Assign(ACommand: TCommand);
+begin
+  if Assigned(ACommand) then
+  begin
+    FPrevBitmap.Assign(ACommand.FPrevBitmap);
+    FCurrntBitmap.Assign(ACommand.FCurrntBitmap);
+    FPen.Assign(ACommand.FPen);
+  end;
+end;
+
+function TCommand.Copy(ACommand: TCommand): TCommand;
+begin
+
+end;
+
 constructor TCommand.Create;
 begin
   FPrevBitmap := TBitmap.Create;
@@ -118,7 +172,7 @@ begin
   FPen := TDrawPen.Create;
 end;
 
-constructor TCommand.Destroy;
+destructor TCommand.Destroy;
 begin
   FPrevBitmap.Free;
   FCurrntBitmap.Free;
@@ -126,6 +180,31 @@ begin
 end;
 
 { TDrawRectangle }
+
+procedure TDrawRectangle.Assign(ACommand: TCommand);
+begin
+  inherited;
+
+  if ACommand is TDrawRectangle then
+  begin
+    FStartPoint := TDrawRectangle(ACommand).FStartPoint;
+    FEndPoint := TDrawRectangle(ACommand).FEndPoint;
+  end;
+end;
+
+function TDrawRectangle.Copy(ACommand: TCommand): TCommand;
+var
+  LCmd: TCommand;
+begin
+  LCmd := TDrawRectangle.Create;
+  LCmd.Assign(ACommand);
+  Result := LCmd;
+end;
+
+constructor TDrawRectangle.Create;
+begin
+  inherited Create;
+end;
 
 constructor TDrawRectangle.Create(ABitmap: TBitmap; APen: TDrawPen; AStart,
   AEnd: TPoint);
@@ -147,6 +226,12 @@ begin
   begin
     FPen.Assign(APen);
   end;
+end;
+
+destructor TDrawRectangle.Destroy;
+begin
+  inherited;
+
 end;
 
 procedure TDrawRectangle.Execute(ABitmap: TBitmap);

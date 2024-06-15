@@ -37,6 +37,9 @@ contains
   CommandManager in 'CommandManager.pas',
   Commands in 'Commands.pas',
   GraphicObject in 'GraphicObject.pas',
-  GraphicManager in 'GraphicManager.pas';
+  GraphicManager in 'GraphicManager.pas',
+  History in 'History\History.pas';
 
 end.
+
+

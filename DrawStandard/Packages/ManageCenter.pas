@@ -38,7 +38,7 @@ type
 
   public
     constructor Create(AImageBitmap: TBitmap);
-    destructor Destory;
+    destructor Destroy; override;
 
     procedure HandleEvents;
     procedure HandleMouseDown(Sender: TObject; Button: TMouseButton;
@@ -60,9 +60,6 @@ implementation
 { TManager }
 
 constructor TManager.Create(AImageBitmap: TBitmap);
-var
-  Receiver: TGraphicReceiver;
-  Commands: TCommand;
 begin
   // canvas settings:
   FMode := drawBRUSH;
@@ -78,10 +75,12 @@ begin
 
 end;
 
-destructor TManager.Destory;
+destructor TManager.Destroy;
 begin
-  FPen.Free;
-  FCommandManager.Free;
+  FreeAndNil(FPen);
+  FreeAndNil(FCommandManager);
+  FreeAndNil(FPoints);
+  FreeAndNil(FGraphicManager);
 end;
 
 procedure TManager.HandleColorChange(AColor: Integer);
@@ -96,8 +95,6 @@ end;
 
 procedure TManager.HandleMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
-var
-  Command: TCommand;
 begin
   if Button = mbLeft then
   begin
@@ -138,8 +135,6 @@ end;
 
 procedure TManager.HandleMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
-var
-  Command: TCommand;
 begin
   if FIsDrawing then
   begin
@@ -191,15 +186,16 @@ begin
             FPoints.Add(FEndPoint);
             LObject := TFreeLine.Create(FPoints);
             FGraphicManager.RegisterObject(LObject);
+
+            //  :=
           end;
-          // LCommand :=
         end;
         drawLINE:
         begin
+          LObject := TLine.Create(FStartPoint, FEndPoint);
+          FGraphicManager.RegisterObject(LObject);
           LCommand := TDrawLine.Create(FImageBitmap, FPen, FStartPoint, FEndPoint);
           FCommandManager.ExecuteCommand(LCommand, FImageBitmap);
-
-
         end;
         drawRECTANGLE:
         begin

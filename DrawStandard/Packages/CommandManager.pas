@@ -3,7 +3,7 @@ unit CommandManager;
 interface
 
 uses
-  Generics.Collections, Graphics, Commands;
+  SysUtils, Generics.Collections, Graphics, Commands;
 
 type
   TCommandManager = class
@@ -12,7 +12,7 @@ type
     FRedoStack: TStack<TCommand>;
   public
     constructor Create;
-    destructor Destroy;
+    destructor Destroy;override;
     procedure ExecuteCommand(ACommand: TCommand; ABitmap: TBitmap);
     procedure Undo(ABitmap: TBitmap);
     procedure Redo(ABitmap: TBitmap);
@@ -43,8 +43,10 @@ begin
     LCommand.Free;
   end;
 
-  FCommandStack.Free;
-  FRedoStack.Free;
+  FreeAndNil(FCommandStack);
+  FreeAndNil(FRedoStack);
+
+  inherited;
 end;
 
 procedure TCommandManager.ExecuteCommand(ACommand: TCommand; ABitmap: TBitmap);

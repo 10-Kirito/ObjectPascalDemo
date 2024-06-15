@@ -15,13 +15,14 @@ uses
   ObjectFunc in 'Chapter6\ObjectFunc.pas',
   ReferenceTest in 'Chapter6\ReferenceTest.pas',
   InterfaceTest in 'Chapter7\InterfaceTest.pas',
-  GenerateGUID in 'Practices\GenerateGUID.pas';
+  GenerateGUID in 'Practices\GenerateGUID.pas',
+  TestAssign in 'Chapter6\TestAssign.pas';
 
 begin
 //  练习一：
 //  Practice1.MultiplicationFormulas();
 //  Practice1.FindPrimeNumber();
 //  Practice1.Verify();
-  GenerateGUID.MainTest;
+  TestAssign.MainTest;
   Readln;
 end.
