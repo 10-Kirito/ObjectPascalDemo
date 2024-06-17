@@ -51,7 +51,7 @@ end;
 
 procedure TCommandManager.ExecuteCommand(ACommand: TCommand; ABitmap: TBitmap);
 begin
-  ACommand.Execute(ABitmap);
+  // ACommand.Execute(ABitmap);
   FCommandStack.Push(ACommand);
 end;
 
@@ -63,7 +63,7 @@ begin
   if FCommandStack.Count > 0 then
   begin
     LCommand := FCommandStack.Pop;
-    LCommand.Undo(ABitmap);
+    // LCommand.Undo(ABitmap);
     FRedoStack.Push(LCommand);
   end;
 end;
@@ -75,7 +75,7 @@ begin
   if FRedoStack.Count > 0 then
   begin
     LCommand := FRedoStack.Pop;
-    LCommand.Redo(ABitmap);
+    // LCommand.Redo(ABitmap);
     FCommandStack.Push(LCommand);
   end;
 end;

@@ -17,8 +17,8 @@ object Form1: TForm1
   PixelsPerInch = 96
   TextHeight = 13
   object imgDrawImage: TImage
-    Left = 8
-    Top = 87
+    Left = 16
+    Top = 82
     Width = 955
     Height = 528
     OnMouseDown = imgDrawImageMouseDown

@@ -41,6 +41,7 @@ type
     procedure btnRedoClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
 
   private
     FManger: TManager;
@@ -54,6 +55,11 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TForm1.BitBtn1Click(Sender: TObject);
+begin
+  raise Exception.Create('Error Message');
+end;
 
 procedure TForm1.btnCircleClick(Sender: TObject);
 begin

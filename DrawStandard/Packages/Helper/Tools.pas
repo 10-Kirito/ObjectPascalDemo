@@ -19,8 +19,6 @@ type
     function GetWidth: Integer;
     procedure SetWidth(AWidth: Integer);
 
-    procedure Assign(APen: TDrawPen);
-
     property PColor: TColor read FColor write FColor;
     property PWidth: Integer read GetWidth write SetWidth;
   end;
@@ -28,12 +26,6 @@ type
 implementation
 
 { TDrawPen }
-
-procedure TDrawPen.Assign(APen: TDrawPen);
-begin
-  FColor := APen.FColor;
-  FWidth := APen.FWidth;
-end;
 
 constructor TDrawPen.Create;
 begin

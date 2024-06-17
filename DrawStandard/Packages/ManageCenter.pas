@@ -3,9 +3,9 @@ unit ManageCenter;
 interface
 
 uses
-  SysUtils, Generics.Collections, Dialogs, Controls, Classes, Windows,
-  Graphics, ExtCtrls, Command, GraphicReceiver, Tools, CommandManager,
-  Commands, GraphicManager, GraphicObject;
+  SysUtils, Generics.Collections, Dialogs, Controls, Classes, Windows, Graphics,
+  ExtCtrls, Command, GraphicReceiver, Tools, CommandManager, Commands,
+  GraphicManager, GraphicObject, History;
 
 type
   {TManager:
@@ -16,12 +16,12 @@ type
   TManager = class
   private
     FImageBitmap: TBitmap; // target bitmap
+    FTempBitmap: TBitmap; // temp bitmap
 
     FMode: TDrawMode;
     FIsDrawing: Boolean;
     FPen: TDrawPen;
 
-    {}
     FStartPoint: TPoint;
     FEndPoint: TPoint;
     FPoints: TList<TPoint>;
@@ -36,17 +36,15 @@ type
     FCommandManager: TCommandManager;
     FGraphicManager: TGraphicManager;
 
+    FHistory: THistory;
   public
     constructor Create(AImageBitmap: TBitmap);
     destructor Destroy; override;
 
     procedure HandleEvents;
-    procedure HandleMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure HandleMouseMove(Sender: TObject; Shift: TShiftState;
-      X, Y: Integer);
-    procedure HandleMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure HandleMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure HandleMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure HandleColorChange(AColor: Integer);
     procedure HandleUndo;
     procedure HandleRedo;
@@ -68,11 +66,16 @@ begin
 
   // copy the reference of image to change or update it
   FImageBitmap := AImageBitmap;
+
+  FTempBitmap := TBitmap.Create;
+  FTempBitmap.Assign(AImageBitmap);
+
   // create the commands manager
   FCommandManager := TCommandManager.Create;
   // create the graphic manager
   FGraphicManager := TGraphicManager.Create;
 
+  FHistory := THistory.Create;
 end;
 
 destructor TManager.Destroy;
@@ -81,6 +84,7 @@ begin
   FreeAndNil(FCommandManager);
   FreeAndNil(FPoints);
   FreeAndNil(FGraphicManager);
+  FreeAndNil(FTempBitmap);
 end;
 
 procedure TManager.HandleColorChange(AColor: Integer);
@@ -93,8 +97,7 @@ begin
   /// TODO!!!
 end;
 
-procedure TManager.HandleMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TManager.HandleMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   if Button = mbLeft then
   begin
@@ -104,7 +107,11 @@ begin
       /// TODO!!!
       Exit;
     end;
-
+    {
+      由于实现橡皮筋效果需要对真正的画布进行操作，所以需要对其进行拷贝，待得橡皮筋
+      效果展示完毕也就是鼠标按键松开的时候，将拷贝的画布重新进行赋值。
+    }
+    FTempBitmap.Assign(FImageBitmap);
     FReceiver := TGraphicReceiver.Create(FImageBitmap);
     FReceiver.SetDrawPen(FPen);
 
@@ -113,13 +120,13 @@ begin
     // normal case:
     case FMode of
       drawBRUSH:
-      begin
+        begin
           FReceiver.MovePoint(FStartPoint);
 
           //
           FPoints := TList<TPoint>.Create;
           FPoints.Add(FStartPoint);
-      end;
+        end;
       drawLINE:
         ;
       drawRECTANGLE:
@@ -133,28 +140,27 @@ begin
   end;
 end;
 
-procedure TManager.HandleMouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
+procedure TManager.HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
   if FIsDrawing then
   begin
     case FMode of
       drawBRUSH:
-      begin
-        FReceiver.ConnectPoint(Point(X, Y));
-        if Assigned(FPoints) then
         begin
-          FPoints.Add(Point(X, Y));
+          FReceiver.ConnectPoint(Point(X, Y));
+          if Assigned(FPoints) then
+          begin
+            FPoints.Add(Point(X, Y));
+          end;
         end;
-      end;
       drawLINE:
-      begin
-        FReceiver.UpdateLine(FStartPoint, Point(X, Y));
-      end;
+        begin
+          FReceiver.UpdateLine(FStartPoint, Point(X, Y));
+        end;
       drawRECTANGLE:
-      begin
-        FReceiver.UpdateRectangle(FStartPoint, Point(X, Y));
-      end;
+        begin
+          FReceiver.UpdateRectangle(FStartPoint, Point(X, Y));
+        end;
       drawCIRCLE:
         ;
       drawERASE:
@@ -163,8 +169,7 @@ begin
   end;
 end;
 
-procedure TManager.HandleMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TManager.HandleMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
   LCommand: TCommand;
   LObject: TGraphicObject;
@@ -173,41 +178,50 @@ begin
   begin
     if FIsDrawing then
     begin
+      {
+        将画布还原到橡皮筋效果之前的样子
+      }
+      FImageBitmap.Assign(FTempBitmap);
       FEndPoint := Point(X, Y);
-      {Do something:
-        1. create a new command into commands manager;
+      { Do something:
+        1. create a new command and insert it into FHistory;
         2. register a new Graphic object in the object manager;
       }
       case FMode of
         drawBRUSH:
-        begin
-          if Assigned(FPoints) then
           begin
-            FPoints.Add(FEndPoint);
-            LObject := TFreeLine.Create(FPoints);
-            FGraphicManager.RegisterObject(LObject);
+            if Assigned(FPoints) then
+            begin
+            // LCommand :=
 
-            //  :=
+              FPoints.Add(FEndPoint);
+              LObject := TFreeLine.Create(FPoints);
+              FGraphicManager.RegisterObject(LObject);
+
+            end;
           end;
-        end;
         drawLINE:
-        begin
-          LObject := TLine.Create(FStartPoint, FEndPoint);
-          FGraphicManager.RegisterObject(LObject);
-          LCommand := TDrawLine.Create(FImageBitmap, FPen, FStartPoint, FEndPoint);
-          FCommandManager.ExecuteCommand(LCommand, FImageBitmap);
-        end;
+          begin
+          // 1. create the command and insert it into FHistory
+            LCommand := TDrawLine.Create(FPen, FStartPoint, FEndPoint);
+            FHistory.AddHistory(FImageBitmap, LCommand);
+            LCommand.Run(FImageBitmap);
+          // 2. register the object in FGraphicManager
+            LObject := TLine.Create(FStartPoint, FEndPoint);
+            FGraphicManager.RegisterObject(LObject);
+          end;
         drawRECTANGLE:
-        begin
+          begin
 
-        end;
-        drawCIRCLE:;
-        drawERASE:;
+          end;
+        drawCIRCLE:
+          ;
+        drawERASE:
+          ;
       end;
     end;
     FIsDrawing := False;
     FReceiver.Free;
-    // LCommand.Free;
   end;
 end;
 
@@ -218,7 +232,7 @@ end;
 
 procedure TManager.HandleUndo;
 begin
-  FCommandManager.Undo(FImageBitmap);
+  FHistory.UndoHistory(FImageBitmap);
 end;
 
 end.

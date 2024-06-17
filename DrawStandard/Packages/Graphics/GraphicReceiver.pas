@@ -144,6 +144,4 @@ begin
   FreeAndNil(FTempBitmap);
 end;
 
-
-
 end.
