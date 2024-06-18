@@ -40,6 +40,18 @@ type
     procedure Run(ABitmap: TBitmap); override;
   end;
 
+  TDrawELLIPSE = class(TCommand)
+  private
+    FStartPoint: TPoint;
+    FEndPoint: TPoint;
+  public
+    constructor Create;overload;
+    constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint);overload;
+    destructor Destroy;override;
+
+    procedure Run(ABitmap: TBitmap); override;
+  end;
+
   TDrawBrush = class(TCommand)
   private
     FPoints: TList<TPoint>;
@@ -181,8 +193,42 @@ begin
   for LIndex := 1 to FPoints.Count - 1 do
   begin
     LPoint := FPoints[LIndex];
-    ABitmap.Canvas.MoveTo(LPoint.X, LPoint.Y);
+    ABitmap.Canvas.LineTo(LPoint.X, LPoint.Y);
   end;
+end;
+
+{ TDrawELLIPSE }
+
+constructor TDrawELLIPSE.Create;
+begin
+  inherited Create;
+end;
+
+constructor TDrawELLIPSE.Create(APen: TDrawPen; AStart, AEnd: TPoint);
+begin
+  inherited Create;
+
+  FStartPoint := AStart;
+  FEndPoint := AEnd;
+
+  FPen := TDrawPen.Create;
+  FPen.PColor := APen.PColor;
+  FPen.PWidth := APen.PWidth;
+end;
+
+destructor TDrawELLIPSE.Destroy;
+begin
+
+  inherited;
+end;
+
+procedure TDrawELLIPSE.Run(ABitmap: TBitmap);
+begin
+  ABitmap.Canvas.Pen.Color := FPen.PColor;
+  ABitmap.Canvas.Pen.Width := FPen.PWidth;
+
+  ABitmap.Canvas.Ellipse(FStartPoint.X, FStartPoint.Y, FEndPoint.X,
+    FEndPoint.Y);
 end;
 
 end.

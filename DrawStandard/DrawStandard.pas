@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, RzLstBox, RzButton, ImgList, ExtCtrls, RzPanel, RzCommon,
   RzBorder, RzPopups, RzDBList, Grids, RzGrids, RzCmboBx, Mask, RzEdit, Buttons,
-  Menus, GraphicReceiver, Tools, Command, ManageCenter;
+  Menus, GraphicReceiver, Tools, Command, ManageCenter, RzTrkBar;
 
 type
   TForm1 = class(TForm)
@@ -25,6 +25,7 @@ type
     btnSelect: TRzToolButton;
     btnUndo: TRzToolButton;
     btnRedo: TRzToolButton;
+    cbbLine: TRzComboBox;
     procedure FormCreate(Sender: TObject);
     procedure imgDrawImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure imgDrawImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -42,6 +43,9 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure cbbLineDrawItem(Control: TWinControl; Index: Integer; Rect: TRect;
+      State: TOwnerDrawState);
+    procedure cbbLineChange(Sender: TObject);
 
   private
     FManger: TManager;
@@ -106,6 +110,31 @@ begin
   FManger.HandleUndo;
 end;
 
+procedure TForm1.cbbLineChange(Sender: TObject);
+begin
+  FManger.HandleWidthChange(StrToInt(cbbLine.Value));
+end;
+
+procedure TForm1.cbbLineDrawItem(Control: TWinControl; Index: Integer;
+  Rect: TRect; State: TOwnerDrawState);
+var
+  LComboBox: TRzComboBox;
+  LLineWidth: Integer;
+begin
+  LComboBox := Control as TRzComboBox;
+  LComboBox.Canvas.FillRect(Rect); // 清除背景
+
+  LLineWidth := StrToInt(LComboBox.Items[Index]); // 获取线宽
+
+  // 设置画笔
+  LComboBox.Canvas.Pen.Width := LLineWidth;
+  LComboBox.Canvas.Pen.Color := clBlack;
+
+  // 绘制线段
+  LComboBox.Canvas.MoveTo(Rect.Left + 10, (Rect.Top + Rect.Bottom) div 2);
+  LComboBox.Canvas.LineTo(Rect.Right - 10, (Rect.Top + Rect.Bottom) div 2);
+end;
+
 procedure TForm1.edtColorChange(Sender: TObject);
 begin
   FManger.HandleColorChange(edtColor.SelectedColor);
@@ -120,6 +149,12 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   imgDrawImage.Canvas.LineTo(0,0);
   FManger := TManager.Create(imgDrawImage.Picture.Bitmap);
+
+  cbbLine.AddItemValue('1', '1');
+  cbbLine.AddItemValue('2', '2');
+  cbbLine.AddItemValue('3', '3');
+  cbbLine.AddItemValue('4', '4');
+  cbbLine.AddItemValue('5', '6');
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);

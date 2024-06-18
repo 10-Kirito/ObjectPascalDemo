@@ -160,6 +160,16 @@ object Form1: TForm1
       OnChange = edtColorChange
     end
   end
+  object cbbLine: TRzComboBox
+    Left = 415
+    Top = 47
+    Width = 145
+    Height = 22
+    Style = csOwnerDrawFixed
+    TabOrder = 2
+    OnChange = cbbLineChange
+    OnDrawItem = cbbLineDrawItem
+  end
   object ilImageList: TImageList
     Left = 56
     Top = 552

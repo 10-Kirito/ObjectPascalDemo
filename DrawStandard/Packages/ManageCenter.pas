@@ -46,6 +46,7 @@ type
     procedure HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure HandleMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure HandleColorChange(AColor: Integer);
+    procedure HandleWidthChange(AWidth: Integer);
     procedure HandleUndo;
     procedure HandleRedo;
 
@@ -226,6 +227,12 @@ begin
           ;
         drawERASE:
           ;
+        drawELLIPSE:
+          begin
+            LCommand := TDrawELLIPSE.Create(FPen, FStartPoint, FEndPoint);
+            FHistory.AddHistory(FImageBitmap, LCommand);
+            LCommand.Run(FImageBitmap);
+          end;
       end;
     end;
     FIsDrawing := False;
@@ -235,13 +242,17 @@ end;
 
 procedure TManager.HandleRedo;
 begin
-//  FCommandManager.Redo(FImageBitmap);
   FHistory.RedoHistory(FImageBitmap);
 end;
 
 procedure TManager.HandleUndo;
 begin
   FHistory.UndoHistory(FImageBitmap);
+end;
+
+procedure TManager.HandleWidthChange(AWidth: Integer);
+begin
+  FPen.PWidth := AWidth;
 end;
 
 end.
