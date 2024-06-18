@@ -14,6 +14,8 @@ type
     destructor Destroy; override;
 
     procedure RegisterObject(AObject: TGraphicObject);
+
+    function GetObject(AGUID: TGUID): TGraphicObject;
     procedure DeleteObject(AGUID: TGUID);
   end;
 
@@ -46,6 +48,11 @@ begin
 
     FreeAndNil(FGraphicDic);
   end;
+end;
+
+function TGraphicManager.GetObject(AGUID: TGUID): TGraphicObject;
+begin
+  Result := FGraphicDic.Items[AGUID];
 end;
 
 procedure TGraphicManager.RegisterObject(AObject: TGraphicObject);

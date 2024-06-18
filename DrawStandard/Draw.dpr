@@ -7,7 +7,7 @@ uses
   madListProcesses,
   madListModules,
   Forms,
-  DrawStandard in 'DrawStandard.pas' {Form1};
+  DrawStandard in 'DrawStandard.pas' {MainForm};
 
 {$R *.res}
 
@@ -15,6 +15,6 @@ begin
   System.ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.

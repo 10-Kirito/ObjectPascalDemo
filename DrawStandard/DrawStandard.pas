@@ -9,7 +9,7 @@ uses
   Menus, GraphicReceiver, Tools, Command, ManageCenter, RzTrkBar;
 
 type
-  TForm1 = class(TForm)
+  TMainForm = class(TForm)
     ilImageList: TImageList;
     imgDrawImage: TImage;
     rztlbrToolsBar: TRzToolbar;
@@ -54,68 +54,68 @@ type
   end;
 
 var
-  Form1: TForm1;
+  MainForm: TMainForm;
 
 implementation
 
 {$R *.dfm}
 
-procedure TForm1.BitBtn1Click(Sender: TObject);
+procedure TMainForm.BitBtn1Click(Sender: TObject);
 begin
   raise Exception.Create('Error Message');
 end;
 
-procedure TForm1.btnCircleClick(Sender: TObject);
+procedure TMainForm.btnCircleClick(Sender: TObject);
 begin
   FManger.PMode := drawELLIPSE;
 end;
 
-procedure TForm1.btnCurveClick(Sender: TObject);
+procedure TMainForm.btnCurveClick(Sender: TObject);
 begin
   ShowMessage('TODO!!!');
 end;
 
-procedure TForm1.btnLineClick(Sender: TObject);
+procedure TMainForm.btnLineClick(Sender: TObject);
 begin
   FManger.PMode := drawLINE;
 end;
 
-procedure TForm1.btnOpenClick(Sender: TObject);
+procedure TMainForm.btnOpenClick(Sender: TObject);
 begin
   ShowMessage('TODO!!!');
 end;
 
-procedure TForm1.btnPenClick(Sender: TObject);
+procedure TMainForm.btnPenClick(Sender: TObject);
 begin
   FManger.PMode := drawBRUSH;
 end;
 
-procedure TForm1.btnRecClick(Sender: TObject);
+procedure TMainForm.btnRecClick(Sender: TObject);
 begin
   FManger.PMode := drawRECTANGLE;
 end;
 
-procedure TForm1.btnRedoClick(Sender: TObject);
+procedure TMainForm.btnRedoClick(Sender: TObject);
 begin
   FManger.HandleRedo;
 end;
 
-procedure TForm1.btnSelectClick(Sender: TObject);
+procedure TMainForm.btnSelectClick(Sender: TObject);
 begin
   FManger.PMode := drawSELECT;
 end;
 
-procedure TForm1.btnUndoClick(Sender: TObject);
+procedure TMainForm.btnUndoClick(Sender: TObject);
 begin
   FManger.HandleUndo;
 end;
 
-procedure TForm1.cbbLineChange(Sender: TObject);
+procedure TMainForm.cbbLineChange(Sender: TObject);
 begin
   FManger.HandleWidthChange(StrToInt(cbbLine.Value));
 end;
 
-procedure TForm1.cbbLineDrawItem(Control: TWinControl; Index: Integer;
+procedure TMainForm.cbbLineDrawItem(Control: TWinControl; Index: Integer;
   Rect: TRect; State: TOwnerDrawState);
 var
   LComboBox: TRzComboBox;
@@ -135,17 +135,17 @@ begin
   LComboBox.Canvas.LineTo(Rect.Right - 10, (Rect.Top + Rect.Bottom) div 2);
 end;
 
-procedure TForm1.edtColorChange(Sender: TObject);
+procedure TMainForm.edtColorChange(Sender: TObject);
 begin
   FManger.HandleColorChange(edtColor.SelectedColor);
 end;
 
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := cafree;
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TMainForm.FormCreate(Sender: TObject);
 begin
   imgDrawImage.Canvas.LineTo(0,0);
   FManger := TManager.Create(imgDrawImage.Picture.Bitmap);
@@ -154,26 +154,26 @@ begin
   cbbLine.AddItemValue('2', '2');
   cbbLine.AddItemValue('3', '3');
   cbbLine.AddItemValue('4', '4');
-  cbbLine.AddItemValue('5', '6');
+  cbbLine.AddItemValue('5', '5');
 end;
 
-procedure TForm1.FormDestroy(Sender: TObject);
+procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(FManger);
 
 end;
 
-procedure TForm1.imgDrawImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TMainForm.imgDrawImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   FManger.HandleMouseDown(Sender, Button, Shift, X, Y);
 end;
 
-procedure TForm1.imgDrawImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+procedure TMainForm.imgDrawImageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
   FManger.HandleMouseMove(Sender, Shift, X, Y);
 end;
 
-procedure TForm1.imgDrawImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TMainForm.imgDrawImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   FManger.HandleMouseUp(Sender, Button, Shift, X, Y);
 end;

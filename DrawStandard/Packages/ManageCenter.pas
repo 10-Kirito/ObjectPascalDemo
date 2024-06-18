@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Generics.Collections, Dialogs, Controls, Classes, Windows, Graphics,
-  ExtCtrls, Command, GraphicReceiver, Tools, CommandManager, Commands,
+  ExtCtrls, Command, GraphicReceiver, Tools, Commands,
   GraphicManager, GraphicObject, History;
 
 type
@@ -29,11 +29,7 @@ type
       1.橡皮筋效果和命令模式是分离开的，其中橡皮筋效果借助于TGraphicReceiver类;
     }
     FReceiver: TGraphicReceiver;
-    {
-      1.FCommandManager管理添加所有的命令;
-      2.FGraphicManager管理所有绘制的图像;
-    }
-    FCommandManager: TCommandManager;
+
     FGraphicManager: TGraphicManager;
 
     FHistory: THistory;
@@ -71,19 +67,15 @@ begin
   FTempBitmap := TBitmap.Create;
   FTempBitmap.Assign(AImageBitmap);
 
-  // create the commands manager
-  FCommandManager := TCommandManager.Create;
   // create the graphic manager
   FGraphicManager := TGraphicManager.Create;
 
-  FHistory := THistory.Create;
+  FHistory := THistory.Create(FGraphicManager);
 end;
 
 destructor TManager.Destroy;
 begin
   FreeAndNil(FPen);
-  FreeAndNil(FCommandManager);
-  FreeAndNil(FPoints);
   FreeAndNil(FGraphicManager);
   FreeAndNil(FTempBitmap);
   FreeAndNil(FHistory);
@@ -199,27 +191,30 @@ begin
             if Assigned(FPoints) then
             begin
               FPoints.Add(FEndPoint);
-              LCommand := TDrawBrush.Create(FPen, FPoints);
-              FHistory.AddHistory(FImageBitmap, LCommand);
-              LCommand.Run(FImageBitmap);
 
               LObject := TFreeLine.Create(FPoints);
               FGraphicManager.RegisterObject(LObject);
+
+              LCommand := TDrawBrush.Create(FPen, FPoints, LObject.PGUID);
+              FHistory.AddHistory(FImageBitmap, LCommand);
+              LCommand.Run(FImageBitmap);
             end;
           end;
         drawLINE:
           begin
-            // 1. create the command and insert it into FHistory
-            LCommand := TDrawLine.Create(FPen, FStartPoint, FEndPoint);
-            FHistory.AddHistory(FImageBitmap, LCommand);
-            LCommand.Run(FImageBitmap);
-            // 2. register the object in FGraphicManager
             LObject := TLine.Create(FStartPoint, FEndPoint);
             FGraphicManager.RegisterObject(LObject);
+
+            LCommand := TDrawLine.Create(FPen, FStartPoint, FEndPoint, LObject.PGUID);
+            FHistory.AddHistory(FImageBitmap, LCommand);
+            LCommand.Run(FImageBitmap);
           end;
         drawRECTANGLE:
           begin
-            LCommand := TDrawRectangle.Create(FPen, FStartPoint, FEndPoint);
+            LObject := TRectangle.Create(FStartPoint, FEndPoint);
+            FGraphicManager.RegisterObject(LObject);
+
+            LCommand := TDrawRectangle.Create(FPen, FStartPoint, FEndPoint, LObject.PGUID);
             FHistory.AddHistory(FImageBitmap, LCommand);
             LCommand.Run(FImageBitmap);
           end;
@@ -229,7 +224,10 @@ begin
           ;
         drawELLIPSE:
           begin
-            LCommand := TDrawELLIPSE.Create(FPen, FStartPoint, FEndPoint);
+            LObject := TELLIPSE.Create(FStartPoint, FEndPoint);
+            FGraphicManager.RegisterObject(LObject);
+
+            LCommand := TDrawELLIPSE.Create(FPen, FStartPoint, FEndPoint, LObject.PGUID);
             FHistory.AddHistory(FImageBitmap, LCommand);
             LCommand.Run(FImageBitmap);
           end;
@@ -237,6 +235,7 @@ begin
     end;
     FIsDrawing := False;
     FReceiver.Free;
+    FreeAndNil(FPoints);
   end;
 end;
 

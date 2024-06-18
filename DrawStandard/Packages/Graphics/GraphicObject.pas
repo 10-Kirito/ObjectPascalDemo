@@ -6,7 +6,7 @@ uses
   Windows, Graphics, SysUtils, Generics.Collections;
 
 type
-  TGraphicType = (FREEHAND, LINE, RECTANGLE);
+  TGraphicType = (FREEHAND, LINE, RECTANGLE, ELLIPSE);
 
   TGraphicObject = class
   private
@@ -45,6 +45,14 @@ type
   end;
 
   TRectangle = class(TGraphicObject)
+  private
+    FStartPoint: TPoint;
+    FEndPoint: TPoint;
+  public
+    constructor Create(AStart: TPoint; AEnd: TPoint);
+  end;
+
+  TELLIPSE = class(TGraphicObject)
   private
     FStartPoint: TPoint;
     FEndPoint: TPoint;
@@ -152,6 +160,18 @@ end;
 destructor TFreeLine.Destroy;
 begin
   FreeAndNil(FPoints);
+end;
+
+{ TELLIPSE }
+
+constructor TELLIPSE.Create(AStart, AEnd: TPoint);
+begin
+  inherited Create;
+
+  FStartPoint := AStart;
+  FEndPoint := AEnd;
+
+  FType := RECTANGLE;
 end;
 
 end.

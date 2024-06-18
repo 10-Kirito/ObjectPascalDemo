@@ -5,13 +5,15 @@ unit History;
 interface
 
 uses
-  SysUtils, Graphics, Generics.Collections, Commands;
+  SysUtils, Graphics, Generics.Collections, Commands, GraphicManager;
 
 type
   THistoryItem = class
   private
     FSnapshot: TBitmap;
     FCommandList: TList<TCommand>;
+
+    FManager: TGraphicManager;
 
     FCurrentIndex: Integer; // Record the current command index;
     FRedoIndex: Integer;    // FRedoIndex will only be changed when undo and redo
@@ -20,7 +22,7 @@ type
     class var
       MAXSIZE: Integer;     // The maxsize of storage of commands;
   public
-    constructor Create(ABitmap: TBitmap);
+    constructor Create(ABitmap: TBitmap; AManager: TGraphicManager);
     destructor Destroy; override;
 
     procedure AddCommand(ACommand: TCommand);
@@ -44,8 +46,10 @@ type
     FCurrentIndex: Integer;
 
     FHasRedo: Boolean;
+
+    FGraphicManger: TGraphicManager;
   public
-    constructor Create;
+    constructor Create(AManager: TGraphicManager);
     destructor Destroy; override;
 
     procedure AddHistory(ABitmap: TBitmap; ACommand: TCommand);
@@ -62,11 +66,13 @@ implementation
 
 { THistory }
 
-constructor THistory.Create;
+constructor THistory.Create(AManager: TGraphicManager);
 begin
   FHistoryList := TList<THistoryItem>.Create;
   FCurrentIndex := -1;
   FHasRedo := False;
+
+  FGraphicManger := AManager;
 end;
 
 destructor THistory.Destroy;
@@ -166,7 +172,7 @@ begin
   FHasRedo := False;
   if Empty then // if the history is empty, create new item and add command into it
   begin
-    LHistoryItem := THistoryItem.Create(ABitmap);
+    LHistoryItem := THistoryItem.Create(ABitmap, FGraphicManger);
     LHistoryItem.AddCommand(ACommand);
     FHistoryList.Add(LHistoryItem);
     FCurrentIndex := FCurrentIndex + 1;
@@ -176,7 +182,7 @@ begin
     LHistoryItem := FHistoryList[FCurrentIndex];
     if LHistoryItem.Full then
     begin
-      LHistoryItem := THistoryItem.Create(ABitmap);
+      LHistoryItem := THistoryItem.Create(ABitmap, FGraphicManger);
       FHistoryList.Add(LHistoryItem);
       FCurrentIndex := FCurrentIndex + 1;
     end;
@@ -333,6 +339,7 @@ end;
 procedure THistory.UndoHistory(ABitmap: TBitmap);
 var
   LItem: THistoryItem;
+  LBitmap: TBitmap;
 begin
   // if history is empty, return directly
   if Empty then
@@ -356,7 +363,9 @@ begin
   begin
     LItem.UndoCommand;
   end;
-  ABitmap.Assign(LItem.ExecuteCurrentCommands);
+  LBitmap := LItem.ExecuteCurrentCommands;
+  ABitmap.Assign(LBitmap);
+  LBitmap.Free;
 end;
 
 { THistoryItem }
@@ -374,7 +383,7 @@ begin
   Result := FCommandList.Count;
 end;
 
-constructor THistoryItem.Create(ABitmap: TBitmap);
+constructor THistoryItem.Create(ABitmap: TBitmap; AManager: TGraphicManager);
 begin
   { a snapshot for the target bitmap }
   FSnapshot := TBitmap.Create;
@@ -387,6 +396,8 @@ begin
   FCurrentIndex := -1;
   FRedoIndex := -1;
   FNumber := 0;
+
+  FManager := AManager;
 end;
 
 procedure THistoryItem.RedoCommand;
