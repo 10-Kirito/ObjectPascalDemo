@@ -54,6 +54,8 @@ type
     procedure RedoHistory(ABitmap: TBitmap);
     function Empty: Boolean;
     procedure ReleaseRedoResource;
+
+    function HasRedoCommands: Boolean;
   end;
 
 implementation
@@ -68,13 +70,90 @@ begin
 end;
 
 destructor THistory.Destroy;
+var
+  LItem: THistoryItem;
 begin
+  for LItem in FHistoryList do
+  begin
+     LItem.Free;
+  end;
   FHistoryList.Free;
 end;
 
 function THistory.Empty: Boolean;
 begin
   Result := (FCurrentIndex = -1);
+end;
+
+// THistory内部函数，用来判断当前是否存在需要Redo的命令
+function THistory.HasRedoCommands: Boolean;
+var
+  LItem: THistoryItem;
+begin
+
+  // 1. 利用FHasRedo变量来判断当前是否处于可以Redo的状态
+  //    如果处于可以Redo的状态，进行判断当前是否有待Redo的命令
+  //    如果没有处于Redo的状态，直接进行返回即可。
+  if not FHasRedo then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  {
+  示意图：
+    -> FCurrentIndex := -1 -> History is empty
+       : REDO REDO REDO REDO REDO  -> Empty
+       : REDO REDO REDO            -> Empty
+  }
+
+  // 2. 如果当前历史记录显示为空但是还处于可以Redo的状态，说明之前是Undo操作导致
+  //    历史记录显示为空。
+  if Empty then
+  begin
+    Result := (FHistoryList.Count > 0);
+    Exit;
+  end;
+
+  {
+  示意图：
+  情景一：正常Undo之后，进行Redo操作
+       FHasRedo := True;
+       : COMD COMD COMD COMD COMD  -> Full    <- Item
+       : COMD COMD COMD COMD COMD  -> Full    <- Item
+    -> : COMD COMD COMD REDO REDO  -> UnFull  <- CurrentItem
+       : REDO REDO REDO REDO REDO  -> Empty   <- Item
+       : REDO REDO REDO            -> Empty   <- Item
+
+  情景二：正常Undo但是导致当前HistoryItem切换
+       FHasRedo := True;
+       : COMD COMD COMD COMD COMD  -> Full    <- Item
+       : COMD COMD COMD COMD COMD  -> Full    <- Item
+    -> : COMD COMD COMD COMD COMD  -> Full    <- CurrentItem
+       : REDO REDO REDO REDO REDO  -> Empty   <- Item
+       : REDO REDO REDO            -> Empty   <- Item
+
+  情景三：一直做Redo导致的情况
+       FHasRedo := True;
+       : COMD COMD COMD COMD COMD  -> Full    <- Item
+       : COMD COMD COMD COMD COMD  -> Full    <- Item
+       : COMD COMD COMD COMD COMD  -> Full    <- Item
+       : COMD COMD COMD COMD COMD  -> Full    <- Item
+    -> : COMD COMD COMD            -> UnFull  <- CurrentItem
+  }
+
+  // 3. 当前历史记录显示不为空，判断当前FHistoryItem是否存在需要Redo的命令，
+  //    如果存在Redo命令，返回True；
+  //    如果不存在Redo命令，判断是否存在其余的FHistoryItem，可能其余的FHistoryItem
+  //    全部都是需要Redo的命令。
+  LItem := FHistoryList[FCurrentIndex];
+  if not LItem.Full then
+  begin
+    Result := LItem.HasRedoItem;
+    Exit;
+  end;
+
+  Result := (FCurrentIndex < (FHistoryList.Count - 1));
 end;
 
 procedure THistory.AddHistory(ABitmap: TBitmap; ACommand: TCommand);
@@ -106,8 +185,94 @@ begin
 end;
 
 procedure THistory.RedoHistory(ABitmap: TBitmap);
+var
+  LHistoryItem: THistoryItem;
+  LBitmap: TBitmap;
+  LIndex: Integer;
 begin
+  {
+    1. 首先判断当前是否存在可以Redo的命令，这里通过类内的函数HasRedoCommands来实现。
+  }
+  if not HasRedoCommands then
+  begin
+    Exit; // 如果没有, 直接退出...
+  end;
 
+  {
+    2. 虽然当前存在可以Redo的命令，但是分为下面几种情景：
+    示意图：
+    情景零：一直Undo操作导致历史记录显示为空
+    -> := -1 -> History is empty              <- CurrentItem
+       : REDO REDO REDO REDO REDO  -> Empty   <- Item
+       : REDO REDO REDO REDO REDO  -> Empty   <- Item
+       : REDO REDO REDO REDO REDO  -> Empty   <- Item
+       : REDO REDO REDO REDO REDO  -> Empty   <- Item
+       : REDO REDO REDO            -> Empty   <- Item
+
+    情景一：正常Undo之后，进行Redo操作
+         FHasRedo := True;
+         : COMD COMD COMD COMD COMD  -> Full    <- Item
+         : COMD COMD COMD COMD COMD  -> Full    <- Item
+      -> : COMD COMD COMD REDO REDO  -> UnFull  <- CurrentItem
+         : REDO REDO REDO REDO REDO  -> Empty   <- Item
+         : REDO REDO REDO            -> Empty   <- Item
+
+    情景二：正常Undo但是导致当前HistoryItem切换
+         FHasRedo := True;
+         : COMD COMD COMD COMD COMD  -> Full    <- Item
+         : COMD COMD COMD COMD COMD  -> Full    <- Item
+      -> : COMD COMD COMD COMD COMD  -> Full    <- CurrentItem
+         : REDO REDO REDO REDO REDO  -> Empty   <- Item
+         : REDO REDO REDO            -> Empty   <- Item
+
+    情景三：一直做Redo导致的情况
+         FHasRedo := True;
+         : COMD COMD COMD COMD COMD  -> Full    <- Item
+         : COMD COMD COMD COMD COMD  -> Full    <- Item
+         : COMD COMD COMD COMD COMD  -> Full    <- Item
+         : COMD COMD COMD COMD COMD  -> Full    <- Item
+      -> : COMD COMD COMD            -> UnFull  <- CurrentItem
+  }
+
+  {
+    2. 判断当前历史记录是否显示为空，因为有一种特殊情况是一直Undo操作，导致当前
+       历史记录看起来为空，此时只能手动访问第一个THistoryItem。
+       当然，如果当前历史记录不为空的话，直接访问FCurrentIndex对应的Item即可。
+  }
+  if Empty then
+  begin
+    LHistoryItem := FHistoryList[0];
+    FCurrentIndex := FCurrentIndex + 1;
+    LHistoryItem.RedoCommand;
+    LBitmap := LHistoryItem.ExecuteCurrentCommands;
+    ABitmap.Assign(LBitmap);
+    LBitmap.Free;
+    Exit;
+  end;
+
+  LHistoryItem := FHistoryList[FCurrentIndex];
+
+  if LHistoryItem.HasRedoItem then // 情景一
+  begin
+    LHistoryItem.RedoCommand;
+    LBitmap := LHistoryItem.ExecuteCurrentCommands;
+    ABitmap.Assign(LBitmap);
+    LBitmap.Free;
+  end
+  else if not LHistoryItem.Full then // 情景三
+  begin
+    FHasRedo := False;
+    Exit;
+  end
+  else // 情景二
+  begin
+    FCurrentIndex := FCurrentIndex + 1;
+    LHistoryItem := FHistoryList[FCurrentIndex];
+    LHistoryItem.RedoCommand;
+    LBitmap := LHistoryItem.ExecuteCurrentCommands;
+    ABitmap.Assign(LBitmap);
+    LBitmap.Free;
+  end;
 end;
 
 /// <summary>
@@ -226,15 +391,16 @@ end;
 
 procedure THistoryItem.RedoCommand;
 begin
-  if (FRedoIndex >= 0) and (FRedoIndex < FNumber) then
+  if (FRedoIndex >= 0) and (FRedoIndex < FCommandList.Count) then
   begin
     FCurrentIndex := FRedoIndex;
     FRedoIndex := FRedoIndex + 1;
   end;
-  if FRedoIndex = FNumber then
+  if FRedoIndex = FCommandList.Count then
   begin
     FRedoIndex := -1;
   end;
+  FNumber := FNumber + 1;
 end;
 
 {
@@ -246,11 +412,17 @@ var
   LCommand: TCommand;
   LIndex: Integer;
 begin
+  // 如果说当前FRedoIndex的下标小于0，说明当前命令组当中并未含有Redo命令
+  if FRedoIndex < 0 then
+  begin
+    Exit;
+  end;
+
   for LIndex := FCommandList.Count - 1 downto FRedoIndex do
   begin
     LCommand := FCommandList[LIndex];
-    LCommand.Free;
     FCommandList.Delete(LIndex);
+    LCommand.Free;
   end;
 end;
 
@@ -270,6 +442,7 @@ begin
   begin
     LCommand.Free;
   end;
+  FCommandList.Free;
   inherited;
 end;
 
@@ -305,6 +478,7 @@ begin
 end;
 
 initialization
-  THistoryItem.MAXSIZE := 1;
+  THistoryItem.MAXSIZE := 4;
+
 end.
 

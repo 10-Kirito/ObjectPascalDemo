@@ -63,7 +63,7 @@ end;
 
 procedure TForm1.btnCircleClick(Sender: TObject);
 begin
-  FManger.PMode := drawCIRCLE;
+  FManger.PMode := drawELLIPSE;
 end;
 
 procedure TForm1.btnCurveClick(Sender: TObject);

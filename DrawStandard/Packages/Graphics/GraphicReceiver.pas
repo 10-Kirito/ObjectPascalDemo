@@ -27,6 +27,12 @@ type
     procedure DrawRectangle(AStart: TPoint; AEnd: TPoint);
     procedure UpdateRectangle(AStart: TPoint; AEnd: TPoint);
 
+    procedure DrawEllipse(AStart: TPoint; AEnd: TPoint);
+    procedure UpdateEllipse(AStart: TPoint; AEnd: TPoint);
+
+    procedure DrawCircle(AStart: TPoint; AEnd: TPoint);
+    procedure UpdateCircle(AStart: TPoint; AEnd: TPoint);
+
     procedure MovePoint(APoint: TPoint);
     procedure ConnectPoint(APoint: TPoint);
 
@@ -80,6 +86,23 @@ begin
   inherited;
 end;
 
+procedure TGraphicReceiver.DrawCircle(AStart, AEnd: TPoint);
+begin
+
+end;
+
+procedure TGraphicReceiver.DrawEllipse(AStart, AEnd: TPoint);
+begin
+  UpdatePen(FImageBitmap, FPen);
+  FImageBitmap.Canvas.Ellipse(AStart.X, AStart.Y, AEnd.X, AEnd.Y);
+  if Assigned(FPrevBitmap) then
+  begin
+    FPrevBitmap.Free;
+  end;
+
+  FPrevBitmap.Assign(FImageBitmap);
+end;
+
 procedure TGraphicReceiver.DrawLine(AStart, AEnd: TPoint);
 begin
   UpdatePen(FImageBitmap, FPen);
@@ -117,6 +140,23 @@ end;
 procedure TGraphicReceiver.SetDrawPen(APen: TDrawPen);
 begin
   FPen := APen;
+end;
+
+procedure TGraphicReceiver.UpdateCircle(AStart, AEnd: TPoint);
+begin
+
+end;
+
+procedure TGraphicReceiver.UpdateEllipse(AStart, AEnd: TPoint);
+begin
+  FTempBitmap := TBitmap.Create;
+  FTempBitmap.Width := FPrevBitmap.Width;
+  FTempBitmap.Height := FPrevBitmap.Height;
+  UpdatePen(FTempBitmap, FPen);
+  FTempBitmap.Assign(FPrevBitmap);
+  FTempBitmap.Canvas.Ellipse(AStart.X, AStart.Y, AEnd.X, AEnd.Y);
+  FImageBitmap.Assign(FTempBitmap);
+  FreeAndNil(FTempBitmap);
 end;
 
 procedure TGraphicReceiver.UpdateLine(AStart, AEnd: TPoint);

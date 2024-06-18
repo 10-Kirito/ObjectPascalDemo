@@ -7,7 +7,7 @@ uses
 
 type
   TDrawMode = (drawBRUSH, drawLINE, drawRECTANGLE, drawCIRCLE, drawERASE,
-    drawSELECT);
+    drawSELECT, drawELLIPSE);
 
   TDrawPen = class
   private

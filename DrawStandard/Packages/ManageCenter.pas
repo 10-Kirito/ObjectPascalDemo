@@ -85,6 +85,7 @@ begin
   FreeAndNil(FPoints);
   FreeAndNil(FGraphicManager);
   FreeAndNil(FTempBitmap);
+  FreeAndNil(FHistory);
 end;
 
 procedure TManager.HandleColorChange(AColor: Integer);
@@ -123,7 +124,6 @@ begin
         begin
           FReceiver.MovePoint(FStartPoint);
 
-          //
           FPoints := TList<TPoint>.Create;
           FPoints.Add(FStartPoint);
         end;
@@ -148,6 +148,7 @@ begin
       drawBRUSH:
         begin
           FReceiver.ConnectPoint(Point(X, Y));
+
           if Assigned(FPoints) then
           begin
             FPoints.Add(Point(X, Y));
@@ -165,6 +166,10 @@ begin
         ;
       drawERASE:
         ;
+      drawELLIPSE:
+        begin
+          FReceiver.UpdateEllipse(FStartPoint, Point(X, Y));
+        end;
     end;
   end;
 end;
@@ -192,27 +197,30 @@ begin
           begin
             if Assigned(FPoints) then
             begin
-            // LCommand :=
-
               FPoints.Add(FEndPoint);
+              LCommand := TDrawBrush.Create(FPen, FPoints);
+              FHistory.AddHistory(FImageBitmap, LCommand);
+              LCommand.Run(FImageBitmap);
+
               LObject := TFreeLine.Create(FPoints);
               FGraphicManager.RegisterObject(LObject);
-
             end;
           end;
         drawLINE:
           begin
-          // 1. create the command and insert it into FHistory
+            // 1. create the command and insert it into FHistory
             LCommand := TDrawLine.Create(FPen, FStartPoint, FEndPoint);
             FHistory.AddHistory(FImageBitmap, LCommand);
             LCommand.Run(FImageBitmap);
-          // 2. register the object in FGraphicManager
+            // 2. register the object in FGraphicManager
             LObject := TLine.Create(FStartPoint, FEndPoint);
             FGraphicManager.RegisterObject(LObject);
           end;
         drawRECTANGLE:
           begin
-
+            LCommand := TDrawRectangle.Create(FPen, FStartPoint, FEndPoint);
+            FHistory.AddHistory(FImageBitmap, LCommand);
+            LCommand.Run(FImageBitmap);
           end;
         drawCIRCLE:
           ;
@@ -227,7 +235,8 @@ end;
 
 procedure TManager.HandleRedo;
 begin
-  FCommandManager.Redo(FImageBitmap);
+//  FCommandManager.Redo(FImageBitmap);
+  FHistory.RedoHistory(FImageBitmap);
 end;
 
 procedure TManager.HandleUndo;
