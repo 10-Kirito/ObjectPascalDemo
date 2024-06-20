@@ -16,11 +16,14 @@
     <Transaction>2024/06/14 15:58:08.219.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Unit1.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\GraphicManager.pas</Transaction>
     <Transaction>2024/06/14 16:26:54.166.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Manage.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\ManageCenter.pas</Transaction>
     <Transaction>2024/06/15 09:13:41.417.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Unit1.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\History\History.pas</Transaction>
+    <Transaction>2024/06/20 10:09:20.555.pas,E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Unit1.pas=E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Files\GraphicFile.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="Command"/>
     <File Path="Command\CommandManager.pas"/>
     <File Path="Command\Commands.pas"/>
+    <File Path="Files"/>
+    <File Path="Files\GraphicFile.pas"/>
     <File Path="Graphics"/>
     <File Path="Graphics\GraphicManager.pas"/>
     <File Path="Graphics\GraphicObject.pas"/>
@@ -32,6 +35,7 @@
     <File Path="Command.pas"/>
     <File Path="ManageCenter.pas"/>
     <File Path="rtl.dcp"/>
+    <File Path="SuperJson.dcp"/>
     <File Path="vcl.dcp"/>
   </ProjectSortOrder>
 </BorlandProject>

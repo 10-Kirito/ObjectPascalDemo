@@ -28,7 +28,9 @@ package DrawSource;
 
 requires
   rtl,
-  vcl;
+  vcl,
+  SuperJson;
+
 
 contains
   GraphicReceiver in 'Graphics\GraphicReceiver.pas',
@@ -39,7 +41,8 @@ contains
   Commands in 'Command\Commands.pas',
   GraphicObject in 'Graphics\GraphicObject.pas',
   GraphicManager in 'Graphics\GraphicManager.pas',
-  History in 'History\History.pas';
+  History in 'History\History.pas',
+  GraphicFile in 'Files\GraphicFile.pas';
 
 end.
 

@@ -3,12 +3,13 @@ unit GraphicManager;
 interface
 
 uses
-  Generics.Collections, SysUtils, GraphicObject;
+  Graphics, Generics.Collections, SysUtils, GraphicObject;
 
 type
   TGraphicManager = class
   private
     FGraphicDic: TDictionary<TGUID, TGraphicObject>;
+
   public
     constructor Create;
     destructor Destroy; override;
@@ -17,8 +18,10 @@ type
 
     function GetObject(AGUID: TGUID): TGraphicObject;
     procedure DeleteObject(AGUID: TGUID);
-  end;
 
+    function GetDictionnary: TDictionary<TGUID, TGraphicObject>;
+
+  end;
 
 implementation
 
@@ -48,6 +51,11 @@ begin
 
     FreeAndNil(FGraphicDic);
   end;
+end;
+
+function TGraphicManager.GetDictionnary: TDictionary<TGUID, TGraphicObject>;
+begin
+  Result := FGraphicDic;
 end;
 
 function TGraphicManager.GetObject(AGUID: TGUID): TGraphicObject;

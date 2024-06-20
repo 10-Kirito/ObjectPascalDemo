@@ -19,9 +19,15 @@
 			<CfgParent>Base</CfgParent>
 			<Base>true</Base>
 		</PropertyGroup>
+		<Import Project="C:\Users\zhoupengfei\Desktop\standard.optset" Condition="'$(Base)'!='' And Exists('C:\Users\zhoupengfei\Desktop\standard.optset')"/>
 		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_DcuOutput>dcu\</DCC_DcuOutput>
+			<DCC_BplOutput>lib\</DCC_BplOutput>
+			<DCC_UsePackage>Rave77VCL;dxSkinTheAsphaltWorldRS14;dxSkinsCoreRS14;dxSkinValentineRS14;dxSkinWhiteprintRS14;dxSkinXmas2008BlueRS14;dxPSCoreRS14;dxComnRS14;dxPScxVGridLnkRS14;dxPScxCommonRS14;dxPSLnksRS14;cxVerticalGridRS14;dxPSdxOCLnkRS14;dxorgcRS14;dxPSdxDBOCLnkRS14;dxdborRS14;dxPSdxDBTVLnkRS14;dxdbtrRS14;dxBarRS14;dxBarDBNavRS14;dxBarExtDBItemsRS14;dxBarExtItemsRS14;dxRibbonRS14;dxLayoutControlRS14;dxRibbonCustomizationFormRS14;cxTreeListRS14;dxTabbedMDIRS14;dxServerModeRS14;dxGaugeControlRS14;dxNavBarRS14;dxPSdxGaugeControlLnkRS14;dxPScxPivotGridLnkRS14;dxPSdxLCLnkRS14;dxPScxGridLnkRS14;dxPScxSchedulerLnkRS14;dxPScxTLLnkRS14;dxSpreadSheetRS14;dxPSdxSpreadSheetLnkRS14;dxPSTeeChartRS14;dxPSdxFCLnkRS14;dxPSPrVwRibbonRS14;dxWizardControlRS14;cxTreeListdxBarPopupMenuRS14;cxSchedulerRibbonStyleEventEditorRS14;cxSchedulerTreeBrowserRS14;dxSkinBlackRS14;dxSkinBlueRS14;dxSkinBlueprintRS14;dxSkinCaramelRS14;dxSkinCoffeeRS14;dxSkinDarkRoomRS14;dxSkinDarkSideRS14;dxSkinDevExpressDarkStyleRS14;dxSkinDevExpressStyleRS14;dxSkinFoggyRS14;dxSkinGlassOceansRS14;dxSkinHighContrastRS14;dxSkiniMaginaryRS14;dxSkinLilianRS14;dxSkinLiquidSkyRS14;dxSkinLondonLiquidSkyRS14;dxSkinMcSkinRS14;dxSkinMetropolisRS14;dxSkinMoneyTwinsRS14;dxSkinOffice2007BlackRS14;dxSkinOffice2007BlueRS14;dxSkinOffice2007GreenRS14;dxSkinOffice2007PinkRS14;dxSkinMetropolisDarkRS14;dxSkinOffice2007SilverRS14;dxSkinOffice2010BlackRS14;dxSkinOffice2010BlueRS14;dxSkinOffice2010SilverRS14;dxSkinOffice2013DarkGrayRS14;dxSkinOffice2013LightGrayRS14;dxSkinOffice2013WhiteRS14;dxSkinOffice2016ColorfulRS14;dxSkinPumpkinRS14;dxSkinSevenRS14;dxSkinOffice2016DarkRS14;dxSkinSevenClassicRS14;dxSkinSharpRS14;dxSkinSharpPlusRS14;dxSkinSilverRS14;dxSkinVisualStudio2013DarkRS14;dxSkinVisualStudio2013LightRS14;dxSkinVS2010RS14;dxSkinVisualStudio2013BlueRS14;dxSkinsdxBarPainterRS14;dxSkinsdxDLPainterRS14;dxSkinscxPCPainterRS14;dxSkinsdxNavBarPainterRS14;dxSkinsdxRibbonPainterRS14;dxSkinscxSchedulerPainterRS14;dxSpellCheckerRS14;dxSkinSpringTimeRS14;dxSkinStardustRS14;dxSkinSummer2008RS14;dxPScxPCProdRS14;dxPsPrVwAdvRS14;cxPivotGridOLAPRS14;dxPScxExtCommonRS14;dxPSDBTeeChartRS14;madBasic_;madDisAsm_;madExcept_;CodeSiteLoggingPkg;CodeSiteDBToolsPkg;SuperJson;SuperJson</DCC_UsePackage>
+			<DCC_DcpOutput>dcp\</DCC_DcpOutput>
+			<DCC_ExeOutput>bin\</DCC_ExeOutput>
 			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;$(DCC_UnitAlias)</DCC_UnitAlias>
-			<DCC_DependencyCheckOutputName>LearningDelphi.exe</DCC_DependencyCheckOutputName>
+			<DCC_DependencyCheckOutputName>bin\LearningDelphi.exe</DCC_DependencyCheckOutputName>
 			<DCC_K>false</DCC_K>
 			<DCC_F>false</DCC_F>
 			<DCC_ImageBase>00400000</DCC_ImageBase>
@@ -29,6 +35,7 @@
 			<DCC_N>false</DCC_N>
 			<DCC_S>false</DCC_S>
 			<DCC_E>false</DCC_E>
+			<CfgDependentOn>C:\Users\zhoupengfei\Desktop\standard.optset</CfgDependentOn>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1)'!=''">
 			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
@@ -37,6 +44,7 @@
 			<DCC_DebugInformation>false</DCC_DebugInformation>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_MapFile>3</DCC_MapFile>
 			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
 		</PropertyGroup>
 		<ItemGroup>
@@ -59,8 +67,15 @@
 			<DCCReference Include="Chapter6\StaticTest.pas"/>
 			<DCCReference Include="Chapter6\TestInterface.pas"/>
 			<DCCReference Include="Chapter6\ConstructorTest.pas"/>
+			<DCCReference Include="Json-learning\JsonTest.pas"/>
+			<DCCReference Include="Json-learning\src\superdate.pas"/>
+			<DCCReference Include="Json-learning\src\superobject.pas"/>
+			<DCCReference Include="Json-learning\src\supertimezone.pas"/>
+			<DCCReference Include="Json-learning\src\supertypes.pas"/>
+			<DCCReference Include="Json-learning\src\superxmlparser.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
+				<DependentOn>C:\Users\zhoupengfei\Desktop\standard.optset</DependentOn>
 			</BuildConfiguration>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_1</Key>
@@ -112,6 +127,10 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
+					<Excluded_Packages>
+						<Excluded_Packages Name="D:\Software\VCL\DevExpressVcl15.2\Library\RS2010\dcldxADOServerModeRS14.bpl">ADO Data Source for ExpressDataController Server Mode by Developer Express Inc.</Excluded_Packages>
+						<Excluded_Packages Name="D:\Software\VCL\DevExpressVcl15.2\Library\RS2010\dcldxDBXServerModeRS14.bpl">dbExpress Data Source for ExpressDataController Server Mode by Developer Express Inc.</Excluded_Packages>
+					</Excluded_Packages>
 				</Delphi.Personality>
 			</BorlandProject>
 			<ProjectFileVersion>12</ProjectFileVersion>

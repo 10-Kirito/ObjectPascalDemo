@@ -3,7 +3,7 @@ unit GraphicObject;
 interface
 
 uses
-  Windows, Graphics, SysUtils, Generics.Collections;
+  Windows, Graphics, SysUtils, Generics.Collections, Tools;
 
 type
   TGraphicType = (FREEHAND, LINE, RECTANGLE, ELLIPSE);
@@ -19,6 +19,11 @@ type
   public
     // constructor and destructor
     constructor Create;
+
+    // get all points of the graphic
+    function GetPoints: TList<TPoint>; virtual; abstract;
+
+    procedure SetPen(APen: TDrawPen);
 
     // functions and procedures
     function GetType: TGraphicType;
@@ -42,6 +47,7 @@ type
     FEndPoint: TPoint;
   public
     constructor Create(AStart: TPoint; AEnd: TPoint);
+    function GetPoints: TList<TPoint>; override;
   end;
 
   TRectangle = class(TGraphicObject)
@@ -50,6 +56,7 @@ type
     FEndPoint: TPoint;
   public
     constructor Create(AStart: TPoint; AEnd: TPoint);
+    function GetPoints: TList<TPoint>; override;
   end;
 
   TELLIPSE = class(TGraphicObject)
@@ -58,6 +65,7 @@ type
     FEndPoint: TPoint;
   public
     constructor Create(AStart: TPoint; AEnd: TPoint);
+    function GetPoints: TList<TPoint>; override;
   end;
 
   TFreeLine = class(TGraphicObject)
@@ -66,8 +74,11 @@ type
   public
     constructor Create(APoints: TList<TPoint>);
     destructor Destroy; override;
+
+    function GetPoints: TList<TPoint>; override;
   end;
 
+function TypeToStr(AType: TGraphicType): string;
 
 implementation
 
@@ -103,6 +114,12 @@ begin
   FColor := AColor;
 end;
 
+procedure TGraphicObject.SetPen(APen: TDrawPen);
+begin
+  FColor := APen.PColor;
+  FWidth := APen.GetWidth;
+end;
+
 procedure TGraphicObject.SetType(AType: TGraphicType);
 begin
   FType := AType;
@@ -125,6 +142,13 @@ begin
   FType := LINE;
 end;
 
+function TLine.GetPoints: TList<TPoint>;
+begin
+  Result := TList<TPoint>.Create;
+  Result.Add(FStartPoint);
+  Result.Add(FEndPoint);
+end;
+
 { TRectangle }
 
 constructor TRectangle.Create(AStart, AEnd: TPoint);
@@ -135,6 +159,13 @@ begin
   FEndPoint := AEnd;
 
   FType := RECTANGLE;
+end;
+
+function TRectangle.GetPoints: TList<TPoint>;
+begin
+  Result := TList<TPoint>.Create;
+  Result.Add(FStartPoint);
+  Result.Add(FEndPoint);
 end;
 
 { TFreeLine }
@@ -162,6 +193,18 @@ begin
   FreeAndNil(FPoints);
 end;
 
+function TFreeLine.GetPoints: TList<TPoint>;
+var
+  LPoint: TPoint;
+begin
+  Result := TList<TPoint>.Create;
+
+  for LPoint in FPoints do
+  begin
+    Result.Add(LPoint);
+  end;
+end;
+
 { TELLIPSE }
 
 constructor TELLIPSE.Create(AStart, AEnd: TPoint);
@@ -172,6 +215,35 @@ begin
   FEndPoint := AEnd;
 
   FType := RECTANGLE;
+end;
+
+function TypeToStr(AType: TGraphicType): string;
+begin
+  case AType of
+    FREEHAND:
+      begin
+        Result := 'freehand';
+      end;
+    LINE:
+      begin
+        Result := 'line';
+      end;
+    RECTANGLE:
+      begin
+        Result := 'rectangle';
+      end;
+    ELLIPSE:
+      begin
+        Result := 'ellipse';
+      end;
+  end;
+end;
+
+function TELLIPSE.GetPoints: TList<TPoint>;
+begin
+  Result := TList<TPoint>.Create;
+  Result.Add(FStartPoint);
+  Result.Add(FEndPoint);
 end;
 
 end.

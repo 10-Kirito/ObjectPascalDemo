@@ -46,6 +46,7 @@ type
     procedure cbbLineDrawItem(Control: TWinControl; Index: Integer; Rect: TRect;
       State: TOwnerDrawState);
     procedure cbbLineChange(Sender: TObject);
+    procedure btnSaveClick(Sender: TObject);
 
   private
     FManger: TManager;
@@ -98,6 +99,11 @@ end;
 procedure TMainForm.btnRedoClick(Sender: TObject);
 begin
   FManger.HandleRedo;
+end;
+
+procedure TMainForm.btnSaveClick(Sender: TObject);
+begin
+  FManger.HandleSaveFile;
 end;
 
 procedure TMainForm.btnSelectClick(Sender: TObject);

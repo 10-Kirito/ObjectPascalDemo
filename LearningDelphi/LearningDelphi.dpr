@@ -19,13 +19,20 @@ uses
   TestAssign in 'Chapter6\TestAssign.pas',
   StaticTest in 'Chapter6\StaticTest.pas',
   TestInterface in 'Chapter6\TestInterface.pas',
-  ConstructorTest in 'Chapter6\ConstructorTest.pas';
+  ConstructorTest in 'Chapter6\ConstructorTest.pas',
+  JsonTest in 'Json-learning\JsonTest.pas',
+  superdate in 'Json-learning\src\superdate.pas',
+  superobject in 'Json-learning\src\superobject.pas',
+  supertimezone in 'Json-learning\src\supertimezone.pas',
+  supertypes in 'Json-learning\src\supertypes.pas',
+  superxmlparser in 'Json-learning\src\superxmlparser.pas';
 
 begin
 //  练习一：
 //  Practice1.MultiplicationFormulas();
 //  Practice1.FindPrimeNumber();
 //  Practice1.Verify();
-  ConstructorTest.MainTest;
+  JsonTest.MainTest;
+  System.ReportMemoryLeaksOnShutdown := True;
   Readln;
 end.

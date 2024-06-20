@@ -104,9 +104,8 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="D:\StudySoftware\VCL\DevExpressVcl15.2\Library\RS2010\dcldxADOServerModeRS14.bpl">ADO Data Source for ExpressDataController Server Mode by Developer Express Inc.</Excluded_Packages>
-						<Excluded_Packages Name="D:\StudySoftware\VCL\DevExpressVcl15.2\Library\RS2010\dcldxDBXServerModeRS14.bpl">dbExpress Data Source for ExpressDataController Server Mode by Developer Express Inc.</Excluded_Packages>
-						<Excluded_Packages Name="D:\StudySoftware\VCL\DevExpressVcl15.2\Library\RS2010\dcldxmdsRS14.bpl">ExpressMemData by Developer Express Inc.</Excluded_Packages>
+						<Excluded_Packages Name="D:\Software\VCL\DevExpressVcl15.2\Library\RS2010\dcldxADOServerModeRS14.bpl">ADO Data Source for ExpressDataController Server Mode by Developer Express Inc.</Excluded_Packages>
+						<Excluded_Packages Name="D:\Software\VCL\DevExpressVcl15.2\Library\RS2010\dcldxDBXServerModeRS14.bpl">dbExpress Data Source for ExpressDataController Server Mode by Developer Express Inc.</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
 			</BorlandProject>

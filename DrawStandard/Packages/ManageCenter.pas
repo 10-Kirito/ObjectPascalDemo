@@ -3,9 +3,9 @@ unit ManageCenter;
 interface
 
 uses
-  SysUtils, Generics.Collections, Dialogs, Controls, Classes, Windows, Graphics,
-  ExtCtrls, Command, GraphicReceiver, Tools, Commands,
-  GraphicManager, GraphicObject, History;
+  superobject, SysUtils, Generics.Collections, Dialogs, Controls, Classes, Windows, Graphics,
+  ExtCtrls, Command, GraphicReceiver, Tools, Commands, GraphicManager,
+  GraphicObject, History, GraphicFile;
 
 type
   {TManager:
@@ -45,6 +45,7 @@ type
     procedure HandleWidthChange(AWidth: Integer);
     procedure HandleUndo;
     procedure HandleRedo;
+    procedure HandleSaveFile;
 
     property PMode: TDrawMode read FMode write FMode;
     property PIsDrawing: Boolean read FIsDrawing write FIsDrawing;
@@ -194,7 +195,7 @@ begin
 
               LObject := TFreeLine.Create(FPoints);
               FGraphicManager.RegisterObject(LObject);
-
+              LObject.SetPen(FPen);
               LCommand := TDrawBrush.Create(FPen, FPoints, LObject.PGUID);
               FHistory.AddHistory(FImageBitmap, LCommand);
               LCommand.Run(FImageBitmap);
@@ -204,7 +205,7 @@ begin
           begin
             LObject := TLine.Create(FStartPoint, FEndPoint);
             FGraphicManager.RegisterObject(LObject);
-
+            LObject.SetPen(FPen);
             LCommand := TDrawLine.Create(FPen, FStartPoint, FEndPoint, LObject.PGUID);
             FHistory.AddHistory(FImageBitmap, LCommand);
             LCommand.Run(FImageBitmap);
@@ -213,7 +214,7 @@ begin
           begin
             LObject := TRectangle.Create(FStartPoint, FEndPoint);
             FGraphicManager.RegisterObject(LObject);
-
+            LObject.SetPen(FPen);
             LCommand := TDrawRectangle.Create(FPen, FStartPoint, FEndPoint, LObject.PGUID);
             FHistory.AddHistory(FImageBitmap, LCommand);
             LCommand.Run(FImageBitmap);
@@ -226,7 +227,7 @@ begin
           begin
             LObject := TELLIPSE.Create(FStartPoint, FEndPoint);
             FGraphicManager.RegisterObject(LObject);
-
+            LObject.SetPen(FPen);
             LCommand := TDrawELLIPSE.Create(FPen, FStartPoint, FEndPoint, LObject.PGUID);
             FHistory.AddHistory(FImageBitmap, LCommand);
             LCommand.Run(FImageBitmap);
@@ -242,6 +243,52 @@ end;
 procedure TManager.HandleRedo;
 begin
   FHistory.RedoHistory(FImageBitmap);
+end;
+
+procedure TManager.HandleSaveFile;
+var
+  Path: string;
+  FileJson: ISuperObject;
+  SaveDialog: TSaveDialog;
+  FileName: string;
+  PictureName: string;
+begin
+  FileJson := TDataFile.ExportFile(FGraphicManager);
+
+  PictureName := DrawTime + '.png';
+  FileName := DrawTime + '.json';
+
+  SaveDialog := TSaveDialog.Create(nil);
+  try
+    SaveDialog.Filter := 'JSON Files (*.json)|*.json'; // 设置文件过滤器
+    SaveDialog.DefaultExt := 'json'; // 设置默认文件扩展名
+    SaveDialog.FileName := FileName; // 设置默认文件名
+
+    if SaveDialog.Execute then
+    begin
+      FileName := SaveDialog.FileName; // 获取用户选择的文件名
+      // 在这里进行保存操作，例如保存 LFile 到 FileName
+      FileJson.SaveTo(FileName);
+    end;
+  finally
+    SaveDialog.Free;
+  end;
+
+  SaveDialog := TSaveDialog.Create(nil);
+  try
+    SaveDialog.Filter := 'PNG Files (*.png)|*.png'; // 设置文件过滤器
+    SaveDialog.DefaultExt := 'png'; // 设置默认文件扩展名
+    SaveDialog.FileName := PictureName; // 设置默认文件名
+
+    if SaveDialog.Execute then
+    begin
+      PictureName := SaveDialog.FileName; // 获取用户选择的文件名
+      // 在这里进行保存操作，例如保存 LFile 到 FileName
+      FImageBitmap.SaveToFile(PictureName);
+    end;
+  finally
+    SaveDialog.Free;
+  end;
 end;
 
 procedure TManager.HandleUndo;

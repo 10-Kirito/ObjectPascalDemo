@@ -3,7 +3,7 @@ unit Tools;
 interface
 
 uses
-  Classes, Graphics, Windows;
+  Classes, Graphics, Windows, SysUtils;
 
 type
   TDrawMode = (drawBRUSH, drawLINE, drawRECTANGLE, drawCIRCLE, drawERASE,
@@ -23,6 +23,8 @@ type
     property PWidth: Integer read GetWidth write SetWidth;
   end;
 
+function DrawTime: string;
+
 implementation
 
 { TDrawPen }
@@ -41,6 +43,14 @@ end;
 procedure TDrawPen.SetWidth(AWidth: Integer);
 begin
   FWidth := AWidth;
+end;
+
+function DrawTime: string;
+var
+  CurrentTime: TDateTime;
+begin
+  CurrentTime := Now; // 获取当前日期和时间
+  Result := FormatDateTime('yyyy-mm-dd-hh-nn-ss', CurrentTime);
 end;
 
 end.

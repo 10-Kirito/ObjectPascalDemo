@@ -22,11 +22,11 @@
 		<PropertyGroup Condition="'$(Base)'!=''">
 			<DesignOnlyPackage>false</DesignOnlyPackage>
 			<RuntimeOnlyPackage>true</RuntimeOnlyPackage>
-			<DCC_DcuOutput>..\..\dcu\</DCC_DcuOutput>
-			<DCC_DcpOutput>..\..\dcp\</DCC_DcpOutput>
-			<DCC_BplOutput>..\..\bin\</DCC_BplOutput>
+			<DCC_DcuOutput>..\..\..\LearningDelphi\dcu\</DCC_DcuOutput>
+			<DCC_DcpOutput>..\..\..\LearningDelphi\lib\</DCC_DcpOutput>
+			<DCC_BplOutput>..\..\..\LearningDelphi\bin\</DCC_BplOutput>
 			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;$(DCC_UnitAlias)</DCC_UnitAlias>
-			<DCC_DependencyCheckOutputName>..\..\bin\SuperJson.bpl</DCC_DependencyCheckOutputName>
+			<DCC_DependencyCheckOutputName>..\..\..\LearningDelphi\bin\SuperJson.bpl</DCC_DependencyCheckOutputName>
 			<GenPackage>true</GenPackage>
 			<GenDll>true</GenDll>
 			<DCC_ImageBase>00400000</DCC_ImageBase>

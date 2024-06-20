@@ -60,6 +60,7 @@ object MainForm: TMainForm
       DisabledIndex = 22
       ImageIndex = 21
       Caption = 'Save'
+      OnClick = btnSaveClick
     end
     object btnUndo: TRzToolButton
       Left = 124
