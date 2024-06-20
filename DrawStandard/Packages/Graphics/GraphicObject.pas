@@ -38,7 +38,7 @@ type
     property PType: TGraphicType read GetType write SetType;
     property PColor: TColor read GetColor write SetColor;
     property PWidth: Integer read GetWidth write SetWidth;
-    property PGUID: TGUID read GetGUID;
+    property PGUID: TGUID read GetGUID write FID;
   end;
 
   TLine = class(TGraphicObject)
@@ -79,6 +79,8 @@ type
   end;
 
 function TypeToStr(AType: TGraphicType): string;
+
+function StrToType(AString: string): TGraphicType;
 
 implementation
 
@@ -246,4 +248,26 @@ begin
   Result.Add(FEndPoint);
 end;
 
+function StrToType(AString: string): TGraphicType;
+begin
+
+  if AString = 'line' then
+  begin
+    Result := LINE;
+  end
+  else if AString = 'freehand' then
+  begin
+    Result := FREEHAND;
+  end
+  else if AString = 'rectangle' then
+  begin
+    Result := RECTANGLE;
+  end
+  else if AString = 'ellipse' then
+  begin
+    Result := ELLIPSE;
+  end;
+end;
+
 end.
+

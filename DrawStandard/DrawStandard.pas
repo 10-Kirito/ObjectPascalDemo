@@ -83,7 +83,7 @@ end;
 
 procedure TMainForm.btnOpenClick(Sender: TObject);
 begin
-  ShowMessage('TODO!!!');
+  FManger.HandleOpenFile;
 end;
 
 procedure TMainForm.btnPenClick(Sender: TObject);

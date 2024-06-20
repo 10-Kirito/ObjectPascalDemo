@@ -10,6 +10,11 @@ procedure FileTest;
 
 implementation
 
+procedure ImportJson;
+begin
+
+end;
+
 const JsonStr = '{"No1":"张三", "No2":"李四"}';
 
 procedure MainTest;
@@ -59,33 +64,6 @@ begin
   Writeln(LFile.AsJSon(True, True));
 end;
 
-procedure ExportComplexJSON;
-var
-  LFile: ISuperObject;
-  PersonArray: TSuperArray;
-  Person: ISuperObject;
-begin
-//  LFile := SO;
-//
-//  // 创建一个数组
-//  PersonArray := TSuperArray.Create;
-//
-//  //
-//  Person := SO;
-//  Person.S['name'] := 'Kirito';
-//  Person.I['age'] := 30;
-//  Person.O['address'] := TSuperObject.Create;
-//
-//  Person.O['address'].S['city'] := 'New York';
-//  Person.O['address'].S['street'] := '123 Elm Street';
-//
-//  Person.O['phones'] := SA(['123-456-789', '123-123-123']);
-//
-//  PersonArray.Add(Person);
-//
-//  LFile.A['persons'] := PersonArray;
-//
-//  LFile.SaveTo('./test.json');
-end;
+
 
 end.

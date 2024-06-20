@@ -46,9 +46,12 @@ type
     procedure HandleUndo;
     procedure HandleRedo;
     procedure HandleSaveFile;
+    procedure HandleOpenFile;
 
     property PMode: TDrawMode read FMode write FMode;
     property PIsDrawing: Boolean read FIsDrawing write FIsDrawing;
+  private
+    procedure HandleImportFile(APath: string; ABitmap: TBitmap; AGraManager: TGraphicManager);
   end;
 
 implementation
@@ -90,6 +93,20 @@ end;
 procedure TManager.HandleEvents;
 begin
   /// TODO!!!
+end;
+
+procedure TManager.HandleImportFile(APath: string; ABitmap: TBitmap; AGraManager: TGraphicManager);
+begin
+  ///
+  /// 1. Parsing the import file:
+  ///  1.1 create and insert the graphics into AGraManager;
+  ///  1.2 create the related command and execute the command to update the ABitmap
+  ///
+
+
+
+
+
 end;
 
 procedure TManager.HandleMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -240,6 +257,29 @@ begin
   end;
 end;
 
+procedure TManager.HandleOpenFile;
+var
+  OpenDialog: TOpenDialog;
+  FileName: string;
+  LFile: ISuperObject;
+begin
+  OpenDialog := TOpenDialog.Create(nil);
+  try
+    OpenDialog.Filter := 'JSON Files (*.json)|*.json'; // 设置文件过滤器
+    OpenDialog.DefaultExt := 'json'; // 设置默认文件扩展名
+
+    if OpenDialog.Execute then
+    begin
+      FileName := OpenDialog.FileName; // 获取用户选择的文件名
+      // LFile := TSuperObject.ParseFile(FileName, True);
+      HandleImportFile(FileName, FImageBitmap, FGraphicManager);
+      ShowMessage(LFile.AsJSon(True, True));
+    end;
+  finally
+    OpenDialog.Free;
+  end;
+end;
+
 procedure TManager.HandleRedo;
 begin
   FHistory.RedoHistory(FImageBitmap);
@@ -252,6 +292,7 @@ var
   SaveDialog: TSaveDialog;
   FileName: string;
   PictureName: string;
+
 begin
   FileJson := TDataFile.ExportFile(FGraphicManager);
 
