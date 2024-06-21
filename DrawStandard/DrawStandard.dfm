@@ -43,7 +43,6 @@ object MainForm: TMainForm
     BorderSides = [sdTop]
     BorderWidth = 0
     TabOrder = 0
-    ExplicitWidth = 971
     ToolbarControls = (
       btnOpen
       btnSave
@@ -73,7 +72,8 @@ object MainForm: TMainForm
       Hint = 'Undo'
       DisabledIndex = 30
       ImageIndex = 29
-      Caption = 'Undo'
+      DisabledImages = ilImageList
+      Caption = '&Undo'
       OnClick = btnUndoClick
     end
     object btnRedo: TRzToolButton
@@ -82,6 +82,7 @@ object MainForm: TMainForm
       Hint = 'Redo'
       DisabledIndex = 32
       ImageIndex = 31
+      DisabledImages = ilImageList
       Caption = 'Redo'
       OnClick = btnRedoClick
     end
@@ -1510,5 +1511,10 @@ object MainForm: TMainForm
       8001800100000000800180010000000080018001000000008001800100000000
       8001800100030003FFFFFFFF0003000300000000000000000000000000000000
       000000000000}
+  end
+  object actlstShotcut: TActionList
+    State = asSuspended
+    Left = 104
+    Top = 552
   end
 end

@@ -41,7 +41,7 @@ type
 
 implementation
 
-{ Tools functions}
+{ Tools functions }
 
 procedure UpdatePen(ABitmap: TBitmap; APen: TDrawPen);
 begin
@@ -69,6 +69,7 @@ constructor TGraphicReceiver.Create(AImageBitmap: TBitmap);
 begin
   if Assigned(AImageBitmap) and not AImageBitmap.Empty then
   begin
+    AImageBitmap.Canvas.Brush.Style := bsClear;
     FImageBitmap := AImageBitmap;
     FPrevBitmap := TBitmap.Create;
     FPrevBitmap.Width := FImageBitmap.Width;
@@ -76,8 +77,8 @@ begin
     FPrevBitmap.Assign(FImageBitmap);
   end
   else
-    raise Exception.Create('Invalid or uninitialized bitmap passed to '
-      + 'TGraphicReceiver.Create');
+    raise Exception.Create('Invalid or uninitialized bitmap passed to ' +
+        'TGraphicReceiver.Create');
 end;
 
 destructor TGraphicReceiver.Destroy;
@@ -154,6 +155,7 @@ begin
   FTempBitmap.Height := FPrevBitmap.Height;
   UpdatePen(FTempBitmap, FPen);
   FTempBitmap.Assign(FPrevBitmap);
+  FTempBitmap.Canvas.Brush.Style := bsClear;
   FTempBitmap.Canvas.Ellipse(AStart.X, AStart.Y, AEnd.X, AEnd.Y);
   FImageBitmap.Assign(FTempBitmap);
   FreeAndNil(FTempBitmap);
@@ -165,9 +167,12 @@ begin
   FTempBitmap.Width := FPrevBitmap.Width;
   FTempBitmap.Height := FPrevBitmap.Height;
   FTempBitmap.Assign(FPrevBitmap);
+
   UpdatePen(FTempBitmap, FPen);
+  FTempBitmap.Canvas.Brush.Style := bsClear;
   FTempBitmap.Canvas.MoveTo(AStart.X, AStart.Y);
   FTempBitmap.Canvas.LineTo(AEnd.X, AEnd.Y);
+
   FImageBitmap.Assign(FTempBitmap);
   FreeAndNil(FTempBitmap);
 end;
@@ -179,6 +184,7 @@ begin
   FTempBitmap.Height := FPrevBitmap.Height;
   UpdatePen(FTempBitmap, FPen);
   FTempBitmap.Assign(FPrevBitmap);
+  FTempBitmap.Canvas.Brush.Style := bsClear;
   FTempBitmap.Canvas.Rectangle(AStart.X, AStart.Y, AEnd.X, AEnd.Y);
   FImageBitmap.Assign(FTempBitmap);
   FreeAndNil(FTempBitmap);

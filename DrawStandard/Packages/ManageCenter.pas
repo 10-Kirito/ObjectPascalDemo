@@ -60,6 +60,8 @@ implementation
 
 constructor TManager.Create(AImageBitmap: TBitmap);
 begin
+  AImageBitmap.Canvas.Brush.Style := bsClear;
+
   // canvas settings:
   FMode := drawBRUSH;
   FIsDrawing := False;
@@ -163,6 +165,8 @@ begin
       /// TODO!!!
       Exit;
     end;
+
+    // normal case:
     {
       由于实现橡皮筋效果需要对真正的画布进行操作，所以需要对其进行拷贝，待得橡皮筋
       效果展示完毕也就是鼠标按键松开的时候，将拷贝的画布重新进行赋值。
@@ -197,6 +201,11 @@ end;
 
 procedure TManager.HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
+  /// TODO!!!
+  if FMode = drawSELECT then
+  begin
+  end;
+
   if FIsDrawing then
   begin
     case FMode of
@@ -233,9 +242,29 @@ procedure TManager.HandleMouseUp(Sender: TObject; Button: TMouseButton; Shift: T
 var
   LCommand: TCommand;
   LObject: TGraphicObject;
+  SelectObjects: TList<TGraphicObject>;
+  SelectObject: TGraphicObject;
 begin
   if Button = mbLeft then
   begin
+    if FMode = drawSELECT then
+    begin
+      SelectObjects := FGraphicManager.PointExitsObject(Point(X, Y));
+      if SelectObjects.Count <> 0 then
+      begin
+        SelectObject := SelectObjects[0];
+        SelectObject.DrawSelectBox(FImageBitmap);
+
+        for SelectObject in SelectObjects do
+        begin
+          SelectObject.Free;
+        end;
+        SelectObjects.Free;
+      end;
+      Exit;
+    end;
+
+    // Drawing!!!
     if FIsDrawing then
     begin
       {
@@ -260,6 +289,8 @@ begin
               LCommand := TDrawBrush.Create(FPen, FPoints, LObject.PGUID);
               FHistory.AddHistory(FImageBitmap, LCommand);
               LCommand.Run(FImageBitmap);
+
+              FreeAndNil(FPoints);
             end;
           end;
         drawLINE:
@@ -294,10 +325,9 @@ begin
             LCommand.Run(FImageBitmap);
           end;
       end;
+      FIsDrawing := False;
+      FReceiver.Free;
     end;
-    FIsDrawing := False;
-    FReceiver.Free;
-    FreeAndNil(FPoints);
   end;
 end;
 

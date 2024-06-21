@@ -3,7 +3,7 @@ unit GraphicManager;
 interface
 
 uses
-  Graphics, Generics.Collections, SysUtils, GraphicObject;
+  Windows, Graphics, Generics.Collections, SysUtils, GraphicObject;
 
 type
   TGraphicManager = class
@@ -20,6 +20,8 @@ type
     procedure DeleteObject(AGUID: TGUID);
 
     function GetDictionnary: TDictionary<TGUID, TGraphicObject>;
+
+    function PointExitsObject(APoint: TPoint): TList<TGraphicObject>;
 
   end;
 
@@ -61,6 +63,23 @@ end;
 function TGraphicManager.GetObject(AGUID: TGUID): TGraphicObject;
 begin
   Result := FGraphicDic.Items[AGUID];
+end;
+
+function TGraphicManager.PointExitsObject(
+  APoint: TPoint): TList<TGraphicObject>;
+var
+  Graphic: TGraphicObject;
+begin
+  /// 由于可能存在有着重叠的图形，所以这里检查的时候返回的是一个链表
+  Result := TList<TGraphicObject>.Create;
+
+  for Graphic in FGraphicDic.Values do
+  begin
+    if Graphic.CheckPointExist(APoint) then
+    begin
+      Result.Add(Graphic);
+    end;
+  end;
 end;
 
 procedure TGraphicManager.RegisterObject(AObject: TGraphicObject);

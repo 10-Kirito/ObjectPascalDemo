@@ -19,9 +19,13 @@ type
   public
     // constructor and destructor
     constructor Create;
-
     // get all points of the graphic
     function GetPoints: TList<TPoint>; virtual; abstract;
+    // check the point if exist in the graphic
+    function CheckPointExist(APoint: TPoint): Boolean; virtual; abstract;
+
+    // draw a select box
+    procedure DrawSelectBox(ABitmap: TBitmap); virtual; abstract;
 
     procedure SetPen(APen: TDrawPen);
 
@@ -48,6 +52,8 @@ type
   public
     constructor Create(AStart: TPoint; AEnd: TPoint);
     function GetPoints: TList<TPoint>; override;
+    function CheckPointExist(APoint: TPoint): Boolean;override;
+    procedure DrawSelectBox(ABitmap: TBitmap);override;
   end;
 
   TRectangle = class(TGraphicObject)
@@ -57,6 +63,8 @@ type
   public
     constructor Create(AStart: TPoint; AEnd: TPoint);
     function GetPoints: TList<TPoint>; override;
+    function CheckPointExist(APoint: TPoint): Boolean;override;
+    procedure DrawSelectBox(ABitmap: TBitmap);override;
   end;
 
   TELLIPSE = class(TGraphicObject)
@@ -66,6 +74,8 @@ type
   public
     constructor Create(AStart: TPoint; AEnd: TPoint);
     function GetPoints: TList<TPoint>; override;
+    function CheckPointExist(APoint: TPoint): Boolean;override;
+    procedure DrawSelectBox(ABitmap: TBitmap);override;
   end;
 
   TFreeLine = class(TGraphicObject)
@@ -76,6 +86,8 @@ type
     destructor Destroy; override;
 
     function GetPoints: TList<TPoint>; override;
+    function CheckPointExist(APoint: TPoint): Boolean;override;
+    procedure DrawSelectBox(ABitmap: TBitmap);override;
   end;
 
 function TypeToStr(AType: TGraphicType): string;
@@ -134,6 +146,16 @@ end;
 
 { TLine }
 
+function TLine.CheckPointExist(APoint: TPoint): Boolean;
+var
+  distance: Double;
+begin
+  // just need to determine the distance between the given point and the line if is zero
+  //    if zero return true;
+  //    else return false;
+  Result := (PointToLineDistance(FStartPoint, FEndPoint, APoint) < 1);
+end;
+
 constructor TLine.Create(AStart, AEnd: TPoint);
 begin
   inherited Create;
@@ -144,6 +166,19 @@ begin
   FType := LINE;
 end;
 
+procedure TLine.DrawSelectBox(ABitmap: TBitmap);
+var
+  LWidth: Integer;
+begin
+  ABitmap.Canvas.Pen.Style := psDot;
+  LWidth := ABitmap.Canvas.Pen.Width;
+  ABitmap.Canvas.Pen.Width := 1;
+  ABitmap.Canvas.Rectangle(FStartPoint.X - 3, FStartPoint.Y - 3,
+                           FEndPoint.X + 3, FEndPoint.Y + 3);
+  ABitmap.Canvas.Pen.Style := psSolid;
+  ABitmap.Canvas.Pen.Width := LWidth;
+end;
+
 function TLine.GetPoints: TList<TPoint>;
 begin
   Result := TList<TPoint>.Create;
@@ -152,6 +187,22 @@ begin
 end;
 
 { TRectangle }
+function TRectangle.CheckPointExist(APoint: TPoint): Boolean;
+begin
+///
+///start - - - -  -
+///  -   - - - -  -
+///  -   - - - -  -
+///  -   - - - - end
+///
+///end - - - -  -
+///  -   - - - -  -
+///  -   - - - -  -
+///  -   - - - - start
+///
+  Result := False;
+
+end;
 
 constructor TRectangle.Create(AStart, AEnd: TPoint);
 begin
@@ -163,6 +214,11 @@ begin
   FType := RECTANGLE;
 end;
 
+procedure TRectangle.DrawSelectBox(ABitmap: TBitmap);
+begin
+
+end;
+
 function TRectangle.GetPoints: TList<TPoint>;
 begin
   Result := TList<TPoint>.Create;
@@ -170,7 +226,13 @@ begin
   Result.Add(FEndPoint);
 end;
 
+
 { TFreeLine }
+
+function TFreeLine.CheckPointExist(APoint: TPoint): Boolean;
+begin
+   Result := False;
+end;
 
 constructor TFreeLine.Create(APoints: TList<TPoint>);
 var
@@ -195,6 +257,11 @@ begin
   FreeAndNil(FPoints);
 end;
 
+procedure TFreeLine.DrawSelectBox(ABitmap: TBitmap);
+begin
+
+end;
+
 function TFreeLine.GetPoints: TList<TPoint>;
 var
   LPoint: TPoint;
@@ -209,6 +276,11 @@ end;
 
 { TELLIPSE }
 
+function TELLIPSE.CheckPointExist(APoint: TPoint): Boolean;
+begin
+   Result := False;
+end;
+
 constructor TELLIPSE.Create(AStart, AEnd: TPoint);
 begin
   inherited Create;
@@ -217,6 +289,11 @@ begin
   FEndPoint := AEnd;
 
   FType := RECTANGLE;
+end;
+
+procedure TELLIPSE.DrawSelectBox(ABitmap: TBitmap);
+begin
+
 end;
 
 function TypeToStr(AType: TGraphicType): string;

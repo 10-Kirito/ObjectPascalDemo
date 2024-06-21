@@ -113,7 +113,7 @@ procedure TDrawLine.Run(ABitmap: TBitmap);
 begin
   ABitmap.Canvas.Pen.Color := FPen.PColor;
   ABitmap.Canvas.Pen.Width := FPen.PWidth;
-
+  ABitmap.Canvas.Brush.Style := bsClear;
   ABitmap.Canvas.MoveTo(FStartPoint.X, FStartPoint.Y);
   ABitmap.Canvas.LineTo(FEndPoint.X, FEndPoint.Y);
 end;
@@ -172,7 +172,7 @@ procedure TDrawRectangle.Run(ABitmap: TBitmap);
 begin
   ABitmap.Canvas.Pen.Color := FPen.PColor;
   ABitmap.Canvas.Pen.Width := FPen.PWidth;
-
+  ABitmap.Canvas.Brush.Style := bsClear;
   ABitmap.Canvas.Rectangle(FStartPoint.X, FStartPoint.Y, FEndPoint.X,
     FEndPoint.Y);
 end;
@@ -235,7 +235,7 @@ begin
   begin
     Exit;
   end;
-
+  ABitmap.Canvas.Brush.Style := bsClear;
   ABitmap.Canvas.Pen.Color := FPen.PColor;
   ABitmap.Canvas.Pen.Width := FPen.PWidth;
 
@@ -293,6 +293,7 @@ begin
   ABitmap.Canvas.Pen.Color := FPen.PColor;
   ABitmap.Canvas.Pen.Width := FPen.PWidth;
 
+  ABitmap.Canvas.Brush.Style := bsClear;
   ABitmap.Canvas.Ellipse(FStartPoint.X, FStartPoint.Y, FEndPoint.X,
     FEndPoint.Y);
 end;

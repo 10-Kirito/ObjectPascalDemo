@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, RzLstBox, RzButton, ImgList, ExtCtrls, RzPanel, RzCommon,
   RzBorder, RzPopups, RzDBList, Grids, RzGrids, RzCmboBx, Mask, RzEdit, Buttons,
-  Menus, GraphicReceiver, Tools, Command, ManageCenter, RzTrkBar;
+  Menus, GraphicReceiver, Tools, Command, ManageCenter, RzTrkBar, ActnList;
 
 type
   TMainForm = class(TForm)
@@ -26,6 +26,7 @@ type
     btnUndo: TRzToolButton;
     btnRedo: TRzToolButton;
     cbbLine: TRzComboBox;
+    actlstShotcut: TActionList;
     procedure FormCreate(Sender: TObject);
     procedure imgDrawImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure imgDrawImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -163,8 +164,11 @@ begin
   cbbLine.AddItemValue('5', '5');
 
   cbbLine.ItemIndex := 2;
-
   edtColor.Color := clBlack;
+
+  // set the begin status of undo and redo buttons
+  // btnUndo.Enabled := not btnUndo.Enabled;
+  // btnRedo.Enabled := not btnRedo.Enabled;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);

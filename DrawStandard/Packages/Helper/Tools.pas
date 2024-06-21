@@ -24,7 +24,11 @@ type
     property PWidth: Integer read GetWidth write SetWidth;
   end;
 
+// Get the drawing time!
 function DrawTime: string;
+
+// Calculate the distance from a point to a line!
+function PointToLineDistance(A: TPoint; B: TPoint; APoint: TPoint):Double;
 
 implementation
 
@@ -58,6 +62,31 @@ var
 begin
   CurrentTime := Now; // 获取当前日期和时间
   Result := FormatDateTime('yyyy-mm-dd-hh-nn-ss', CurrentTime);
+end;
+
+function PointToLineDistance(A: TPoint; B: TPoint; APoint: TPoint):Double;
+var
+  x1, y1, x2, y2, x0, y0: Double;
+  numerator, denominator: Double;
+begin
+  x1 := A.X;
+  y1 := A.Y;
+  x2 := B.X;
+  y2 := B.Y;
+  x0 := APoint.X;
+  y0 := APoint.Y;
+
+  numerator := Abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1);
+  denominator := Sqrt(Sqr(y2 - y1) + Sqr(x2 - x1));
+
+  if denominator = 0 then
+  begin
+    Result := -1;
+  end
+  else
+  begin
+    Result := numerator / denominator;
+  end;
 end;
 
 end.
