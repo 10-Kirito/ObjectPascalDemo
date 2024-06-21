@@ -1,9 +1,10 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
+  AutoSize = True
   Caption = #30011#22270
-  ClientHeight = 623
-  ClientWidth = 971
+  ClientHeight = 634
+  ClientWidth = 980
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,18 +18,21 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object imgDrawImage: TImage
-    Left = 4
-    Top = 82
-    Width = 967
-    Height = 543
+    Left = 3
+    Top = 85
+    Width = 977
+    Height = 549
+    Align = alCustom
     OnMouseDown = imgDrawImageMouseDown
     OnMouseMove = imgDrawImageMouseMove
     OnMouseUp = imgDrawImageMouseUp
+    ExplicitLeft = 0
+    ExplicitTop = 82
   end
   object rztlbrToolsBar: TRzToolbar
     Left = 0
     Top = 0
-    Width = 971
+    Width = 980
     Height = 29
     Images = ilImageList
     ButtonWidth = 60
@@ -39,6 +43,7 @@ object MainForm: TMainForm
     BorderSides = [sdTop]
     BorderWidth = 0
     TabOrder = 0
+    ExplicitWidth = 971
     ToolbarControls = (
       btnOpen
       btnSave
@@ -84,8 +89,9 @@ object MainForm: TMainForm
   object rzpnlTools: TRzPanel
     Left = 0
     Top = 33
-    Width = 971
+    Width = 980
     Height = 48
+    Align = alCustom
     BorderOuter = fsFlatBold
     TabOrder = 1
     object btnPen: TRzToolButton
@@ -153,8 +159,11 @@ object MainForm: TMainForm
       Top = 14
       Width = 144
       Height = 21
+      DefaultColor = clWhite
       NoColorCaption = #39068#33394
       Align = alCustom
+      Color = clBtnHighlight
+      DisabledColor = clMedGray
       DragKind = dkDock
       FlatButtons = True
       TabOrder = 0

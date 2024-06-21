@@ -161,6 +161,10 @@ begin
   cbbLine.AddItemValue('3', '3');
   cbbLine.AddItemValue('4', '4');
   cbbLine.AddItemValue('5', '5');
+
+  cbbLine.ItemIndex := 2;
+
+  edtColor.Color := clBlack;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);

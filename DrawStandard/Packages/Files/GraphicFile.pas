@@ -149,7 +149,7 @@ begin
       FREEHAND:
         begin
           LPoints := ParsePoints(LListPoint);
-          LFile.O['points'] := LPoints;
+          LElement.O['points'] := LPoints;
         end;
       LINE:
         begin
