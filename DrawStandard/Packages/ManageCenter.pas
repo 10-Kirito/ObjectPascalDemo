@@ -95,18 +95,62 @@ begin
   /// TODO!!!
 end;
 
+procedure DrawFromGraphics(ABitmap: TBitmap; AList: TList<TGraphicObject>);
+var
+  LObject: TGraphicObject;
+  LCommand: TCommand;
+  LPen: TDrawPen;
+
+  LPoints: TList<TPoint>;
+begin
+  for LObject in AList do
+  begin
+    LPen := TDrawPen.Create(LObject.GetColor, LObject.GetWidth);
+    LPoints := LObject.GetPoints;
+    case LObject.GetType of
+      FREEHAND:
+        begin
+          LCommand := TDrawBrush.Create(LPen, LPoints);
+        end;
+      LINE:
+        begin
+          LCommand := TDrawLine.Create(LPen, LPoints[0], LPoints[1]);
+        end;
+      RECTANGLE:
+        begin
+          LCommand := TDrawRectangle.Create(LPen, LPoints[0], LPoints[1]);
+        end;
+      ELLIPSE:
+        begin
+          LCommand := TDrawELLIPSE.Create(LPen, LPoints[0], LPoints[1]);
+        end;
+    end;
+    LCommand.Run(ABitmap);
+    LCommand.Free;
+    LPen.Free;
+    LPoints.Free;
+  end;
+end;
+
 procedure TManager.HandleImportFile(APath: string; ABitmap: TBitmap; AGraManager: TGraphicManager);
+var
+  LList: TList<TGraphicObject>;
+  LObject: TGraphicObject;
 begin
   ///
   /// 1. Parsing the import file:
   ///  1.1 create and insert the graphics into AGraManager;
   ///  1.2 create the related command and execute the command to update the ABitmap
   ///
+  LList := TDataFile.ImportFile(APath, AGraManager);
+  DrawFromGraphics(ABitmap, LList);
 
+  for LObject in LList do
+  begin
+    LObject.Free;
+  end;
 
-
-
-
+  LList.Free;
 end;
 
 procedure TManager.HandleMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -271,9 +315,7 @@ begin
     if OpenDialog.Execute then
     begin
       FileName := OpenDialog.FileName; // 获取用户选择的文件名
-      // LFile := TSuperObject.ParseFile(FileName, True);
       HandleImportFile(FileName, FImageBitmap, FGraphicManager);
-      ShowMessage(LFile.AsJSon(True, True));
     end;
   finally
     OpenDialog.Free;

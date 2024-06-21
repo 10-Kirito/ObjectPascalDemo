@@ -17,6 +17,8 @@ begin
   CreateGUID(GUID);
   GUIDString := GUIDToString(GUID);
 
+  Writeln('Generated GUID: ', GUIDString);
+
   GUIDString := StringReplace(GUIDString, '{', '', [rfReplaceAll]);
   GUIDString := StringReplace(GUIDString, '}', '', [rfReplaceAll]);
 

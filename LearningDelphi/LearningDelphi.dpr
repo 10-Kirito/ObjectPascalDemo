@@ -25,14 +25,15 @@ uses
   superobject in 'Json-learning\src\superobject.pas',
   supertimezone in 'Json-learning\src\supertimezone.pas',
   supertypes in 'Json-learning\src\supertypes.pas',
-  superxmlparser in 'Json-learning\src\superxmlparser.pas';
+  superxmlparser in 'Json-learning\src\superxmlparser.pas',
+  TestBaseClass in 'Chapter7\TestBaseClass.pas';
 
 begin
 //  练习一：
 //  Practice1.MultiplicationFormulas();
 //  Practice1.FindPrimeNumber();
 //  Practice1.Verify();
-  JsonTest.MainTest;
+  TestBaseClass.MainTest;
   System.ReportMemoryLeaksOnShutdown := True;
   Readln;
 end.

@@ -13,7 +13,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    class procedure ImportFile(AString: string; AManager: TGraphicManager);
+    class function ImportFile(AString: string; AManager: TGraphicManager): TList<TGraphicObject>;
     class function ExportFile(AManager: TGraphicManager): ISuperObject;
   end;
 
@@ -63,12 +63,15 @@ function ParseGraphicFromJson(AElement: ISuperObject): TGraphicObject;
 var
   LObject: TGraphicObject;
 
+  LTemp: TList<TPoint>;
   AGUID: string;
 begin
   case StrToType(AElement.S['type']) of
     FREEHAND:
       begin
-        LObject := TFreeLine.Create(ParsePointsFromJson(AElement.O['points'].AsArray));
+        LTemp:= ParsePointsFromJson(AElement.O['points'].AsArray);
+        LObject := TFreeLine.Create(LTemp);
+        LTemp.Free;
       end;
     LINE:
       begin
@@ -135,8 +138,8 @@ begin
     LElement.S['type'] := TypeToStr(LGraphicObject.GetType);
 
     GUIDString := GUIDToString(LGraphicObject.GetGUID);
-    GUIDString := StringReplace(GUIDString, '{', '', [rfReplaceAll]);
-    GUIDString := StringReplace(GUIDString, '}', '', [rfReplaceAll]);
+    // GUIDString := StringReplace(GUIDString, '{', '', [rfReplaceAll]);
+    // GUIDString := StringReplace(GUIDString, '}', '', [rfReplaceAll]);
     LElement.S['GUID'] := GUIDString;
     LElement.I['width'] := LGraphicObject.GetWidth;
     LElement.I['color'] := LGraphicObject.GetColor;
@@ -172,13 +175,15 @@ begin
   Result := LFile;
 end;
 
-class procedure TDataFile.ImportFile(AString: string; AManager: TGraphicManager);
+class function TDataFile.ImportFile(AString: string; AManager: TGraphicManager): TList<TGraphicObject>;
 var
   AFile: ISuperObject;
   AElementsArray: TSuperArray;
   AElement: ISuperObject;
   Index: Integer;
 begin
+  Result := TList<TGraphicObject>.Create;
+
   AFile := TSuperObject.ParseFile(AString, True);
   AElementsArray := AFile.O['elements'].AsArray;
 
@@ -188,6 +193,7 @@ begin
     begin
       AElement := AElementsArray.O[Index]; // 获取数组中的对象元素
       AManager.RegisterObject(ParseGraphicFromJson(AElement));
+      Result.Add(ParseGraphicFromJson(AElement));
     end;
   finally
   end;

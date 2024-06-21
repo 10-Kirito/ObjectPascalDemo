@@ -73,6 +73,7 @@
 			<DCCReference Include="Json-learning\src\supertimezone.pas"/>
 			<DCCReference Include="Json-learning\src\supertypes.pas"/>
 			<DCCReference Include="Json-learning\src\superxmlparser.pas"/>
+			<DCCReference Include="Chapter7\TestBaseClass.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 				<DependentOn>C:\Users\zhoupengfei\Desktop\standard.optset</DependentOn>

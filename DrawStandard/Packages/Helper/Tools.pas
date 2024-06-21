@@ -14,7 +14,8 @@ type
     FColor: TColor;
     FWidth: Integer;
   public
-    constructor Create;
+    constructor Create;overload;
+    constructor Create(AColor: TColor; AWidth: Integer);overload;
 
     function GetWidth: Integer;
     procedure SetWidth(AWidth: Integer);
@@ -33,6 +34,12 @@ constructor TDrawPen.Create;
 begin
   FColor := clBlack;
   FWidth := 3;
+end;
+
+constructor TDrawPen.Create(AColor: TColor; AWidth: Integer);
+begin
+  FColor := AColor;
+  FWidth := AWidth;
 end;
 
 function TDrawPen.GetWidth: Integer;

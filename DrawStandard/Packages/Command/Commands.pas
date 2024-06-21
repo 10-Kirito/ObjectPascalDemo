@@ -23,6 +23,7 @@ type
     FEndPoint: TPoint;
   public
     constructor Create; overload;
+    constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint); overload;
     constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint; AGUID: TGUID); overload;
     destructor Destroy;override;
 
@@ -35,6 +36,7 @@ type
     FEndPoint: TPoint;
   public
     constructor Create;overload;
+    constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint); overload;
     constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint; AGUID: TGUID);overload;
     destructor Destroy;override;
 
@@ -47,6 +49,7 @@ type
     FEndPoint: TPoint;
   public
     constructor Create;overload;
+    constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint); overload;
     constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint; AGUID: TGUID);overload;
     destructor Destroy;override;
 
@@ -58,6 +61,7 @@ type
     FPoints: TList<TPoint>;
   public
     constructor Create;overload;
+    constructor Create(APen: TDrawPen; APoints: TList<TPoint>);overload;
     constructor Create(APen: TDrawPen; APoints: TList<TPoint>; AGUID: TGUID);overload;
     destructor Destroy;override;
 
@@ -78,6 +82,18 @@ begin
   inherited Create;
 
   FID := AGUID;
+
+  FStartPoint := AStart;
+  FEndPoint := AEnd;
+
+  FPen := TDrawPen.Create;
+  FPen.PColor := APen.PColor;
+  FPen.PWidth := APen.PWidth;
+end;
+
+constructor TDrawLine.Create(APen: TDrawPen; AStart, AEnd: TPoint);
+begin
+  inherited Create;
 
   FStartPoint := AStart;
   FEndPoint := AEnd;
@@ -133,6 +149,18 @@ begin
   FPen.PWidth := APen.PWidth;
 end;
 
+constructor TDrawRectangle.Create(APen: TDrawPen; AStart, AEnd: TPoint);
+begin
+  inherited Create;
+
+  FStartPoint := AStart;
+  FEndPoint := AEnd;
+
+  FPen := TDrawPen.Create;
+  FPen.PColor := APen.PColor;
+  FPen.PWidth := APen.PWidth;
+end;
+
 destructor TDrawRectangle.Destroy;
 begin
   inherited;
@@ -162,6 +190,23 @@ begin
   inherited Create;
 
   FID := AGUID;
+
+  FPen := TDrawPen.Create;
+  FPen.PColor := APen.PColor;
+  FPen.PWidth := APen.PWidth;
+  FPoints := TList<TPoint>.Create;
+
+  for LPoint in APoints do
+  begin
+    FPoints.Add(LPoint);
+  end;
+end;
+
+constructor TDrawBrush.Create(APen: TDrawPen; APoints: TList<TPoint>);
+var
+  LPoint: TPoint;
+begin
+  inherited Create;
 
   FPen := TDrawPen.Create;
   FPen.PColor := APen.PColor;
@@ -216,6 +261,18 @@ begin
   inherited Create;
 
   FID := AGUID;
+
+  FStartPoint := AStart;
+  FEndPoint := AEnd;
+
+  FPen := TDrawPen.Create;
+  FPen.PColor := APen.PColor;
+  FPen.PWidth := APen.PWidth;
+end;
+
+constructor TDrawELLIPSE.Create(APen: TDrawPen; AStart, AEnd: TPoint);
+begin
+  inherited Create;
 
   FStartPoint := AStart;
   FEndPoint := AEnd;
