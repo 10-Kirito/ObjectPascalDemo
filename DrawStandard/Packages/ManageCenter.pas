@@ -60,7 +60,7 @@ implementation
 
 constructor TManager.Create(AImageBitmap: TBitmap);
 begin
-  AImageBitmap.Canvas.Brush.Style := bsClear;
+  // AImageBitmap.Canvas.Brush.Style := bsClear;
 
   // canvas settings:
   FMode := drawBRUSH;
@@ -204,6 +204,7 @@ begin
   /// TODO!!!
   if FMode = drawSELECT then
   begin
+    Exit;
   end;
 
   if FIsDrawing then
@@ -244,6 +245,7 @@ var
   LObject: TGraphicObject;
   SelectObjects: TList<TGraphicObject>;
   SelectObject: TGraphicObject;
+  LCount: Integer;
 begin
   if Button = mbLeft then
   begin
@@ -252,15 +254,12 @@ begin
       SelectObjects := FGraphicManager.PointExitsObject(Point(X, Y));
       if SelectObjects.Count <> 0 then
       begin
-        SelectObject := SelectObjects[0];
+        LCount := SelectObjects.Count;
+        // 如果返回列表当中有多个图形对象，将列表当中最后一个图形对象选中即可
+        SelectObject := SelectObjects[LCount - 1];
         SelectObject.DrawSelectBox(FImageBitmap);
-
-        for SelectObject in SelectObjects do
-        begin
-          SelectObject.Free;
-        end;
-        SelectObjects.Free;
       end;
+      SelectObjects.Free;
       Exit;
     end;
 
@@ -368,8 +367,8 @@ var
 begin
   FileJson := TDataFile.ExportFile(FGraphicManager);
 
-  PictureName := DrawTime + '.png';
-  FileName := DrawTime + '.json';
+  PictureName := TTools.DrawTime + '.png';
+  FileName := TTools.DrawTime + '.json';
 
   SaveDialog := TSaveDialog.Create(nil);
   try

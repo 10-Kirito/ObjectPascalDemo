@@ -15,7 +15,7 @@ type
     FWidth: Integer;
 
     FID: TGUID;
-
+    FRelavantObjs: TList<TGUID>;
   public
     // constructor and destructor
     constructor Create;
@@ -148,12 +148,13 @@ end;
 
 function TLine.CheckPointExist(APoint: TPoint): Boolean;
 var
-  distance: Double;
+  LDistance: Double;
 begin
   // just need to determine the distance between the given point and the line if is zero
   //    if zero return true;
   //    else return false;
-  Result := (PointToLineDistance(FStartPoint, FEndPoint, APoint) < 1);
+  LDistance := TTools.PointToLineDistance(FStartPoint, FEndPoint, APoint);
+  Result := (LDistance < 10);
 end;
 
 constructor TLine.Create(AStart, AEnd: TPoint);
@@ -173,10 +174,12 @@ begin
   ABitmap.Canvas.Pen.Style := psDot;
   LWidth := ABitmap.Canvas.Pen.Width;
   ABitmap.Canvas.Pen.Width := 1;
-  ABitmap.Canvas.Rectangle(FStartPoint.X - 3, FStartPoint.Y - 3,
-                           FEndPoint.X + 3, FEndPoint.Y + 3);
+  ABitmap.Canvas.Brush.Style := bsClear;
+  ABitmap.Canvas.Rectangle(FStartPoint.X - 4, FStartPoint.Y - 4,
+                           FEndPoint.X + 4, FEndPoint.Y + 4);
   ABitmap.Canvas.Pen.Style := psSolid;
   ABitmap.Canvas.Pen.Width := LWidth;
+  ABitmap.Canvas.Brush.Style := bsSolid;
 end;
 
 function TLine.GetPoints: TList<TPoint>;
@@ -189,19 +192,15 @@ end;
 { TRectangle }
 function TRectangle.CheckPointExist(APoint: TPoint): Boolean;
 begin
-///
-///start - - - -  -
-///  -   - - - -  -
-///  -   - - - -  -
-///  -   - - - - end
-///
-///end - - - -  -
-///  -   - - - -  -
-///  -   - - - -  -
-///  -   - - - - start
-///
-  Result := False;
-
+  if TTools.IsPointInInterval(FStartPoint.X, FEndPoint.X, APoint.X)
+    and TTools.IsPointInInterval(FStartPoint.Y, FEndPoint.Y, APoint.Y) then
+  begin
+    Result := True;
+  end
+  else
+  begin
+    Result := False;
+  end;
 end;
 
 constructor TRectangle.Create(AStart, AEnd: TPoint);
@@ -215,8 +214,18 @@ begin
 end;
 
 procedure TRectangle.DrawSelectBox(ABitmap: TBitmap);
+var
+  LWidth: Integer;
 begin
-
+  ABitmap.Canvas.Pen.Style := psDot;
+  LWidth := ABitmap.Canvas.Pen.Width;
+  ABitmap.Canvas.Pen.Width := 1;
+  ABitmap.Canvas.Brush.Style := bsClear;
+  ABitmap.Canvas.Rectangle(FStartPoint.X - 4, FStartPoint.Y - 4,
+                           FEndPoint.X + 4, FEndPoint.Y + 4);
+  ABitmap.Canvas.Pen.Style := psSolid;
+  ABitmap.Canvas.Pen.Width := LWidth;
+  ABitmap.Canvas.Brush.Style := bsSolid;
 end;
 
 function TRectangle.GetPoints: TList<TPoint>;
@@ -230,8 +239,18 @@ end;
 { TFreeLine }
 
 function TFreeLine.CheckPointExist(APoint: TPoint): Boolean;
+var
+  Another: TPoint;
 begin
-   Result := False;
+  for Another in FPoints do
+  begin
+    if TTools.IsPointCloseAnother(Another, APoint) then
+    begin
+      Result := True;
+      Exit;
+    end;
+  end;
+  Result := False;
 end;
 
 constructor TFreeLine.Create(APoints: TList<TPoint>);
@@ -258,8 +277,22 @@ begin
 end;
 
 procedure TFreeLine.DrawSelectBox(ABitmap: TBitmap);
+var
+  StartPoint: TPoint;
+  EndPoint: TPoint;
+  LWidth: Integer;
 begin
-
+  StartPoint := FPoints.First;
+  EndPoint := FPoints.Last;
+  ABitmap.Canvas.Pen.Style := psDot;
+  LWidth := ABitmap.Canvas.Pen.Width;
+  ABitmap.Canvas.Pen.Width := 1;
+  ABitmap.Canvas.Brush.Style := bsClear;
+  ABitmap.Canvas.Rectangle(StartPoint.X - 4, StartPoint.Y - 4,
+                           EndPoint.X + 4, EndPoint.Y + 4);
+  ABitmap.Canvas.Pen.Style := psSolid;
+  ABitmap.Canvas.Pen.Width := LWidth;
+  ABitmap.Canvas.Brush.Style := bsSolid;
 end;
 
 function TFreeLine.GetPoints: TList<TPoint>;
@@ -277,8 +310,28 @@ end;
 { TELLIPSE }
 
 function TELLIPSE.CheckPointExist(APoint: TPoint): Boolean;
+var
+  h, k: Double;
+  a, b: Double;
+  x, y: Double;
+  EquationValue: Double;
 begin
-   Result := False;
+  // 计算椭圆的中心点
+  h := (FStartPoint.X + FEndPoint.X) / 2;
+  k := (FStartPoint.Y + FEndPoint.Y) / 2;
+
+  // 计算椭圆的水平半轴长度和垂直半轴长度
+  a := Abs(FEndPoint.X - FStartPoint.X) / 2;
+  b := Abs(FEndPoint.Y - FStartPoint.Y) / 2;
+
+  // 将给定点转换为双精度浮点数
+  x := APoint.X;
+  y := APoint.Y;
+
+  // 计算椭圆方程值
+  EquationValue := Sqr((x - h) / a) + Sqr((y - k) / b);
+  // 判断点是否在椭圆内
+  Result := EquationValue <= 1;
 end;
 
 constructor TELLIPSE.Create(AStart, AEnd: TPoint);
@@ -292,8 +345,18 @@ begin
 end;
 
 procedure TELLIPSE.DrawSelectBox(ABitmap: TBitmap);
+var
+  LWidth: Integer;
 begin
-
+  ABitmap.Canvas.Pen.Style := psDot;
+  LWidth := ABitmap.Canvas.Pen.Width;
+  ABitmap.Canvas.Pen.Width := 1;
+  ABitmap.Canvas.Brush.Style := bsClear;
+  ABitmap.Canvas.Rectangle(FStartPoint.X - 4, FStartPoint.Y - 4,
+                           FEndPoint.X + 4, FEndPoint.Y + 4);
+  ABitmap.Canvas.Pen.Style := psSolid;
+  ABitmap.Canvas.Pen.Width := LWidth;
+  ABitmap.Canvas.Brush.Style := bsSolid;
 end;
 
 function TypeToStr(AType: TGraphicType): string;

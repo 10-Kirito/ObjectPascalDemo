@@ -69,7 +69,7 @@ constructor TGraphicReceiver.Create(AImageBitmap: TBitmap);
 begin
   if Assigned(AImageBitmap) and not AImageBitmap.Empty then
   begin
-    AImageBitmap.Canvas.Brush.Style := bsClear;
+    // AImageBitmap.Canvas.Brush.Style := bsClear;
     FImageBitmap := AImageBitmap;
     FPrevBitmap := TBitmap.Create;
     FPrevBitmap.Width := FImageBitmap.Width;

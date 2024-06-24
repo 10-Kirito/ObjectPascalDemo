@@ -113,7 +113,7 @@ procedure TDrawLine.Run(ABitmap: TBitmap);
 begin
   ABitmap.Canvas.Pen.Color := FPen.PColor;
   ABitmap.Canvas.Pen.Width := FPen.PWidth;
-  ABitmap.Canvas.Brush.Style := bsClear;
+  // ABitmap.Canvas.Brush.Style := bsClear;
   ABitmap.Canvas.MoveTo(FStartPoint.X, FStartPoint.Y);
   ABitmap.Canvas.LineTo(FEndPoint.X, FEndPoint.Y);
 end;

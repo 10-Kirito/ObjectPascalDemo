@@ -1512,9 +1512,4 @@ object MainForm: TMainForm
       8001800100030003FFFFFFFF0003000300000000000000000000000000000000
       000000000000}
   end
-  object actlstShotcut: TActionList
-    State = asSuspended
-    Left = 104
-    Top = 552
-  end
 end

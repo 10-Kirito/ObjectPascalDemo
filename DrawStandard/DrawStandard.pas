@@ -26,7 +26,6 @@ type
     btnUndo: TRzToolButton;
     btnRedo: TRzToolButton;
     cbbLine: TRzComboBox;
-    actlstShotcut: TActionList;
     procedure FormCreate(Sender: TObject);
     procedure imgDrawImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure imgDrawImageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -174,7 +173,6 @@ end;
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(FManger);
-
 end;
 
 procedure TMainForm.imgDrawImageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);

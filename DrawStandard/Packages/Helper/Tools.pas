@@ -24,11 +24,23 @@ type
     property PWidth: Integer read GetWidth write SetWidth;
   end;
 
-// Get the drawing time!
-function DrawTime: string;
+  TTools = class
+  public
+    // Get the drawing time!
+    class function DrawTime: string;
 
-// Calculate the distance from a point to a line!
-function PointToLineDistance(A: TPoint; B: TPoint; APoint: TPoint):Double;
+    // Calculate the distance from a point to a line!
+    class function PointToLineDistance(A: TPoint; B: TPoint; APoint: TPoint):Double;
+
+    // Calculate the distance between two points!
+    class function DistanceBetweenPoints(APoint:TPoint; BPoint: TPoint): Double;
+
+    // 判断一个顶点是否位于区间[x1, x2]之间，x1和x2的大小不确定!
+    class function IsPointInInterval(A: Integer; B: Integer; X: Integer): Boolean;
+
+    // 判断一个顶点是否位于另外一个顶点附近
+    class function IsPointCloseAnother(APoint:TPoint; Another: TPoint): Boolean;
+  end;
 
 implementation
 
@@ -56,7 +68,14 @@ begin
   FWidth := AWidth;
 end;
 
-function DrawTime: string;
+{ TTools }
+
+class function TTools.DistanceBetweenPoints(APoint, BPoint: TPoint): Double;
+begin
+  Result := Sqrt(Sqr(APoint.Y - BPoint.Y) + Sqr(BPoint.X - BPoint.X));
+end;
+
+class function TTools.DrawTime: string;
 var
   CurrentTime: TDateTime;
 begin
@@ -64,7 +83,41 @@ begin
   Result := FormatDateTime('yyyy-mm-dd-hh-nn-ss', CurrentTime);
 end;
 
-function PointToLineDistance(A: TPoint; B: TPoint; APoint: TPoint):Double;
+class function TTools.IsPointCloseAnother(APoint, Another: TPoint): Boolean;
+var
+  LDistance: Double;
+begin
+  LDistance := DistanceBetweenPoints(APoint, Another);
+
+  Result := (LDistance <= 10);
+end;
+
+class function TTools.IsPointInInterval(A, B, X: Integer): Boolean;
+var
+  Min: Integer;
+  Max: Integer;
+begin
+  if A <= B then
+  begin
+    Min := A;
+    Max := B;
+  end
+  else
+  begin
+    Min := B;
+    Max := A;
+  end;
+  if (X >= Min) and (X <= Max) then
+  begin
+    Result := True;
+  end
+  else
+  begin
+    Result := False;
+  end;
+end;
+
+class function TTools.PointToLineDistance(A, B, APoint: TPoint): Double;
 var
   x1, y1, x2, y2, x0, y0: Double;
   numerator, denominator: Double;
