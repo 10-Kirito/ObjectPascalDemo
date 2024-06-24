@@ -1,0 +1,320 @@
+@startuml DrawUML
+
+class TManager {
+    -FImageBitmap: TBitmap;
+    -FTempBitmap: TBitmap;
+    -FMode: TDrawMode;
+    -FIsDrawing: Boolean;
+    -FPen: TDrawPen; 
+    -FStartPoint: TPoint;
+    -FEndPoint: TPoint;
+    -FPoints: TList<TPoint>;
+    -FReceiver: TGraphicReceiver;
+    -FGraphicManager: TGraphicManager;
+    -FHistory: THistory;
+    ..
+    +property PMode: TDrawMode read FMode write FMode;
+    +property PIsDrawing: Boolean read FIsDrawing write FIsDrawing;
+    --
+    +constructor Create(AImageBitmap: TBitmap);
+    +destroy Destroy();override;
+    ..
+    +procedure HandleMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    +procedure HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    +procedure HandleMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    ..
+    +procedure HandleColorChange(AColor: Integer);
+    +procedure HandleWidthChange(AWidth: Integer);
+    ..
+    +procedure HandleUndo();
+    +procedure HandleRedo();
+    ..
+    +procedure HandleSaveFile();
+    +procedure HandleOpenFile();
+    --
+    -procedure HandleImportFile(APath: string; ABitmap: TBitmap; AGraManager: TGraphicManager);
+}
+
+class TGraphicReceiver {
+    -FImageBitmap: TBitmap;
+    -FPrevBitmap: TBitmap;
+    -FTempBitmap: TBitmap;
+    -FPen: TDrawPen;
+    ..
+    +property PPen: TDrawPen read GetDrawPen write SetDrawPen;
+    --
+    +constructor Create(AImageBitmap: TBitmap);
+    +destructor Destroy(); override;
+    ..
+    +function GetCurrentBitmap(): TBitmap;
+    +procedure SetDrawPen(APen: TDrawPen);
+    +function GetDrawPen(): TDrawPen;
+
+    +procedure DrawLine(AStart: TPoint; AEnd: TPoint);
+    +procedure UpdateLine(AStart: TPoint; AEnd: TPoint);
+
+    +procedure DrawRectangle(AStart: TPoint; AEnd: TPoint);
+    +procedure UpdateRectangle(AStart: TPoint; AEnd: TPoint);
+
+    +procedure DrawEllipse(AStart: TPoint; AEnd: TPoint);
+    +procedure UpdateEllipse(AStart: TPoint; AEnd: TPoint);
+
+    +procedure DrawCircle(AStart: TPoint; AEnd: TPoint);
+    +procedure UpdateCircle(AStart: TPoint; AEnd: TPoint);
+
+    +procedure MovePoint(APoint: TPoint);
+    +procedure ConnectPoint(APoint: TPoint);
+}
+
+TGraphicReceiver <.. TManager
+
+enum TGraphicType {
+    FREEHAND 
+    LINE 
+    RECTANGLE 
+    ELLIPSE
+}
+
+abstract class TGraphicObject {
+    -FType: TGraphicType;
+    -FColor: TColor;
+    -FWidth: Integer;
+    -FID: TGUID;
+    -FRelavantObjs: TList<TGUID>;
+    ..
+    +property PType: TGraphicType read GetType write SetType;
+    +property PColor: TColor read GetColor write SetColor;
+    +property PWidth: Integer read GetWidth write SetWidth;
+    +property PGUID: TGUID read GetGUID write FID;
+    --
+    +constructor Create();
+    +function GetPoints(): TList<TPoint>; virtual; abstract;
+    +function CheckPointExist(APoint: TPoint): Boolean; virtual; abstract;
+    +procedure DrawSelectBox(ABitmap: TBitmap); virtual; abstract;
+    +procedure SetPen(APen: TDrawPen);
+    +function GetType(): TGraphicType;
+    +procedure SetType(AType: TGraphicType);
+    +function GetColor(): TColor;
+    +procedure SetColor(AColor: TColor);
+    +function GetWidth(): Integer;
+    +procedure SetWidth(AWidth: Integer);
+    +function GetGUID(): TGUID; 
+}
+
+TGraphicType <.. TGraphicObject
+
+class TLine {
+    -FStartPoint: TPoint;
+    -FEndPoint: TPoint;
+    +constructor Create(AStart: TPoint; AEnd: TPoint);
+    +function GetPoints(): TList<TPoint>; override;
+    +function CheckPointExist(APoint: TPoint): Boolean;override;
+    +procedure DrawSelectBox(ABitmap: TBitmap);override;
+}
+
+class TRectangle {
+    -FStartPoint: TPoint;
+    -FEndPoint: TPoint;
+    +constructor Create(AStart: TPoint; AEnd: TPoint);
+    +function GetPoints(): TList<TPoint>; override;
+    +function CheckPointExist(APoint: TPoint): Boolean;override;
+    +procedure DrawSelectBox(ABitmap: TBitmap);override;
+}
+
+class TELLIPSE {
+    -FStartPoint: TPoint;
+    -FEndPoint: TPoint;
+    +constructor Create(AStart: TPoint; AEnd: TPoint);
+    +function GetPoints(): TList<TPoint>; override;
+    +function CheckPointExist(APoint: TPoint): Boolean;override;
+    +procedure DrawSelectBox(ABitmap: TBitmap);override;
+}
+
+class TFreeLine {
+    -FPoints: TList<TPoint>;
+    +constructor Create(AStart: TPoint; AEnd: TPoint);
+    +destructor Destroy(); override;
+    +function GetPoints(): TList<TPoint>; override;
+    +function CheckPointExist(APoint: TPoint): Boolean;override;
+    +procedure DrawSelectBox(ABitmap: TBitmap);override;
+}
+
+TGraphicObject <|.. TLine
+TGraphicObject <|.. TRectangle
+TGraphicObject <|.. TELLIPSE
+TGraphicObject <|.. TFreeLine
+
+
+class TGraphicManager {
+    -ListItem = TPair<TGUID, TGraphicObject>;
+    ..
+    -FGraphicDic: TDictionary<TGUID, TGraphicObject>;
+    -FGraphicList: TList<ListItem>;
+    --
+    +constructor Create();
+    +destructor Destroy(); override;
+    +procedure RegisterObject(AObject: TGraphicObject);
+    +function GetObject(AGUID: TGUID): TGraphicObject;
+    +procedure DeleteObject(AGUID: TGUID);
+    +function GetDictionnary(): TDictionary<TGUID, TGraphicObject>;
+    +function PointExitsObject(APoint: TPoint): TList<TGraphicObject>;
+}
+
+TGraphicObject o.. TGraphicManager 
+
+
+class TDataFile {
+    +constructor Create();
+    +destructor Destroy(); override;
+    +class function ImportFile(AString: string; AManager: TGraphicManager): TList<TGraphicObject>;
+    +class function ExportFile(AManager: TGraphicManager): ISuperObject;
+}
+
+
+abstract class TCommand {
+    -FPen: TDrawPen;
+    -FID: TGUID;
+    --
+    +constructor Create();
+    +destructor Destroy(); override;
+    +procedure Run(ABitmap: TBitmap); virtual; abstract;
+}
+
+class TDrawLine {
+    -FStartPoint: TPoint;
+    -FEndPoint: TPoint;
+    +constructor Create(); overload;
+    +constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint); overload;
+    +constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint; AGUID: TGUID); overload;
+    +destructor Destroy();override;
+    +procedure Run(ABitmap: TBitmap); override;
+}
+
+class TDrawRectangle {
+    -FStartPoint: TPoint;
+    -FEndPoint: TPoint;
+    +constructor Create();overload;
+    +constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint); overload;
+    +constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint; AGUID: TGUID);overload;
+    +destructor Destroy();override;
+    +procedure Run(ABitmap: TBitmap); override;
+}
+
+class TDrawELLIPSE {
+    -FStartPoint: TPoint;
+    -FEndPoint: TPoint;
+    --
+    +constructor Create;overload;
+    +constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint); overload;
+    +constructor Create(APen: TDrawPen; AStart: TPoint; AEnd: TPoint; AGUID: TGUID);overload;
+    +destructor Destroy;override;
+    +procedure Run(ABitmap: TBitmap); override; 
+}
+
+class TDrawBrush {
+    -FPoints: TList<TPoint>;
+    --
+    +constructor Create();overload;
+    +constructor Create(APen: TDrawPen; APoints: TList<TPoint>);overload;
+    +constructor Create(APen: TDrawPen; APoints: TList<TPoint>; AGUID: TGUID);overload;
+    +destructor Destroy();override;
+    +procedure Run(ABitmap: TBitmap); override;
+}
+
+TCommand <|.. TDrawLine   
+TCommand <|.. TDrawRectangle   
+TCommand <|.. TDrawELLIPSE   
+TCommand <|.. TDrawBrush   
+
+class THistoryItem {
+    -FSnapshot: TBitmap;
+    -FCommandList: TList<TCommand>;
+    -FManager: TGraphicManager;
+    -FCurrentIndex: Integer; 
+    -FRedoIndex: Integer;    
+    -FNumber: Integer;       
+    ..
+    {static} MAXSIZE: Integer;     
+    --
+    +constructor Create(ABitmap: TBitmap; AManager: TGraphicManager);
+    +destructor Destroy(); override;
+    ..
+    +procedure AddCommand(ACommand: TCommand);
+    +procedure UndoCommand();
+    +procedure RedoCommand();
+    +function Empty(): Boolean;
+    +function Full(): Boolean;
+    +function HasRedoItem(): Boolean;
+    +function ExecuteCurrentCommands(): TBitmap;
+    +function CommandNumber(): Integer;
+    +procedure ReleaseRedoResource();
+}
+
+class THistory {
+    -FHistoryList: TList<THistoryItem>;
+    -FCurrentIndex: Integer;
+    -FHasRedo: Boolean;
+    -FGraphicManger: TGraphicManager;
+    --
+    +constructor Create(AManager: TGraphicManager);
+    +destructor Destroy(); override;
+    ..
+    +procedure AddHistory(ABitmap: TBitmap; ACommand: TCommand);
+    +procedure UndoHistory(ABitmap: TBitmap);
+    +procedure RedoHistory(ABitmap: TBitmap);
+    +function Empty(): Boolean;
+    +procedure ReleaseRedoResource();
+    +function HasRedoCommands(): Boolean;
+}
+
+TCommand <.. THistoryItem
+THistoryItem o.. THistory
+
+enum TDrawMode {
+    drawBRUSH
+    drawLINE
+    drawRECTANGLE
+    drawCIRCLE
+    drawERASE
+    drawSELECT
+    drawELLIPSE
+}
+
+class TDrawPen {
+    -FColor: TColor;
+    -FWidth: Integer;
+    --
+    +constructor Create();overload;
+    +constructor Create(AColor: TColor; AWidth: Integer);overload;
+    +function GetWidth(): Integer;
+    +procedure SetWidth(AWidth: Integer);
+    +property PColor: TColor read FColor write FColor;
+    +property PWidth: Integer read GetWidth write SetWidth;
+}
+
+THistory *-- TManager
+TGraphicManager *-- TManager
+TDrawPen <.. TManager
+TDrawMode <.. TManager
+TDrawPen <.. TCommand
+
+TGraphicManager <.. THistory
+TGraphicManager <.. THistoryItem
+
+TDrawPen <.. TGraphicReceiver
+TDataFile <.. TManager
+
+class TTools {
+    +class function DrawTime(): string;
+    +class function PointToLineDistance(A: TPoint; B: TPoint; APoint: TPoint):Double;
+    +class function DistanceBetweenPoints(APoint:TPoint; BPoint: TPoint): Double;
+    +class function IsPointInInterval(A: Integer; B: Integer; X: Integer): Boolean;
+    +class function IsPointCloseAnother(APoint:TPoint; Another: TPoint): Boolean;
+}
+
+TTools <.. TGraphicObject
+TTools <.. TManager
+
+@enduml
+
+
