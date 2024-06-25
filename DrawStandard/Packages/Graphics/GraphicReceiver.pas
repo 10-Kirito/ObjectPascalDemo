@@ -6,6 +6,9 @@ uses
   Windows, Classes, Graphics, SysUtils, Tools;
 
 type
+  /// <summary>
+  ///   橡皮筋效果调用的绘制方法都位于该类当中
+  /// </summary>
   TGraphicReceiver = class
   private
     FImageBitmap: TBitmap;
@@ -14,29 +17,44 @@ type
     FPen: TDrawPen;
   public
     constructor Create(AImageBitmap: TBitmap);
-
     destructor Destroy; override;
 
+    /// <summary> 获取当前的Bitmap</summary>
     function GetCurrentBitmap: TBitmap;
+
+    /// <summary> 设置以及获取画笔的相关属性</summary>
     procedure SetDrawPen(APen: TDrawPen);
     function GetDrawPen: TDrawPen;
 
+    /// <summary> 绘制直线</summary>
+    /// <param name="AStart"></param>
+    /// <param name="AEnd"></param>
     procedure DrawLine(AStart: TPoint; AEnd: TPoint);
     procedure UpdateLine(AStart: TPoint; AEnd: TPoint);
 
+    /// <summary> 绘制矩形</summary>
+    /// <param name="AStart"></param>
+    /// <param name="AEnd"></param>
     procedure DrawRectangle(AStart: TPoint; AEnd: TPoint);
     procedure UpdateRectangle(AStart: TPoint; AEnd: TPoint);
 
+    /// <summary> 绘制椭圆</summary>
+    /// <param name="AStart"></param>
+    /// <param name="AEnd"></param>
     procedure DrawEllipse(AStart: TPoint; AEnd: TPoint);
     procedure UpdateEllipse(AStart: TPoint; AEnd: TPoint);
 
+    /// <summary> 绘制圆</summary>
+    /// <param name="AStart"></param>
+    /// <param name="AEnd"></param>
     procedure DrawCircle(AStart: TPoint; AEnd: TPoint);
     procedure UpdateCircle(AStart: TPoint; AEnd: TPoint);
 
+    /// <summary> 绘制自由线条</summary>
+    /// <param name="APoint"></param>
     procedure MovePoint(APoint: TPoint);
     procedure ConnectPoint(APoint: TPoint);
-
-    property PPen: TDrawPen read GetDrawPen write SetDrawPen;
+    property Pen: TDrawPen read GetDrawPen write SetDrawPen;
   end;
 
 implementation
@@ -45,8 +63,8 @@ implementation
 
 procedure UpdatePen(ABitmap: TBitmap; APen: TDrawPen);
 begin
-  ABitmap.Canvas.Pen.Color := APen.PColor;
-  ABitmap.Canvas.Pen.Width := APen.PWidth;
+  ABitmap.Canvas.Pen.Color := APen.Color;
+  ABitmap.Canvas.Pen.Width := APen.Width;
 end;
 
 { TGraphicReceiver }

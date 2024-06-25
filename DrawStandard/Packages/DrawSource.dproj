@@ -20,7 +20,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
-			<DCC_UnitSearchPath>E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\lib;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<DCC_UnitSearchPath>..\lib\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<BRCC_IncludePath>E:\Desktop\Projects\ObjectPascalDemo\DrawStandard\lib;$(BRCC_IncludePath)</BRCC_IncludePath>
 			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
 			<DCC_ImageBase>00400000</DCC_ImageBase>
@@ -51,10 +51,8 @@
 			<DCCReference Include="vcl.dcp"/>
 			<DCCReference Include="SuperJson.dcp"/>
 			<DCCReference Include="Graphics\GraphicReceiver.pas"/>
-			<DCCReference Include="Command.pas"/>
 			<DCCReference Include="Helper\Tools.pas"/>
 			<DCCReference Include="ManageCenter.pas"/>
-			<DCCReference Include="Command\CommandManager.pas"/>
 			<DCCReference Include="Command\Commands.pas"/>
 			<DCCReference Include="Graphics\GraphicObject.pas"/>
 			<DCCReference Include="Graphics\GraphicManager.pas"/>

@@ -3,9 +3,6 @@
 			<ProjectGuid>{2C0DAE22-F98C-4E8B-8491-442646AEEDEF}</ProjectGuid>
 		</PropertyGroup>
 		<ItemGroup>
-			<Projects Include="ThirdPackages\Json\SuperJson.dproj">
-				<Dependencies/>
-			</Projects>
 			<Projects Include="Packages\DrawSource.dproj">
 				<Dependencies/>
 			</Projects>
@@ -20,15 +17,6 @@
 				<Default.Personality/>
 			</BorlandProject>
 		</ProjectExtensions>
-		<Target Name="SuperJson">
-			<MSBuild Projects="ThirdPackages\Json\SuperJson.dproj"/>
-		</Target>
-		<Target Name="SuperJson:Clean">
-			<MSBuild Targets="Clean" Projects="ThirdPackages\Json\SuperJson.dproj"/>
-		</Target>
-		<Target Name="SuperJson:Make">
-			<MSBuild Targets="Make" Projects="ThirdPackages\Json\SuperJson.dproj"/>
-		</Target>
 		<Target Name="DrawSource">
 			<MSBuild Projects="Packages\DrawSource.dproj"/>
 		</Target>
@@ -48,13 +36,13 @@
 			<MSBuild Targets="Make" Projects="Draw.dproj"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="SuperJson;DrawSource;Draw"/>
+			<CallTarget Targets="DrawSource;Draw"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="SuperJson:Clean;DrawSource:Clean;Draw:Clean"/>
+			<CallTarget Targets="DrawSource:Clean;Draw:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="SuperJson:Make;DrawSource:Make;Draw:Make"/>
+			<CallTarget Targets="DrawSource:Make;Draw:Make"/>
 		</Target>
 		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 	</Project>

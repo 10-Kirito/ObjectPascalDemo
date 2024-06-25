@@ -7,13 +7,25 @@ uses
   GraphicManager, Tools;
 
 type
+  /// <summary>
+  ///  文件类：
+  ///  - 提供导入和导出JSON文件方法
+  /// </summary>
   TDataFile = class
   private
   public
     constructor Create;
     destructor Destroy; override;
 
+    /// <summary> 导入JSON文件</summary>
+    /// <param name="AString">导入文件的路径</param>
+    /// <param name="AManager">导入的文件分析得到的图形对象都会在该对象当中注册</param>
+    /// <returns>返回分析出来的对象列表</returns>
     class function ImportFile(AString: string; AManager: TGraphicManager): TList<TGraphicObject>;
+
+    /// <summary> 导出JSON文件</summary>
+    /// <param name="AManager">传入的是图形对象管理器</param>
+    /// <returns>返回ISuperObject对象，里面含有所有的图形对象</returns>
     class function ExportFile(AManager: TGraphicManager): ISuperObject;
   end;
 
@@ -66,7 +78,9 @@ var
   LTemp: TList<TPoint>;
   AGUID: string;
 begin
-  case StrToType(AElement.S['type']) of
+  LObject := nil;
+
+  case TGraphicObject.StrToType(AElement.S['type']) of
     FREEHAND:
       begin
         LTemp:= ParsePointsFromJson(AElement.O['points'].AsArray);
@@ -91,10 +105,13 @@ begin
   end;
 
   AGUID := AElement.S['GUID'];
-  LObject.PGUID := StringToGUID(AGUID);
 
-  LObject.SetColor(AElement.I['color']);
-  LObject.SetWidth(AElement.I['width']);
+  if Assigned(LObject) then
+  begin
+    LObject.GUID := StringToGUID(AGUID);
+    LObject.SetColor(AElement.I['color']);
+    LObject.SetWidth(AElement.I['width']);
+  end;
 
   Result := LObject;
 end;
@@ -125,7 +142,6 @@ var
   LGraphicObject: TGraphicObject;
   LListPoint: TList<TPoint>;
   GUIDString: string;
-  SaveDialog: TSaveDialog;
 begin
   LGraphicDic := AManager.GetDictionnary;
   LFile := SO;
@@ -135,7 +151,7 @@ begin
   begin
     LElement := SO;
     LGraphicObject := LPair.Value;
-    LElement.S['type'] := TypeToStr(LGraphicObject.GetType);
+    LElement.S['type'] := TGraphicObject.TypeToStr(LGraphicObject.GetType);
 
     GUIDString := GUIDToString(LGraphicObject.GetGUID);
     // GUIDString := StringReplace(GUIDString, '{', '', [rfReplaceAll]);

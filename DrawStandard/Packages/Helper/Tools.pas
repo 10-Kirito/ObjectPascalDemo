@@ -6,9 +6,17 @@ uses
   Classes, Graphics, Windows, SysUtils;
 
 type
+  /// <summary>
+  ///   全局绘制模式：
+  ///   - 用来判断当前的绘制状态
+  /// </summary>
   TDrawMode = (drawBRUSH, drawLINE, drawRECTANGLE, drawCIRCLE, drawERASE,
     drawSELECT, drawELLIPSE);
 
+  /// <summary>
+  ///   自定义画笔：
+  ///   - 其中只包含属性FColor以及FWidth
+  /// </summary>
   TDrawPen = class
   private
     FColor: TColor;
@@ -16,29 +24,46 @@ type
   public
     constructor Create;overload;
     constructor Create(AColor: TColor; AWidth: Integer);overload;
-
     function GetWidth: Integer;
     procedure SetWidth(AWidth: Integer);
-
-    property PColor: TColor read FColor write FColor;
-    property PWidth: Integer read GetWidth write SetWidth;
+    property Color: TColor read FColor write FColor;
+    property Width: Integer read GetWidth write SetWidth;
   end;
 
+  /// <summary>
+  ///   全局辅助函数类：
+  ///   - 该类当中具有若干个类工具函数用来辅助其余的函数
+  /// </summary>
   TTools = class
   public
-    // Get the drawing time!
+    /// <summary> 获取当前的时间</summary>
+    /// <returns> 返回值为'yyyy-mm-dd-hh-nn-ss'格式的字符串</returns>
     class function DrawTime: string;
 
-    // Calculate the distance from a point to a line!
+    /// <summary> 计算点到线段的距离</summary>
+    /// <param name="A">线段的端点A</param>
+    /// <param name="B">线段的端点B</param>
+    /// <param name="APoint">需要计算的顶点APoint</param>
+    /// <returns>返回相应的距离</returns>
     class function PointToLineDistance(A: TPoint; B: TPoint; APoint: TPoint):Double;
 
-    // Calculate the distance between two points!
+    /// <summary>计算两点之间的距离</summary>
+    /// <param name="APoint">其中一个顶点</param>
+    /// <param name="BPoint">另外一个顶点</param>
+    /// <returns>返回相应的距离</returns>
     class function DistanceBetweenPoints(APoint:TPoint; BPoint: TPoint): Double;
 
-    // 判断一个顶点是否位于区间[x1, x2]之间，x1和x2的大小不确定!
+    /// <summary>判断一个整数X是否位于区间[A, B]之间，X和B的大小不确定</summary>
+    /// <param name="A"></param>
+    /// <param name="B"></param>
+    /// <param name="X"></param>
+    /// <returns>如果位于的话，返回True, 反之返回False</returns>
     class function IsPointInInterval(A: Integer; B: Integer; X: Integer): Boolean;
 
-    // 判断一个顶点是否位于另外一个顶点附近
+    /// <summary>判断一个顶点是否位于另外一个顶点附近</summary>
+    /// <param name="APoint">顶点A</param>
+    /// <param name="Another">另外一个顶点</param>
+    /// <returns>如果两点之间的距离小于10，返回True, 否则返回False</returns>
     class function IsPointCloseAnother(APoint:TPoint; Another: TPoint): Boolean;
   end;
 

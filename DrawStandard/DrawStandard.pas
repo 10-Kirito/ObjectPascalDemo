@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, RzLstBox, RzButton, ImgList, ExtCtrls, RzPanel, RzCommon,
   RzBorder, RzPopups, RzDBList, Grids, RzGrids, RzCmboBx, Mask, RzEdit, Buttons,
-  Menus, GraphicReceiver, Tools, Command, ManageCenter, RzTrkBar, ActnList;
+  Menus, GraphicReceiver, Tools, ManageCenter, RzTrkBar, ActnList;
 
 type
   TMainForm = class(TForm)
@@ -68,7 +68,7 @@ end;
 
 procedure TMainForm.btnCircleClick(Sender: TObject);
 begin
-  FManger.PMode := drawELLIPSE;
+  FManger.Mode := drawELLIPSE;
 end;
 
 procedure TMainForm.btnCurveClick(Sender: TObject);
@@ -78,7 +78,7 @@ end;
 
 procedure TMainForm.btnLineClick(Sender: TObject);
 begin
-  FManger.PMode := drawLINE;
+  FManger.Mode := drawLINE;
 end;
 
 procedure TMainForm.btnOpenClick(Sender: TObject);
@@ -88,12 +88,12 @@ end;
 
 procedure TMainForm.btnPenClick(Sender: TObject);
 begin
-  FManger.PMode := drawBRUSH;
+  FManger.Mode := drawBRUSH;
 end;
 
 procedure TMainForm.btnRecClick(Sender: TObject);
 begin
-  FManger.PMode := drawRECTANGLE;
+  FManger.Mode := drawRECTANGLE;
 end;
 
 procedure TMainForm.btnRedoClick(Sender: TObject);
@@ -108,7 +108,7 @@ end;
 
 procedure TMainForm.btnSelectClick(Sender: TObject);
 begin
-  FManger.PMode := drawSELECT;
+  FManger.Mode := drawSELECT;
 end;
 
 procedure TMainForm.btnUndoClick(Sender: TObject);

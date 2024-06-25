@@ -6,8 +6,15 @@ uses
   Windows, Graphics, SysUtils, Generics.Collections, Tools;
 
 type
+  /// <summary>
+  ///   图形对象的类型
+  /// </summary>
   TGraphicType = (FREEHAND, LINE, RECTANGLE, ELLIPSE);
 
+  /// <summary>
+  ///   图形对象的抽象基类：
+  ///   - 存储图形对象共有属性以及方法
+  /// </summary>
   TGraphicObject = class
   private
     FType: TGraphicType;
@@ -15,36 +22,55 @@ type
     FWidth: Integer;
 
     FID: TGUID;
-    FRelavantObjs: TList<TGUID>;
   public
-    // constructor and destructor
     constructor Create;
-    // get all points of the graphic
+
+    /// <summary> 获取当前图形对象的所有的顶点</summary>
+    /// <returns> 返回一个列表</returns>
     function GetPoints: TList<TPoint>; virtual; abstract;
-    // check the point if exist in the graphic
+
+    /// <summary> 判断给定点是否属于当前图形对象</summary>
+    /// <param name="APoint"> 传入鼠标所在的位置</param>
     function CheckPointExist(APoint: TPoint): Boolean; virtual; abstract;
 
-    // draw a select box
+    /// <summary> 在当前图形的周围绘制一个选择框</summary>
+    /// <param name="ABitmap"> 传入当前Canvas对应的Bitmap</param>
     procedure DrawSelectBox(ABitmap: TBitmap); virtual; abstract;
 
-    procedure SetPen(APen: TDrawPen);
-
     // functions and procedures
+    procedure SetPen(APen: TDrawPen);
     function GetType: TGraphicType;
     procedure SetType(AType: TGraphicType);
     function GetColor: TColor;
     procedure SetColor(AColor: TColor);
     function GetWidth: Integer;
     procedure SetWidth(AWidth: Integer);
-    function GetGUID: TGUID; // will created in the Create; only for read;
+    function GetGUID: TGUID;
 
-    // properties
-    property PType: TGraphicType read GetType write SetType;
-    property PColor: TColor read GetColor write SetColor;
-    property PWidth: Integer read GetWidth write SetWidth;
-    property PGUID: TGUID read GetGUID write FID;
+    /// <summary> 当前图形对象所对应的类型</summary>
+    property GraphicType: TGraphicType read GetType write SetType;
+
+    /// <summary> 绘制该图形对象的颜色</summary>
+    property Color: TColor read GetColor write SetColor;
+
+    /// <summary> 绘制该图形对象的宽度</summary>
+    property Width: Integer read GetWidth write SetWidth;
+
+    /// <summary> 该图形对象对应的GUID</summary>
+    property GUID: TGUID read GetGUID write FID;
+
+    /// <summary> 将图形类型转换为字符串返回</summary>
+    /// <param name="AType">图形类型</param>
+    class function TypeToStr(AType: TGraphicType): string;
+
+    /// <summary> 将字符串转换为图形类型</summary>
+    /// <param name="AType">字符串</param>
+    class function StrToType(AString: string): TGraphicType;
   end;
 
+  /// <summary>
+  ///  线段图形对象
+  /// </summary>
   TLine = class(TGraphicObject)
   private
     FStartPoint: TPoint;
@@ -56,6 +82,9 @@ type
     procedure DrawSelectBox(ABitmap: TBitmap);override;
   end;
 
+  /// <summary>
+  ///  矩形图形对象
+  /// </summary>
   TRectangle = class(TGraphicObject)
   private
     FStartPoint: TPoint;
@@ -67,6 +96,9 @@ type
     procedure DrawSelectBox(ABitmap: TBitmap);override;
   end;
 
+  /// <summary>
+  ///  椭圆图形对象
+  /// </summary>
   TELLIPSE = class(TGraphicObject)
   private
     FStartPoint: TPoint;
@@ -78,6 +110,9 @@ type
     procedure DrawSelectBox(ABitmap: TBitmap);override;
   end;
 
+  /// <summary>
+  ///  自由绘制对应的图形对象
+  /// </summary>
   TFreeLine = class(TGraphicObject)
   private
     FPoints: TList<TPoint>;
@@ -89,11 +124,6 @@ type
     function CheckPointExist(APoint: TPoint): Boolean;override;
     procedure DrawSelectBox(ABitmap: TBitmap);override;
   end;
-
-function TypeToStr(AType: TGraphicType): string;
-
-function StrToType(AString: string): TGraphicType;
-
 implementation
 
 { TGraphicObject }
@@ -130,7 +160,7 @@ end;
 
 procedure TGraphicObject.SetPen(APen: TDrawPen);
 begin
-  FColor := APen.PColor;
+  FColor := APen.Color;
   FWidth := APen.GetWidth;
 end;
 
@@ -142,6 +172,48 @@ end;
 procedure TGraphicObject.SetWidth(AWidth: Integer);
 begin
   FWidth := AWidth;
+end;
+
+class function TGraphicObject.StrToType(AString: string): TGraphicType;
+begin
+  if AString = 'line' then
+  begin
+    Result := LINE;
+  end
+  else if AString = 'freehand' then
+  begin
+    Result := FREEHAND;
+  end
+  else if AString = 'rectangle' then
+  begin
+    Result := RECTANGLE;
+  end
+  else
+  begin
+    Result := ELLIPSE;
+  end;
+end;
+
+class function TGraphicObject.TypeToStr(AType: TGraphicType): string;
+begin
+  case AType of
+    FREEHAND:
+      begin
+        Result := 'freehand';
+      end;
+    LINE:
+      begin
+        Result := 'line';
+      end;
+    RECTANGLE:
+      begin
+        Result := 'rectangle';
+      end;
+    ELLIPSE:
+      begin
+        Result := 'ellipse';
+      end;
+  end;
 end;
 
 { TLine }
@@ -359,54 +431,11 @@ begin
   ABitmap.Canvas.Brush.Style := bsSolid;
 end;
 
-function TypeToStr(AType: TGraphicType): string;
-begin
-  case AType of
-    FREEHAND:
-      begin
-        Result := 'freehand';
-      end;
-    LINE:
-      begin
-        Result := 'line';
-      end;
-    RECTANGLE:
-      begin
-        Result := 'rectangle';
-      end;
-    ELLIPSE:
-      begin
-        Result := 'ellipse';
-      end;
-  end;
-end;
-
 function TELLIPSE.GetPoints: TList<TPoint>;
 begin
   Result := TList<TPoint>.Create;
   Result.Add(FStartPoint);
   Result.Add(FEndPoint);
-end;
-
-function StrToType(AString: string): TGraphicType;
-begin
-
-  if AString = 'line' then
-  begin
-    Result := LINE;
-  end
-  else if AString = 'freehand' then
-  begin
-    Result := FREEHAND;
-  end
-  else if AString = 'rectangle' then
-  begin
-    Result := RECTANGLE;
-  end
-  else if AString = 'ellipse' then
-  begin
-    Result := ELLIPSE;
-  end;
 end;
 
 end.

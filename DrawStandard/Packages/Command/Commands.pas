@@ -6,6 +6,10 @@ uses
   Generics.Collections, Classes, Windows, Graphics, GraphicReceiver, Tools;
 
 type
+
+  /// <summary>
+  ///   抽象命令基类
+  /// </summary>
   TCommand = class
   private
     FPen: TDrawPen;
@@ -14,9 +18,14 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    /// <summary>在给定的Bitmap当中执行该命令</summary>
+    /// <param name="ABitmap"> 给定的Bitmap</param>
     procedure Run(ABitmap: TBitmap); virtual; abstract;
   end;
 
+  /// <summary>
+  ///   绘制直线命令
+  /// </summary>
   TDrawLine = class(TCommand)
   private
     FStartPoint: TPoint;
@@ -30,6 +39,9 @@ type
     procedure Run(ABitmap: TBitmap); override;
   end;
 
+  /// <summary>
+  ///   绘制矩形命令
+  /// </summary>
   TDrawRectangle = class(TCommand)
   private
     FStartPoint: TPoint;
@@ -43,6 +55,9 @@ type
     procedure Run(ABitmap: TBitmap); override;
   end;
 
+  /// <summary>
+  ///   绘制椭圆命令
+  /// </summary>
   TDrawELLIPSE = class(TCommand)
   private
     FStartPoint: TPoint;
@@ -56,6 +71,9 @@ type
     procedure Run(ABitmap: TBitmap); override;
   end;
 
+  /// <summary>
+  ///   自由笔刷绘制命令
+  /// </summary>
   TDrawBrush = class(TCommand)
   private
     FPoints: TList<TPoint>;
@@ -87,8 +105,8 @@ begin
   FEndPoint := AEnd;
 
   FPen := TDrawPen.Create;
-  FPen.PColor := APen.PColor;
-  FPen.PWidth := APen.PWidth;
+  FPen.Color := APen.Color;
+  FPen.Width := APen.Width;
 end;
 
 constructor TDrawLine.Create(APen: TDrawPen; AStart, AEnd: TPoint);
@@ -99,8 +117,8 @@ begin
   FEndPoint := AEnd;
 
   FPen := TDrawPen.Create;
-  FPen.PColor := APen.PColor;
-  FPen.PWidth := APen.PWidth;
+  FPen.Color := APen.Color;
+  FPen.Width := APen.Width;
 end;
 
 destructor TDrawLine.Destroy;
@@ -111,8 +129,8 @@ end;
 
 procedure TDrawLine.Run(ABitmap: TBitmap);
 begin
-  ABitmap.Canvas.Pen.Color := FPen.PColor;
-  ABitmap.Canvas.Pen.Width := FPen.PWidth;
+  ABitmap.Canvas.Pen.Color := FPen.Color;
+  ABitmap.Canvas.Pen.Width := FPen.Width;
   // ABitmap.Canvas.Brush.Style := bsClear;
   ABitmap.Canvas.MoveTo(FStartPoint.X, FStartPoint.Y);
   ABitmap.Canvas.LineTo(FEndPoint.X, FEndPoint.Y);
@@ -145,8 +163,8 @@ begin
   FEndPoint := AEnd;
 
   FPen := TDrawPen.Create;
-  FPen.PColor := APen.PColor;
-  FPen.PWidth := APen.PWidth;
+  FPen.Color := APen.Color;
+  FPen.Width := APen.Width;
 end;
 
 constructor TDrawRectangle.Create(APen: TDrawPen; AStart, AEnd: TPoint);
@@ -157,8 +175,8 @@ begin
   FEndPoint := AEnd;
 
   FPen := TDrawPen.Create;
-  FPen.PColor := APen.PColor;
-  FPen.PWidth := APen.PWidth;
+  FPen.Color := APen.Color;
+  FPen.Width := APen.Width;
 end;
 
 destructor TDrawRectangle.Destroy;
@@ -170,8 +188,8 @@ end;
 
 procedure TDrawRectangle.Run(ABitmap: TBitmap);
 begin
-  ABitmap.Canvas.Pen.Color := FPen.PColor;
-  ABitmap.Canvas.Pen.Width := FPen.PWidth;
+  ABitmap.Canvas.Pen.Color := FPen.Color;
+  ABitmap.Canvas.Pen.Width := FPen.Width;
   ABitmap.Canvas.Brush.Style := bsClear;
   ABitmap.Canvas.Rectangle(FStartPoint.X, FStartPoint.Y, FEndPoint.X,
     FEndPoint.Y);
@@ -192,8 +210,8 @@ begin
   FID := AGUID;
 
   FPen := TDrawPen.Create;
-  FPen.PColor := APen.PColor;
-  FPen.PWidth := APen.PWidth;
+  FPen.Color := APen.Color;
+  FPen.Width := APen.Width;
   FPoints := TList<TPoint>.Create;
 
   for LPoint in APoints do
@@ -209,8 +227,8 @@ begin
   inherited Create;
 
   FPen := TDrawPen.Create;
-  FPen.PColor := APen.PColor;
-  FPen.PWidth := APen.PWidth;
+  FPen.Color := APen.Color;
+  FPen.Width := APen.Width;
   FPoints := TList<TPoint>.Create;
 
   for LPoint in APoints do
@@ -236,8 +254,8 @@ begin
     Exit;
   end;
   ABitmap.Canvas.Brush.Style := bsClear;
-  ABitmap.Canvas.Pen.Color := FPen.PColor;
-  ABitmap.Canvas.Pen.Width := FPen.PWidth;
+  ABitmap.Canvas.Pen.Color := FPen.Color;
+  ABitmap.Canvas.Pen.Width := FPen.Width;
 
   LFirstPoint := FPoints[0];
   ABitmap.Canvas.MoveTo(LFirstPoint.X, LFirstPoint.Y);
@@ -266,8 +284,8 @@ begin
   FEndPoint := AEnd;
 
   FPen := TDrawPen.Create;
-  FPen.PColor := APen.PColor;
-  FPen.PWidth := APen.PWidth;
+  FPen.Color := APen.Color;
+  FPen.Width := APen.Width;
 end;
 
 constructor TDrawELLIPSE.Create(APen: TDrawPen; AStart, AEnd: TPoint);
@@ -278,8 +296,8 @@ begin
   FEndPoint := AEnd;
 
   FPen := TDrawPen.Create;
-  FPen.PColor := APen.PColor;
-  FPen.PWidth := APen.PWidth;
+  FPen.Color := APen.Color;
+  FPen.Width := APen.Width;
 end;
 
 destructor TDrawELLIPSE.Destroy;
@@ -290,8 +308,8 @@ end;
 
 procedure TDrawELLIPSE.Run(ABitmap: TBitmap);
 begin
-  ABitmap.Canvas.Pen.Color := FPen.PColor;
-  ABitmap.Canvas.Pen.Width := FPen.PWidth;
+  ABitmap.Canvas.Pen.Color := FPen.Color;
+  ABitmap.Canvas.Pen.Width := FPen.Width;
 
   ABitmap.Canvas.Brush.Style := bsClear;
   ABitmap.Canvas.Ellipse(FStartPoint.X, FStartPoint.Y, FEndPoint.X,

@@ -8,11 +8,16 @@ uses
   SysUtils, Graphics, Generics.Collections, Commands, GraphicManager;
 
 type
+  /// <summary>
+  ///   历史记录Histiry底层的数据结构
+  ///   - 保存有相应的快照以及对应的命令列表;
+  ///   - 负责获取当前命令对应的绘制结果;
+  ///   - 保存有当前命令以及Redo命令指针;
+  /// </summary>
   THistoryItem = class
   private
     FSnapshot: TBitmap;
     FCommandList: TList<TCommand>;
-
     FManager: TGraphicManager;
 
     FCurrentIndex: Integer; // Record the current command index;
@@ -25,40 +30,70 @@ type
     constructor Create(ABitmap: TBitmap; AManager: TGraphicManager);
     destructor Destroy; override;
 
+    /// <summary> 添加命令到历史记录当中</summary>
+    /// <param name="ACommand"> 需要添加的命令</param>
     procedure AddCommand(ACommand: TCommand);
+
+    /// <summary> 撤销历史记录当中的命令</summary>
     procedure UndoCommand;
+
+    /// <summary> 重新刚才撤销的命令</summary>
     procedure RedoCommand;
 
+    /// <summary> 判断当前对应的THistoryItem是否为空</summary>
     function Empty: Boolean;
+
+    /// <summary> 判断当前对应THistoryItem是否已经满</summary>
     function Full: Boolean;
+
+    /// <summary> 判断当前是否需要重新执行的命令</summary>
     function HasRedoItem: Boolean;
+
+    /// <summary> 获取当前THistoryItem当中存储[0, FCurrentIndex]之间的命令对应的绘制结果</summary>
+    /// <returns> 返回TBitmap，即绘制结果</returns>
     function ExecuteCurrentCommands: TBitmap;
 
+    /// <summary> 返回当前THistoryItem当中存储的命令的个数，包含即将Redo的命令</summary>
     function CommandNumber: Integer;
 
+    /// <summary> 当有新的命令执行的时候，将当前THistoryItem存储的命令资源释放</summary>
     procedure ReleaseRedoResource;
   end;
 
+  /// <summary>
+  ///  历史记录类：
+  ///  - 封装了相应的撤销以及重做方法；
+  /// </summary>
   THistory = class
-  private
   private
     FHistoryList: TList<THistoryItem>;
     FCurrentIndex: Integer;
-
     FHasRedo: Boolean;
-
     FGraphicManger: TGraphicManager;
   public
     constructor Create(AManager: TGraphicManager);
     destructor Destroy; override;
 
+    /// <summary> 添加新的绘制命令</summary>
+    /// <param name="ABitmap">当前添加的新的命令绘制之前的Bitmap</param>
+    /// <param name="ACommand">新的绘制命令</param>
     procedure AddHistory(ABitmap: TBitmap; ACommand: TCommand);
 
+    /// <summary> 撤销历史记录当中的绘制命令</summary>
+    /// <param name="ABitmap"> 当前画布对应的Bitmap</param>
     procedure UndoHistory(ABitmap: TBitmap);
+
+    /// <summary> 重新执行刚才撤销的绘制命令</summary>
+    /// <param name="ABitmap">当前画布对应的Bitmap</param>
     procedure RedoHistory(ABitmap: TBitmap);
+
+    /// <summary> 判断当前历史记录是否为空</summary>
     function Empty: Boolean;
+
+    /// <summary> 当有新的命令添加到历史记录当中的时候，释放历史记录当中等待重新执行的命令资源</summary>
     procedure ReleaseRedoResource;
 
+    /// <summary> 判断当前是否具有待重新执行的命令</summary>
     function HasRedoCommands: Boolean;
   end;
 
@@ -194,7 +229,6 @@ procedure THistory.RedoHistory(ABitmap: TBitmap);
 var
   LHistoryItem: THistoryItem;
   LBitmap: TBitmap;
-  LIndex: Integer;
 begin
   {
     1. 首先判断当前是否存在可以Redo的命令，这里通过类内的函数HasRedoCommands来实现。

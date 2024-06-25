@@ -11,6 +11,7 @@ type
     FCommandStack: TStack<TCommand>;
     FRedoStack: TStack<TCommand>;
   public
+    //
     constructor Create;
     destructor Destroy;override;
     procedure ExecuteCommand(ACommand: TCommand; ABitmap: TBitmap);

@@ -1,0 +1,41 @@
+Date : 2024-06-25 10:57:05
+Directory : e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages
+Total : 11 files,  1933 codes, 244 comments, 443 blanks, all 2620 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Pascal   |         11 |      1,933 |        244 |        443 |      2,620 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                    | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                       |         11 |      1,933 |        244 |        443 |      2,620 |
+| . (Files)                                                                               |          3 |        487 |         74 |        113 |        674 |
+| Command                                                                                 |          2 |        293 |         10 |         83 |        386 |
+| Files                                                                                   |          1 |        165 |          5 |         34 |        204 |
+| Graphics                                                                                |          3 |        559 |         27 |        128 |        714 |
+| Helper                                                                                  |          1 |        111 |          7 |         28 |        146 |
+| History                                                                                 |          1 |        318 |        121 |         57 |        496 |
++-----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                | language | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Command.pas                  | Pascal   |        142 |         10 |         54 |        206 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Command\CommandManager.pas   | Pascal   |         63 |          5 |         15 |         83 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Command\Commands.pas         | Pascal   |        230 |          5 |         68 |        303 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\DrawSource.dpk               | Pascal   |         17 |         25 |          8 |         50 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Files\GraphicFile.pas        | Pascal   |        165 |          5 |         34 |        204 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Graphics\GraphicManager.pas  | Pascal   |         77 |          5 |         24 |        106 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Graphics\GraphicObject.pas   | Pascal   |        329 |         19 |         66 |        414 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Graphics\GraphicReceiver.pas | Pascal   |        153 |          3 |         38 |        194 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\Helper\Tools.pas             | Pascal   |        111 |          7 |         28 |        146 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\History\History.pas          | Pascal   |        318 |        121 |         57 |        496 |
+| e:\Desktop\Projects\ObjectPascalDemo\DrawStandard\Packages\ManageCenter.pas             | Pascal   |        328 |         39 |         51 |        418 |
+| Total                                                                                   |          |      1,933 |        244 |        443 |      2,620 |
++-----------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

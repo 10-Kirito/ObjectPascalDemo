@@ -4,15 +4,16 @@ interface
 
 uses
   superobject, SysUtils, Generics.Collections, Dialogs, Controls, Classes, Windows, Graphics,
-  ExtCtrls, Command, GraphicReceiver, Tools, Commands, GraphicManager,
+  ExtCtrls, GraphicReceiver, Tools, Commands, GraphicManager,
   GraphicObject, History, GraphicFile;
 
 type
-  {TManager:
-    1. manage the canvas global status: FMode, FIsDrawing, FPen;
-    2. register all commands;
-    3. handler all events;
-  }
+  /// <summary>
+  ///  全局管理类:
+  ///  - 管理全局画布绘制状态；
+  ///  - 注册所有的命令；
+  ///  - 处理UI页面上的所有的事件；
+  /// </summary>
   TManager = class
   private
     FImageBitmap: TBitmap; // target bitmap
@@ -37,20 +38,59 @@ type
     constructor Create(AImageBitmap: TBitmap);
     destructor Destroy; override;
 
-    procedure HandleEvents;
+    /// <summary> 处理鼠标按下事件</summary>
+    /// <param name="Sender"></param>
+    /// <param name="Button"> 按下的鼠标</param>
+    /// <param name="Shift"></param>
+    /// <param name="X">鼠标的X坐标</param>
+    /// <param name="Y">鼠标的Y坐标</param>
     procedure HandleMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+
+    /// <summary> 处理鼠标移动事件</summary>
+    /// <param name="Sender"></param>
+    /// <param name="Shift"></param>
+    /// <param name="X">鼠标移动的X坐标</param>
+    /// <param name="Y">鼠标移动的Y坐标</param>
     procedure HandleMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+
+    /// <summary> 处理鼠标松开事件</summary>
+    /// <param name="Sender"></param>
+    /// <param name="Button">对应的鼠标按键</param>
+    /// <param name="Shift"></param>
+    /// <param name="X">鼠标的X坐标</param>
+    /// <param name="Y">鼠标的Y坐标</param>
     procedure HandleMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+
+    /// <summary> 处理修改颜色事件</summary>
+    /// <param name="AColor">修改后的颜色</param>
     procedure HandleColorChange(AColor: Integer);
+
+    /// <summary> 处理修改笔刷宽度事件</summary>
+    /// <param name="AWidth">修改后的宽度</param>
     procedure HandleWidthChange(AWidth: Integer);
+
+    /// <summary> 处理撤销操作</summary>
     procedure HandleUndo;
+
+    /// <summary> 处理重新执行操作</summary>
     procedure HandleRedo;
+
+    /// <summary> 处理保存文件操作</summary>
     procedure HandleSaveFile;
+
+    /// <summary> 处理打开文件操作</summary>
     procedure HandleOpenFile;
 
-    property PMode: TDrawMode read FMode write FMode;
-    property PIsDrawing: Boolean read FIsDrawing write FIsDrawing;
+    // 判断当前绘制模式
+    property Mode: TDrawMode read FMode write FMode;
+
+    // 判断当前是否为绘制状态
+    property IsDrawing: Boolean read FIsDrawing write FIsDrawing;
   private
+    /// <summary> 处理导入文件</summary>
+    /// <param name="APath">文件的路径</param>
+    /// <param name="ABitmap">要绘制的目标Bitmap</param>
+    /// <param name="AGraManager">全局图形对象管理器</param>
     procedure HandleImportFile(APath: string; ABitmap: TBitmap; AGraManager: TGraphicManager);
   end;
 
@@ -89,12 +129,7 @@ end;
 
 procedure TManager.HandleColorChange(AColor: Integer);
 begin
-  FPen.PColor := TColor(AColor);
-end;
-
-procedure TManager.HandleEvents;
-begin
-  /// TODO!!!
+  FPen.Color := TColor(AColor);
 end;
 
 procedure DrawFromGraphics(ABitmap: TBitmap; AList: TList<TGraphicObject>);
@@ -109,6 +144,9 @@ begin
   begin
     LPen := TDrawPen.Create(LObject.GetColor, LObject.GetWidth);
     LPoints := LObject.GetPoints;
+
+    LCommand := nil;
+
     case LObject.GetType of
       FREEHAND:
         begin
@@ -127,8 +165,12 @@ begin
           LCommand := TDrawELLIPSE.Create(LPen, LPoints[0], LPoints[1]);
         end;
     end;
-    LCommand.Run(ABitmap);
-    LCommand.Free;
+
+    if Assigned(LCommand) then
+    begin
+      LCommand.Run(ABitmap);
+      LCommand.Free;
+    end;
     LPen.Free;
     LPoints.Free;
   end;
@@ -285,7 +327,7 @@ begin
               LObject := TFreeLine.Create(FPoints);
               FGraphicManager.RegisterObject(LObject);
               LObject.SetPen(FPen);
-              LCommand := TDrawBrush.Create(FPen, FPoints, LObject.PGUID);
+              LCommand := TDrawBrush.Create(FPen, FPoints, LObject.GUID);
               FHistory.AddHistory(FImageBitmap, LCommand);
               LCommand.Run(FImageBitmap);
 
@@ -297,7 +339,7 @@ begin
             LObject := TLine.Create(FStartPoint, FEndPoint);
             FGraphicManager.RegisterObject(LObject);
             LObject.SetPen(FPen);
-            LCommand := TDrawLine.Create(FPen, FStartPoint, FEndPoint, LObject.PGUID);
+            LCommand := TDrawLine.Create(FPen, FStartPoint, FEndPoint, LObject.GUID);
             FHistory.AddHistory(FImageBitmap, LCommand);
             LCommand.Run(FImageBitmap);
           end;
@@ -306,7 +348,7 @@ begin
             LObject := TRectangle.Create(FStartPoint, FEndPoint);
             FGraphicManager.RegisterObject(LObject);
             LObject.SetPen(FPen);
-            LCommand := TDrawRectangle.Create(FPen, FStartPoint, FEndPoint, LObject.PGUID);
+            LCommand := TDrawRectangle.Create(FPen, FStartPoint, FEndPoint, LObject.GUID);
             FHistory.AddHistory(FImageBitmap, LCommand);
             LCommand.Run(FImageBitmap);
           end;
@@ -319,7 +361,7 @@ begin
             LObject := TELLIPSE.Create(FStartPoint, FEndPoint);
             FGraphicManager.RegisterObject(LObject);
             LObject.SetPen(FPen);
-            LCommand := TDrawELLIPSE.Create(FPen, FStartPoint, FEndPoint, LObject.PGUID);
+            LCommand := TDrawELLIPSE.Create(FPen, FStartPoint, FEndPoint, LObject.GUID);
             FHistory.AddHistory(FImageBitmap, LCommand);
             LCommand.Run(FImageBitmap);
           end;
@@ -334,7 +376,6 @@ procedure TManager.HandleOpenFile;
 var
   OpenDialog: TOpenDialog;
   FileName: string;
-  LFile: ISuperObject;
 begin
   OpenDialog := TOpenDialog.Create(nil);
   try
@@ -358,7 +399,6 @@ end;
 
 procedure TManager.HandleSaveFile;
 var
-  Path: string;
   FileJson: ISuperObject;
   SaveDialog: TSaveDialog;
   FileName: string;
@@ -410,7 +450,7 @@ end;
 
 procedure TManager.HandleWidthChange(AWidth: Integer);
 begin
-  FPen.PWidth := AWidth;
+  FPen.Width := AWidth;
 end;
 
 end.

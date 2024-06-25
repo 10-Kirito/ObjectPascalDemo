@@ -3,8 +3,8 @@ object MainForm: TMainForm
   Top = 0
   AutoSize = True
   Caption = #30011#22270
-  ClientHeight = 634
-  ClientWidth = 980
+  ClientHeight = 636
+  ClientWidth = 985
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,21 +18,19 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object imgDrawImage: TImage
-    Left = 3
-    Top = 85
+    Left = 8
+    Top = 87
     Width = 977
     Height = 549
     Align = alCustom
     OnMouseDown = imgDrawImageMouseDown
     OnMouseMove = imgDrawImageMouseMove
     OnMouseUp = imgDrawImageMouseUp
-    ExplicitLeft = 0
-    ExplicitTop = 82
   end
   object rztlbrToolsBar: TRzToolbar
     Left = 0
     Top = 0
-    Width = 980
+    Width = 985
     Height = 29
     Images = ilImageList
     ButtonWidth = 60

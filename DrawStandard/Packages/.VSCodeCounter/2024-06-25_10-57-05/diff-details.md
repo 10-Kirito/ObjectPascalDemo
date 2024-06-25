@@ -1,8 +1,8 @@
 # Diff Details
 
-Date : 2024-06-18 18:15:03
+Date : 2024-06-25 10:57:05
 
-Directory e:\\Desktop\\Projects\\ObjectPascalDemo\\DrawStandard
+Directory e:\\Desktop\\Projects\\ObjectPascalDemo\\DrawStandard\\Packages
 
 Total : 0 files,  0 codes, 0 comments, 0 blanks, all 0 lines
 
